@@ -1,0 +1,6 @@
+*~*
+build/*
+install/*
+xcode/*
+*.pyc
+*.DS_Store
