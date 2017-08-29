@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 
-#include "VimbaDescribe.h"
+#include "AVTVimba.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include "Common/StreamSystemInfo.h"

@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include "VimbaDescribe.h"
+#include "AVTVimba.h"
 
 int main( int argc, char* argv[] )
 {
