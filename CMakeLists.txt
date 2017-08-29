@@ -23,6 +23,9 @@ target_link_libraries(fxis-greet FxIS)
 add_executable(vimbadescribe "src_app/vimbadescribe.cpp")
 target_link_libraries(vimbadescribe FxIS)
 
+add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
+target_link_libraries(asyncacqtest FxIS VimbaCPP)
+
 include_directories($ENV{VIMBA_DIR}/VimbaCPP/Examples)
 file(GLOB VIMBA_EXAMPLE_LISTCAMS_FILES "$ENV{VIMBA_DIR}/VimbaCPP/Examples/ListCameras/Source/*")
 add_executable(vimba-example-list-cameras ${VIMBA_EXAMPLE_LISTCAMS_FILES})
