@@ -30,7 +30,7 @@ VmbErrorType getFeatureValue(CameraPtr cameraPointer, std::string featureName, V
     return VmbErrorSuccess;
 }
 
-VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector frames, IFrameObserverPtr observer) {
+VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector frames, IFrameObserverPtr observer) {
 
     VmbErrorType err;
     VmbInt64_t payload_size;
@@ -55,7 +55,19 @@ VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector frames, IFrameO
             return err;
         }
 
-        err = cameraPointer->AnnounceFrame(frame);
+    }
+
+    return VmbErrorSuccess;
+
+}
+
+VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector frames) {
+
+    VmbErrorType err;
+
+    for (FramePtrVector::iterator itr = frames.begin(); itr != frames.end(); itr++) {
+
+        err = cameraPointer->QueueFrame(*itr);
         if (err != VmbErrorSuccess) {
             return err;
         }
@@ -63,7 +75,6 @@ VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector frames, IFrameO
     }
 
     return VmbErrorSuccess;
-
 }
 
 VmbErrorType acquisitionStart(CameraPtr cameraPointer) {
@@ -188,4 +199,19 @@ VmbErrorType describeVimbaSetup() {
 
 SimpleFrameObserver::SimpleFrameObserver(CameraPtr cameraPointer) : IFrameObserver(cameraPointer) { }
 
-void SimpleFrameObserver::FrameReceived(const FramePtr framePointer) { }
+void SimpleFrameObserver::FrameReceived(const FramePtr framePointer) {
+
+    VmbFrameStatusType err_recv;
+
+    if (framePointer->GetReceiveStatus(err_recv) == VmbErrorSuccess) {
+
+        if (err_recv == VmbFrameStatusComplete) {
+            std::cout << "Receive OK" << std::endl;
+        }
+
+    } else {
+        std::cout << "Receive unsuccessful" << std::endl;
+    }
+
+    this->m_pCamera->QueueFrame(framePointer);
+}
