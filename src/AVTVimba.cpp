@@ -32,7 +32,7 @@ VmbErrorType getFeatureValue(CameraPtr cameraPointer, std::string featureName, V
     return VmbErrorSuccess;
 }
 
-VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector& frames, IFrameObserverPtr& observer) {
+VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector& frames, IFrameObserverPtr observer) {
 
     VmbErrorType err;
     VmbInt64_t payload_size;
@@ -234,9 +234,27 @@ VmbErrorType describeVimbaSetup() {
 
 }
 
-SimpleFrameObserver::SimpleFrameObserver(CameraPtr cameraPointer) : IFrameObserver(cameraPointer) { }
+VmbErrorType openCamera(CameraPtr cameraPointer, VmbAccessModeType accessMode) {
+    VmbErrorType err;
+
+    err = cameraPointer->Open(accessMode);
+    if (err != VmbErrorSuccess) {
+        std::cout << "[ERROR] cameraPointer->Open" << std::endl;
+        return err;
+    }
+
+    return VmbErrorSuccess;
+}
+
+SimpleFrameObserver::SimpleFrameObserver(CameraPtr cameraPointer) : IFrameObserver(cameraPointer) {
+
+    std::cout << "SimpleFrameObserver created" << std::endl;
+
+}
 
 void SimpleFrameObserver::FrameReceived(const FramePtr framePointer) {
+
+    std::cout << "SimpleFrameObserverFrameReceived is invoked" << std::endl;
 
     VmbFrameStatusType err_recv;
     VmbErrorType err;

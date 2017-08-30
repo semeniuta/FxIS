@@ -21,10 +21,10 @@ int main(int argc, char* argv[])
     CameraPtrVector cameras;
     FramePtrVector frames(N_FRAMES);
     CameraPtr cam;
-    IFrameObserverPtr observer(new SimpleFrameObserver(cam));
 
     err = startupVimbaSystemAndGetCameras(sys, cameras);
     if (err != VmbErrorSuccess) {
+        std::cout << "Shutting down!\n";
         sys.Shutdown();
         return -1;
     }
@@ -33,14 +33,18 @@ int main(int argc, char* argv[])
     std::cout << n_cameras << " cameras available" << std::endl;
 
     if (n_cameras == 0) {
+        std::cout << "Shutting down!\n";
         sys.Shutdown();
         return -1;
     }
 
     cam = cameras[0];
+    IFrameObserverPtr observer(new SimpleFrameObserver(cam));
 
-    err = cam->Open(VmbAccessModeFull);
+    //err = cam->Open(VmbAccessModeFull);
+    err = openCamera(cam, VmbAccessModeFull);
     if (err != VmbErrorSuccess) {
+        std::cout << "Shutting down!\n";
         sys.Shutdown();
         return -1;
     }
@@ -54,10 +58,13 @@ int main(int argc, char* argv[])
     err = acquisitionStart(cam);
 
     // ...
+    std::cout<< "Press <enter> to stop acquisition...\n" ;
+    getchar();
 
     err = acquisitionStop(cam);
 
     sys.Shutdown();
+    std::cout << "Shutting down normally\n";
 
     return 0;
 

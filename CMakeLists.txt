@@ -27,9 +27,14 @@ add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
 target_link_libraries(asyncacqtest FxIS VimbaCPP)
 
 include_directories($ENV{VIMBA_DIR}/VimbaCPP/Examples)
+
 file(GLOB VIMBA_EXAMPLE_LISTCAMS_FILES "$ENV{VIMBA_DIR}/VimbaCPP/Examples/ListCameras/Source/*")
 add_executable(vimba-example-list-cameras ${VIMBA_EXAMPLE_LISTCAMS_FILES})
 target_link_libraries(vimba-example-list-cameras VimbaCPP)
+
+#file(GLOB VIMBA_EXAMPLE_ASYNC_GRAB "$ENV{VIMBA_DIR}/VimbaCPP/Examples/AsynchronousGrab/Console/Source/*")
+#add_executable(vimba-example-async-grab ${VIMBA_EXAMPLE_ASYNC_GRAB})
+#target_link_libraries(vimba-example-async-grab VimbaCPP)
 
 add_executable(demo-opencv-blur "spikes/BlurImage.cpp" ${HEADERS})
 target_link_libraries(demo-opencv-blur ${OpenCV_LIBS})

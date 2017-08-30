@@ -14,9 +14,11 @@ VmbErrorType describeVimbaCamera(CameraPtr cameraPointer, std::string& result);
 
 VmbErrorType getFeatureValue(CameraPtr cameraPointer, std::string featureName, VmbInt64_t& result);
 
-VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector& frames, IFrameObserverPtr& observer);
+VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector& frames, IFrameObserverPtr observer);
 
 VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector& frames);
+
+VmbErrorType openCamera(CameraPtr cameraPointer, VmbAccessModeType accessMode);
 
 VmbErrorType acquisitionStart(CameraPtr cameraPointer);
 
