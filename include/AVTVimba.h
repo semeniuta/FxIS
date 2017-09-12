@@ -28,7 +28,7 @@ class SimpleFrameObserver : public IFrameObserver {
 
 public:
     SimpleFrameObserver(CameraPtr cameraPointer);
-    void FrameReceived(const FramePtr framePointer);
+    void FrameReceived(FramePtr framePointer) override;
 
 };
 

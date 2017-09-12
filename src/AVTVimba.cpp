@@ -43,22 +43,20 @@ VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector& frames, IFr
         return err;
     }
 
-    for (FramePtrVector::iterator itr = frames.begin(); itr != frames.end(); itr++) {
+    for (FramePtr& frame : frames) {
+        frame.reset(new Frame(payload_size));
 
-        (*itr).reset(new Frame(payload_size));
-
-        err = (*itr)->RegisterObserver(observer);
+        err = frame->RegisterObserver(observer);
         if (err != VmbErrorSuccess) {
             std::cout << "[ERROR] frame->RegisterObserver" << std::endl;
             return err;
         }
 
-        err = cameraPointer->AnnounceFrame(*itr);
+        err = cameraPointer->AnnounceFrame(frame);
         if (err != VmbErrorSuccess) {
             std::cout << "[ERROR] cameraPointer->AnnounceFrame" << std::endl;
             return err;
         }
-
     }
 
     return VmbErrorSuccess;
@@ -69,14 +67,12 @@ VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector& frames) {
 
     VmbErrorType err;
 
-    for (FramePtrVector::iterator itr = frames.begin(); itr != frames.end(); itr++) {
-
-        err = cameraPointer->QueueFrame(*itr);
+    for (FramePtr& frame : frames) {
+        err = cameraPointer->QueueFrame(frame);
         if (err != VmbErrorSuccess) {
             std::cout << "[ERROR] cameraPointer->QueueFrame" << std::endl;
             return err;
         }
-
     }
 
     return VmbErrorSuccess;
@@ -187,7 +183,7 @@ VmbErrorType startupVimbaSystemAndGetCameras(VimbaSystem& sys, CameraPtrVector& 
         return err;
     }
 
-    sys.GetCameras(cameras);
+    err = sys.GetCameras(cameras);
     if (err != VmbErrorSuccess) {
         std::cout << "[ERROR] sys.GetCameras" << std::endl;
         return err;
