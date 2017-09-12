@@ -1,6 +1,7 @@
 #include "SimpleObserver.h"
 #include <iostream>
 #include <cstdio>
+#include <string>
 #include <opencv2/opencv.hpp>
 
 SimpleFrameObserver::SimpleFrameObserver(CameraPtr cameraPointer) : IFrameObserver(cameraPointer) {
@@ -38,23 +39,14 @@ void SimpleFrameObserver::FrameReceived(const FramePtr framePointer) {
                 std::cout << "Pixel format: VmbPixelFormatMono8" << std::endl;
             }
 
-            //printf("Image pointer address: %x\n", (unsigned long)image_buffer);
-
             cv::Mat im(h, w, CV_8UC1);
-
-            // memcpy( pCurBitmapBuf, pCurSrc, pBitmap->width * nNumColors );
-
             int num_colors = 1;
-            VmbUchar_t* pixel_ptr = image_buffer;
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    im.at<uchar>(i, j) = *pixel_ptr;
-                    pixel_ptr++;
-                }
-            }
+            memcpy(im.data, image_buffer, h * w * num_colors);
 
-            cv::imwrite("image_from_cam.jpg", im);
+            cv::Mat im_res(h, w, CV_8UC3);
+            cv::cvtColor(im, im_res, CV_BayerBG2BGR);
 
+            cv::imwrite("image_from_cam.jpg", im_res);
 
         }
 

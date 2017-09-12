@@ -41,15 +41,35 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    cam = cameras[0];
+    //cam = cameras[0];
+    cam = cameras[1];
     IFrameObserverPtr observer(new SimpleFrameObserver(cam));
 
-    //err = cam->Open(VmbAccessModeFull);
     err = openCamera(cam, VmbAccessModeFull);
     if (err != VmbErrorSuccess) {
         std::cout << "Shutting down!\n";
         sys.Shutdown();
         return -1;
+    }
+
+    VmbInt64_t height, width, pixelFormat;
+
+    err = getFeatureValue(cam, "Height", height);
+    err = getFeatureValue(cam, "Width", width);
+    err = getFeatureValue(cam, "PixelFormat", pixelFormat);
+
+    unsigned int num_channels;
+    switch (pixelFormat) {
+        case VmbPixelFormatMono8:
+            std::cout << "PIXFORMAT: VmbPixelFormatMono8" << std::endl;
+            num_channels = 1;
+            break;
+        case VmbPixelFormatBayerRG8:
+            std::cout << "PIXFORMAT: VmbPixelFormatBayerRG8" << std::endl;
+            num_channels = 3;
+            break;
+        default:
+            num_channels = 0;
     }
 
     err = announceFrames(cam, frames, observer);
@@ -60,7 +80,6 @@ int main(int argc, char* argv[])
 
     err = acquisitionStart(cam);
 
-    // ...
     std::cout<< "Press <enter> to stop acquisition...\n" ;
     getchar();
 
