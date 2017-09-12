@@ -24,12 +24,4 @@ VmbErrorType acquisitionStart(CameraPtr cameraPointer);
 
 VmbErrorType acquisitionStop(CameraPtr cameraPointer);
 
-class SimpleFrameObserver : public IFrameObserver {
-
-public:
-    SimpleFrameObserver(CameraPtr cameraPointer);
-    void FrameReceived(FramePtr framePointer) override;
-
-};
-
 #endif

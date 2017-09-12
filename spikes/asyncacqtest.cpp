@@ -1,10 +1,13 @@
 #include <iostream>
 
 #include "AVTVimba.h"
+#include "SimpleObserver.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include "Common/StreamSystemInfo.h"
 #include "Common/ErrorCodeToMessage.h"
+
+#include <opencv2/opencv.hpp>
 
 const int N_FRAMES = 4;
 
@@ -29,7 +32,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    int n_cameras = cameras.size();
+    unsigned long n_cameras = cameras.size();
     std::cout << n_cameras << " cameras available" << std::endl;
 
     if (n_cameras == 0) {

@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories("include")
 include_directories($ENV{VIMBA_DIR})
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 LINK_DIRECTORIES("$ENV{VIMBA_DIR}/VimbaCPP/DynamicLib/x86_64bit")
 
@@ -24,7 +25,7 @@ add_executable(vimbadescribe "src_app/vimbadescribe.cpp")
 target_link_libraries(vimbadescribe FxIS)
 
 add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
-target_link_libraries(asyncacqtest FxIS VimbaCPP)
+target_link_libraries(asyncacqtest FxIS VimbaCPP ${OpenCV_LIBS})
 
 include_directories($ENV{VIMBA_DIR}/VimbaCPP/Examples)
 

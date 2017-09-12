@@ -241,33 +241,3 @@ VmbErrorType openCamera(CameraPtr cameraPointer, VmbAccessModeType accessMode) {
 
     return VmbErrorSuccess;
 }
-
-SimpleFrameObserver::SimpleFrameObserver(CameraPtr cameraPointer) : IFrameObserver(cameraPointer) {
-
-    std::cout << "SimpleFrameObserver created" << std::endl;
-
-}
-
-void SimpleFrameObserver::FrameReceived(const FramePtr framePointer) {
-
-    std::cout << "SimpleFrameObserverFrameReceived is invoked" << std::endl;
-
-    VmbFrameStatusType err_recv;
-    VmbErrorType err;
-
-    VmbUchar_t* image_buffer;
-
-    if (framePointer->GetReceiveStatus(err_recv) == VmbErrorSuccess) {
-
-        if (err_recv == VmbFrameStatusComplete) {
-            std::cout << "Receive OK" << std::endl;
-
-            err = framePointer->GetImage(image_buffer);
-        }
-
-    } else {
-        std::cout << "Receive unsuccessful" << std::endl;
-    }
-
-    this->m_pCamera->QueueFrame(framePointer);
-}
