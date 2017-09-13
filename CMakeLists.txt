@@ -22,7 +22,10 @@ add_executable(fxis-greet "spikes/greet.cpp" ${HEADERS})
 target_link_libraries(fxis-greet FxIS)
 
 add_executable(vimbadescribe "src_app/vimbadescribe.cpp")
-target_link_libraries(vimbadescribe FxIS)
+target_link_libraries(vimbadescribe FxIS VimbaCPP ${OpenCV_LIBS})
+
+add_executable(vimbastream "src_app/vimbastream.cpp")
+target_link_libraries(vimbastream FxIS VimbaCPP ${OpenCV_LIBS})
 
 add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
 target_link_libraries(asyncacqtest FxIS VimbaCPP ${OpenCV_LIBS})

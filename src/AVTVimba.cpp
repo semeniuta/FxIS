@@ -231,10 +231,9 @@ VmbErrorType describeVimbaSetup() {
 
     std::cout << cameras.size() << " cameras available:" << std::endl;
 
-    for (CameraPtrVector::iterator itr = cameras.begin(); itr != cameras.end(); itr++) {
-        CameraPtr cam_pointer = *itr;
+    for (CameraPtr& cam : cameras) {
 
-        err = describeVimbaCamera(cam_pointer, cam_description);
+        err = describeVimbaCamera(cam, cam_description);
         if (err != VmbErrorSuccess) {
             std::cout << "[ERROR] describeVimbaCamera" << std::endl;
             sys.Shutdown();
