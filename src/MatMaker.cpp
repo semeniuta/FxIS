@@ -41,3 +41,10 @@ MatMaker::MatMaker(std::map<std::string, VmbInt64_t>& features) {
     }
 
 }
+
+unsigned int MatMaker::getNumberOfChannels() {
+    if (this->color) {
+        return 3;
+    }
+    return 1;
+}

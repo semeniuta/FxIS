@@ -5,7 +5,8 @@
 
 #include "AVTVimba.h"
 #include "SimpleObserver.h"
-#include "FrameObserverVideoStream.h"
+#include "AVTFrameObserverVideoStream.h"
+#include "ImageStream.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include "Common/StreamSystemInfo.h"
@@ -62,8 +63,16 @@ int main(int argc, char* argv[])
 
     cv::namedWindow("Camera stream", cv::WINDOW_AUTOSIZE);
     MatMaker mm(camera_features);
-    IFrameObserverPtr observer(new FrameObserverVideoStream(cam, mm, "Camera stream"));
+    IFrameObserverPtr observer(new AVTFrameObserverVideoStream(cam, mm, "Camera stream"));
     //IFrameObserverPtr observer(new SimpleFrameObserver(cam, mm));
+
+    unsigned int w, h;
+    w = (unsigned int)camera_features["Width"];
+    h = (unsigned int)camera_features["Height"];
+
+    ImageStream image_stream(20, w, h, mm.getNumberOfChannels());
+
+
 
     err = announceFrames(cam, frames, observer);
 

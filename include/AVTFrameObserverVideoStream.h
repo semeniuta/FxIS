@@ -7,12 +7,13 @@
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include <opencv2/opencv.hpp>
 #include "MatMaker.h"
+#include "AVTFrameObserverBasic.h"
 
-class FrameObserverVideoStream : public IFrameObserver {
+class AVTFrameObserverVideoStream : public AVTFrameObserverBasic {
 
 public:
-    FrameObserverVideoStream(CameraPtr cam, MatMaker& mm, std::string windowName);
-    void FrameReceived(FramePtr framePointer) override;
+    AVTFrameObserverVideoStream(CameraPtr cam, MatMaker& mm, std::string windowName);
+    virtual void processFrame(FramePtr frame) override;
 
 private:
     MatMaker& mat_maker;

@@ -2,6 +2,7 @@
 #define IMAGESTREAM_H
 
 #include <vector>
+#include <mutex>
 #include <opencv2/opencv.hpp>
 
 class ImageStream {
@@ -18,6 +19,7 @@ private:
     unsigned int num_channels;
     unsigned int current_index;
     std::vector<cv::Mat> images;
+    std::mutex mutex;
 
 };
 

@@ -1,5 +1,5 @@
 #include "ImageStream.h"
-#include <string>
+#include <mutex>
 #include <opencv2/opencv.hpp>
 
 ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
@@ -14,11 +14,13 @@ ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
 
 int ImageStream::storeImageData(unsigned char* imageDataPtr) {
 
+    std::lock_guard<std::mutex> lock(this->mutex);
+
     cv::Mat im = this->images[current_index];
 
     memcpy(im.data, imageDataPtr, this->h * this->w * this->num_channels);
 
-    if (this->current_index == this->stream_size) {
+    if (this->current_index == this->stream_size - 1) {
         this->current_index = 0;
     } else {
         this->current_index++;
@@ -29,6 +31,8 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr) {
 }
 
 int ImageStream::getImage(uint index, cv::Mat out) {
+
+    std::lock_guard<std::mutex> lock(this->mutex);
 
     if (index >= this->stream_size) {
         return -1;
