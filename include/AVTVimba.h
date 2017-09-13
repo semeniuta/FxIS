@@ -2,6 +2,8 @@
 #define VIMBADESCRIBE_H
 
 #include <string>
+#include <map>
+#include <vector>
 #include "VimbaCPP/Include/VimbaCPP.h"
 
 using namespace AVT::VmbAPI;
@@ -23,5 +25,7 @@ VmbErrorType openCamera(CameraPtr cameraPointer, VmbAccessModeType accessMode);
 VmbErrorType acquisitionStart(CameraPtr cameraPointer);
 
 VmbErrorType acquisitionStop(CameraPtr cameraPointer);
+
+VmbErrorType getFeaturesMap(CameraPtr cam, const std::vector<std::string>& names, std::map<std::string, VmbInt64_t>& out_map);
 
 #endif

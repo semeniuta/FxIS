@@ -9,7 +9,7 @@ class ImageStream {
 public:
     ImageStream(uint size, uint width, uint height, uint numChannels);
     int storeImageData(unsigned char* imageDataPtr);
-    int ImageStream::getImage(uint index, cv::Mat out);
+    int getImage(uint index, cv::Mat out);
 
 private:
     unsigned int stream_size;

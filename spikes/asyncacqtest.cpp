@@ -1,4 +1,7 @@
 #include <iostream>
+#include <map>
+#include <vector>
+#include <string>
 
 #include "AVTVimba.h"
 #include "SimpleObserver.h"
@@ -43,7 +46,6 @@ int main(int argc, char* argv[])
 
     //cam = cameras[0];
     cam = cameras[1];
-    IFrameObserverPtr observer(new SimpleFrameObserver(cam));
 
     err = openCamera(cam, VmbAccessModeFull);
     if (err != VmbErrorSuccess) {
@@ -54,23 +56,13 @@ int main(int argc, char* argv[])
 
     VmbInt64_t height, width, pixelFormat;
 
-    err = getFeatureValue(cam, "Height", height);
-    err = getFeatureValue(cam, "Width", width);
-    err = getFeatureValue(cam, "PixelFormat", pixelFormat);
+    std::map<std::string, VmbInt64_t> camera_features;
+    std::vector<std::string> feature_names = {"Height", "Width", "PixelFormat"};
 
-    unsigned int num_channels;
-    switch (pixelFormat) {
-        case VmbPixelFormatMono8:
-            std::cout << "PIXFORMAT: VmbPixelFormatMono8" << std::endl;
-            num_channels = 1;
-            break;
-        case VmbPixelFormatBayerRG8:
-            std::cout << "PIXFORMAT: VmbPixelFormatBayerRG8" << std::endl;
-            num_channels = 3;
-            break;
-        default:
-            num_channels = 0;
-    }
+    err = getFeaturesMap(cam, feature_names, camera_features);
+
+    MatMaker mm(camera_features);
+    IFrameObserverPtr observer(new SimpleFrameObserver(cam, mm));
 
     err = announceFrames(cam, frames, observer);
 

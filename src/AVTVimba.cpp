@@ -32,6 +32,24 @@ VmbErrorType getFeatureValue(CameraPtr cameraPointer, std::string featureName, V
     return VmbErrorSuccess;
 }
 
+VmbErrorType getFeaturesMap(CameraPtr cam, const std::vector<std::string>& names, std::map<std::string, VmbInt64_t>& out_map) {
+
+    VmbErrorType err;
+
+    VmbInt64_t val;
+    for (const std::string& name : names) {
+
+        err = getFeatureValue(cam, name, val);
+        if (err != VmbErrorSuccess) {
+            return err;
+        }
+        out_map[name] = val;
+    }
+
+    return VmbErrorSuccess;
+
+}
+
 VmbErrorType announceFrames(CameraPtr cameraPointer, FramePtrVector& frames, IFrameObserverPtr observer) {
 
     VmbErrorType err;
