@@ -4,7 +4,6 @@
 #include <string>
 
 #include "AVTVimba.h"
-#include "SimpleObserver.h"
 #include "AVTFrameObserverVideoStream.h"
 #include "ImageStream.h"
 
@@ -64,7 +63,6 @@ int main(int argc, char* argv[])
     cv::namedWindow("Camera stream", cv::WINDOW_AUTOSIZE);
     MatMaker mm(camera_features);
     IFrameObserverPtr observer(new AVTFrameObserverVideoStream(cam, mm, "Camera stream"));
-    //IFrameObserverPtr observer(new SimpleFrameObserver(cam, mm));
 
     unsigned int w, h;
     w = (unsigned int)camera_features["Width"];

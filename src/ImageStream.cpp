@@ -16,9 +16,7 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
-    cv::Mat im = this->images[current_index];
-
-    memcpy(im.data, imageDataPtr, this->h * this->w * this->num_channels);
+    memcpy(this->images[current_index].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     if (this->current_index == this->stream_size - 1) {
         this->current_index = 0;

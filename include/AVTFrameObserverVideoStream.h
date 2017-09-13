@@ -13,7 +13,7 @@ class AVTFrameObserverVideoStream : public AVTFrameObserverBasic {
 
 public:
     AVTFrameObserverVideoStream(CameraPtr cam, MatMaker& mm, std::string windowName);
-    virtual void processFrame(FramePtr frame) override;
+    void processFrame(FramePtr frame) override;
 
 private:
     MatMaker& mat_maker;
