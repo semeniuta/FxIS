@@ -5,6 +5,7 @@
 
 #include "AVTVimba.h"
 #include "SimpleObserver.h"
+#include "FrameObserverVideoStream.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include "Common/StreamSystemInfo.h"
@@ -44,8 +45,8 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    //cam = cameras[0];
-    cam = cameras[1];
+    cam = cameras[0];
+    //cam = cameras[1];
 
     err = openCamera(cam, VmbAccessModeFull);
     if (err != VmbErrorSuccess) {
@@ -54,15 +55,15 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    VmbInt64_t height, width, pixelFormat;
-
     std::map<std::string, VmbInt64_t> camera_features;
     std::vector<std::string> feature_names = {"Height", "Width", "PixelFormat"};
 
     err = getFeaturesMap(cam, feature_names, camera_features);
 
+    cv::namedWindow("Camera stream", cv::WINDOW_AUTOSIZE);
     MatMaker mm(camera_features);
-    IFrameObserverPtr observer(new SimpleFrameObserver(cam, mm));
+    IFrameObserverPtr observer(new FrameObserverVideoStream(cam, mm, "Camera stream"));
+    //IFrameObserverPtr observer(new SimpleFrameObserver(cam, mm));
 
     err = announceFrames(cam, frames, observer);
 
