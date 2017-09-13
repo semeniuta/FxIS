@@ -1,6 +1,7 @@
 #include "ImageStream.h"
 #include <mutex>
 #include <opencv2/opencv.hpp>
+#include <iostream>
 
 ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
         : stream_size(size), w(width), h(height), num_channels(numChannels), current_index(0) {
@@ -17,6 +18,8 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr) {
     std::lock_guard<std::mutex> lock(this->mutex);
 
     memcpy(this->images[current_index].data, imageDataPtr, this->h * this->w * this->num_channels);
+
+    std::cout << this->current_index << std::endl;
 
     if (this->current_index == this->stream_size - 1) {
         this->current_index = 0;
