@@ -3,14 +3,18 @@
 
 #include <vector>
 #include <mutex>
+#include <chrono>
+#include "TimeMeasure.h"
 #include <opencv2/opencv.hpp>
 
 class ImageStream {
 
 public:
     ImageStream(uint size, uint width, uint height, uint numChannels);
-    int storeImageData(unsigned char* imageDataPtr);
+    int storeImageData(unsigned char* imageDataPtr, TimePoint t);
     int getImage(uint index, cv::Mat out);
+    int getImage(TimePoint t, cv::Mat out);
+    long searchNearestTime(TimePoint t);
 
 private:
     unsigned int stream_size;
@@ -18,8 +22,13 @@ private:
     unsigned int h;
     unsigned int num_channels;
     unsigned int current_index;
+    bool first_fill;
     std::vector<cv::Mat> images;
+    std::vector<std::chrono::high_resolution_clock::time_point> timestamps;
     std::mutex mutex;
+
+    long searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo);
+    long getInd(ulong i);
 
 };
 
