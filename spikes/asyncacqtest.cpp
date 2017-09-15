@@ -14,7 +14,7 @@
 
 #include <opencv2/opencv.hpp>
 
-const int N_FRAMES = 4;
+const int N_FRAMES = 3;
 
 using namespace AVT::VmbAPI;
 

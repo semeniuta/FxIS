@@ -11,4 +11,19 @@ using ulong = unsigned long;
 TimePoint currentTime();
 std::chrono::nanoseconds computeDuration(TimePoint t0, TimePoint t1);
 
+class EventArrivalCounter {
+
+public:
+    EventArrivalCounter();
+    void onEventArrival();
+    std::chrono::nanoseconds getLastInterarivalTime();
+    TimePoint getEventArrivalTimestamp();
+
+private:
+    bool first_time;
+    TimePoint t_event;
+    TimePoint t_prev_event;
+    std::chrono::nanoseconds t_interarival;
+};
+
 #endif

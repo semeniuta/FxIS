@@ -9,19 +9,16 @@ AVTFrameObserverImageStream::AVTFrameObserverImageStream(CameraPtr cam, MatMaker
 
 void AVTFrameObserverImageStream::processFrame(FramePtr frame) {
 
-    this->last_frame_arrival_timestamp = currentTime();
+    this->counter.onEventArrival();
 
-    //std::chrono::seconds tse = std::chrono::duration_cast<std::chrono::seconds>(this->last_frame_arrival_timestamp.time_since_epoch());
-    std::chrono::nanoseconds tse = this->last_frame_arrival_timestamp.time_since_epoch();
-
-    std::cout << tse.count() << std::endl;
+    std::cout << this->counter.getLastInterarivalTime().count() << std::endl;
 
     VmbErrorType err;
 
     unsigned char* image_buffer;
     err = frame->GetImage(image_buffer);
 
-    this->image_stream.storeImageData(image_buffer, this->last_frame_arrival_timestamp);
+    this->image_stream.storeImageData(image_buffer, this->counter.getEventArrivalTimestamp());
 
 }
 

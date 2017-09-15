@@ -18,7 +18,7 @@ private:
 
     MatMaker& mat_maker;
     ImageStream& image_stream;
-    std::chrono::high_resolution_clock::time_point last_frame_arrival_timestamp;
+    EventArrivalCounter counter;
 
 
 };

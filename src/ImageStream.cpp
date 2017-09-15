@@ -69,13 +69,15 @@ long ImageStream::getInd(ulong i) {
     if (this->first_fill) {
 
         if (i >= this->current_index) {
-           return -1;
+            std::cerr << "Index too high while first run" << std::endl;
+            return -1;
         }
 
         return i;
     }
 
     if (i < 0 || i >= this->stream_size) {
+        std::cerr << "Index out of bounds" << std::endl;
         return -1;
     }
 
@@ -92,6 +94,7 @@ long ImageStream::getInd(ulong i) {
 long ImageStream::searchNearestTime(TimePoint t) {
 
     if (this->timestamps.empty()) {
+        std::cerr << "Timestamps vector is empty" << std::endl;
         return -1;
     }
 
@@ -100,12 +103,14 @@ long ImageStream::searchNearestTime(TimePoint t) {
 
 long ImageStream::searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo) {
 
-    if (indexFrom < indexTo) {
+    if (indexFrom > indexTo) {
+        std::cerr << "indexFrom > indexTo" << std::endl;
         return -1;
     }
 
     if (this->timestamps.size() == 1) {
         if (this->timestamps[getInd(0)] != t) {
+            std::cerr << "this->timestamps[getInd(0)] != t" << std::endl;
             return -1;
         } else {
             return 0;
@@ -113,6 +118,7 @@ long ImageStream::searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo)
     }
 
     if (t < this->timestamps[getInd(0)]) {
+        std::cerr << "t < this->timestamps[getInd(0)]" << std::endl;
         return -1;
     }
 
@@ -120,8 +126,12 @@ long ImageStream::searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo)
 
     if (input_size == 2) {
 
-        std::chrono::duration d1 = t - this->timestamps[getInd(indexFrom)];
-        std::chrono::duration d2 = this->timestamps[getInd(indexTo)] - t;
+
+        TimePoint t1 = this->timestamps[getInd(indexFrom)];
+        TimePoint t2 = this->timestamps[getInd(indexTo)];
+
+        std::chrono::nanoseconds d1 = t - t1;
+        std::chrono::nanoseconds d2 = t2 - t;
 
         if (d1 <= d2) {
             return indexFrom;
@@ -130,7 +140,7 @@ long ImageStream::searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo)
 
     }
 
-    unsigned long index_middle = this->timestamps.size() / 2;
+    unsigned long index_middle = indexFrom + input_size / 2;
 
     if (this->timestamps[getInd(index_middle)] == t) {
         return index_middle;

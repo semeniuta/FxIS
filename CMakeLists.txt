@@ -30,6 +30,9 @@ target_link_libraries(vimbastream FxIS VimbaCPP ${OpenCV_LIBS})
 add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
 target_link_libraries(asyncacqtest FxIS VimbaCPP ${OpenCV_LIBS})
 
+add_executable(imstreamtest "spikes/imstreamtest.cpp" ${HEADERS})
+target_link_libraries(imstreamtest FxIS ${OpenCV_LIBS})
+
 include_directories($ENV{VIMBA_DIR}/VimbaCPP/Examples)
 
 file(GLOB VIMBA_EXAMPLE_LISTCAMS_FILES "$ENV{VIMBA_DIR}/VimbaCPP/Examples/ListCameras/Source/*")
