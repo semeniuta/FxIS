@@ -21,7 +21,6 @@ private:
     unsigned int w;
     unsigned int h;
     unsigned int num_channels;
-    unsigned int current_index;
     bool first_fill;
     std::vector<cv::Mat> images;
     CircularVectorManager cvm;

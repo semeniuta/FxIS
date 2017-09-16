@@ -18,7 +18,7 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, std::chrono::high_r
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
-    memcpy(this->images[current_index].data, imageDataPtr, this->h * this->w * this->num_channels);
+    memcpy(this->images[this->cvm.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     this->cvm.storeTimestamp(t);
 
@@ -34,7 +34,7 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
         return -1;
     }
 
-    cv::Mat im = this->images[current_index];
+    cv::Mat im = this->images[this->cvm.getCurrentIndex()];
     im.copyTo(out);
 
     return 0;
