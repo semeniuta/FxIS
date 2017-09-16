@@ -20,7 +20,7 @@ int main() {
     ImageStream im_stream(STREAM_SIZE, 640, 480, 1);
 
     TimePoint t0 = currentTime();
-    std::chrono::milliseconds sleep_interval{10};
+    std::chrono::milliseconds sleep_interval{15};
 
     TimePoint t_to_find = t0 + 15 * sleep_interval;
     std::cout << "Time to find:" << t_to_find.time_since_epoch().count() << std::endl;
@@ -36,8 +36,10 @@ int main() {
         im_stream.storeImageData(im.data, ct);
     }
 
+    std::cout << "Current index: " << im_stream.getCurrentIndex() << std::endl;
+
     long res = im_stream.searchNearestTime(t_to_find);
-    std::cout << res << std::endl;
+    std::cout << res << ", real: " << im_stream.getInd(res) << std::endl;
 
     return 0;
 

@@ -10,6 +10,7 @@ using ulong = unsigned long;
 
 TimePoint currentTime();
 std::chrono::nanoseconds computeDuration(TimePoint t0, TimePoint t1);
+std::chrono::nanoseconds absDuration(TimePoint a, TimePoint b);
 
 class EventArrivalCounter {
 

@@ -14,7 +14,9 @@ public:
     int storeImageData(unsigned char* imageDataPtr, TimePoint t);
     int getImage(uint index, cv::Mat out);
     int getImage(TimePoint t, cv::Mat out);
+    unsigned int getCurrentIndex();
     long searchNearestTime(TimePoint t);
+    long getInd(ulong i);
 
 private:
     unsigned int stream_size;
@@ -28,7 +30,6 @@ private:
     std::mutex mutex;
 
     long searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo);
-    long getInd(ulong i);
 
 };
 

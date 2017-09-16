@@ -81,13 +81,15 @@ long ImageStream::getInd(ulong i) {
         return -1;
     }
 
+    long real_index;
     if (i <= (this->stream_size - 1 - this->current_index)) {
         // Part of the vector after current_index
-        return this->current_index + i;
+        real_index = this->current_index + i;
     } else {
         // Part of the vector before current_index
-        return i - this->stream_size + this->current_index;
+        real_index = i - this->stream_size + this->current_index;
     }
+    return real_index;
 
 }
 
@@ -126,12 +128,14 @@ long ImageStream::searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo)
 
     if (input_size == 2) {
 
+        long physical_index_from = getInd(indexFrom);
+        long physical_index_to = getInd(indexTo);
 
-        TimePoint t1 = this->timestamps[getInd(indexFrom)];
-        TimePoint t2 = this->timestamps[getInd(indexTo)];
+        TimePoint t1 = this->timestamps[physical_index_from];
+        TimePoint t2 = this->timestamps[physical_index_to];
 
-        std::chrono::nanoseconds d1 = t - t1;
-        std::chrono::nanoseconds d2 = t2 - t;
+        std::chrono::nanoseconds d1 = absDuration(t, t1);
+        std::chrono::nanoseconds d2 = absDuration(t, t2);
 
         if (d1 <= d2) {
             return indexFrom;
@@ -147,12 +151,15 @@ long ImageStream::searchNearestTime(TimePoint t, ulong indexFrom, ulong indexTo)
     }
 
     if (this->timestamps[getInd(index_middle)] < t) {
-        return searchNearestTime(t, indexFrom, index_middle);
-    } else {
         return searchNearestTime(t, index_middle, indexTo);
+    } else {
+        return searchNearestTime(t, indexFrom, index_middle);
     }
 
 
 }
 
+unsigned int ImageStream::getCurrentIndex() {
+    return this->current_index;
+}
 

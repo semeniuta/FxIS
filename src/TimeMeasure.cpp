@@ -12,6 +12,13 @@ nanoseconds computeDuration(TimePoint t0, TimePoint t1) {
     return t0 - t1;
 }
 
+nanoseconds absDuration(TimePoint a, TimePoint b) {
+
+    nanoseconds d = b - a;
+    return d >= d.zero() ? d : -d;
+
+}
+
 EventArrivalCounter::EventArrivalCounter() : first_time(true) { }
 
 void EventArrivalCounter::onEventArrival() {
