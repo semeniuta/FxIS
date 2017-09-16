@@ -4,25 +4,28 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include "CircularVectorManager.h"
 
 uint STREAM_SIZE = 10;
 
 int main() {
 
-    cv::Mat im;
-    im = cv::imread("../data/robotmac_1.png");
+//    cv::Mat im;
+//    im = cv::imread("../data/robotmac_1.png");
+//
+//    if (!im.data) {
+//        std::cout << "No image data" << std::endl;
+//        return -1;
+//    }
+//
+//    ImageStream im_stream(STREAM_SIZE, 640, 480, 1);
 
-    if (!im.data) {
-        std::cout << "No image data" << std::endl;
-        return -1;
-    }
-
-    ImageStream im_stream(STREAM_SIZE, 640, 480, 1);
+    CircularVectorManager cvm(STREAM_SIZE);
 
     TimePoint t0 = currentTime();
-    std::chrono::milliseconds sleep_interval{15};
+    std::chrono::milliseconds sleep_interval{10};
 
-    TimePoint t_to_find = t0 + 15 * sleep_interval;
+    TimePoint t_to_find = t0 + 10 * sleep_interval;
     std::cout << "Time to find:" << t_to_find.time_since_epoch().count() << std::endl;
 
     for (int i = 0; i < STREAM_SIZE + 7; i++) {
@@ -33,13 +36,14 @@ int main() {
         auto diff = ct.time_since_epoch().count() - t_to_find.time_since_epoch().count();
         std::cout << "t=" << ct.time_since_epoch().count() << " " << diff << std::endl;
 
-        im_stream.storeImageData(im.data, ct);
+        cvm.storeTimestamp(ct);
+        //im_stream.storeImageData(im.data, ct);
     }
 
-    std::cout << "Current index: " << im_stream.getCurrentIndex() << std::endl;
+    std::cout << "Current index: " << cvm.getCurrentIndex() << std::endl;
 
-    long res = im_stream.searchNearestTime(t_to_find);
-    std::cout << res << ", real: " << im_stream.getInd(res) << std::endl;
+    unsigned long res = cvm.searchNearestTime(t_to_find);
+    std::cout << "res: " << res <<  std::endl;
 
     return 0;
 

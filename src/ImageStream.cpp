@@ -2,7 +2,6 @@
 #include <mutex>
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include <algorithm>
 
 ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
         : stream_size(size), w(width), h(height), num_channels(numChannels), current_index(0), first_fill(true) {
