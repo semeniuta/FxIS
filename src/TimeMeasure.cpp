@@ -19,9 +19,9 @@ nanoseconds absDuration(TimePoint a, TimePoint b) {
 
 }
 
-EventArrivalCounter::EventArrivalCounter() : first_time(true) { }
+EventTimeCounter::EventTimeCounter() : first_time(true) { }
 
-void EventArrivalCounter::onEventArrival() {
+void EventTimeCounter::onEventArrival() {
 
     if (!this->first_time) {
         this->t_prev_event = this->t_event;
@@ -34,17 +34,26 @@ void EventArrivalCounter::onEventArrival() {
         this->t_prev_event = this->t_event;
     }
 
-    this->t_interarival = this->t_event - this->t_prev_event;
+    this->d_interarrival = this->t_event - this->t_prev_event;
 
 }
 
-TimePoint EventArrivalCounter::getEventArrivalTimestamp() {
+void EventTimeCounter::onProcessingEnd() {
+    auto now = currentTime();
+    this->d_processing = now - this->t_event;
+}
+
+TimePoint EventTimeCounter::getEventArrivalTimestamp() {
     return this->t_event;
 }
 
-std::chrono::nanoseconds EventArrivalCounter::getLastInterarivalTime() {
+std::chrono::nanoseconds EventTimeCounter::getInterarrivalTime() {
 
-    return this->t_interarival;
+    return this->d_interarrival;
+}
+
+std::chrono::nanoseconds EventTimeCounter::getProcessingTime() {
+    return this->d_processing;
 }
 
 

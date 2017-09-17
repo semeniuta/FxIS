@@ -12,19 +12,22 @@ TimePoint currentTime();
 std::chrono::nanoseconds computeDuration(TimePoint t0, TimePoint t1);
 std::chrono::nanoseconds absDuration(TimePoint a, TimePoint b);
 
-class EventArrivalCounter {
+class EventTimeCounter {
 
 public:
-    EventArrivalCounter();
+    EventTimeCounter();
     void onEventArrival();
-    std::chrono::nanoseconds getLastInterarivalTime();
+    void onProcessingEnd();
+    std::chrono::nanoseconds getInterarrivalTime();
+    std::chrono::nanoseconds getProcessingTime();
     TimePoint getEventArrivalTimestamp();
 
 private:
     bool first_time;
     TimePoint t_event;
     TimePoint t_prev_event;
-    std::chrono::nanoseconds t_interarival;
+    std::chrono::nanoseconds d_interarrival;
+    std::chrono::nanoseconds d_processing;
 };
 
 #endif
