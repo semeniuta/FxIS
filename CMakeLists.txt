@@ -34,6 +34,9 @@ target_link_libraries(vimbastream FxIS VimbaCPP ${OpenCV_LIBS})
 add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
 target_link_libraries(asyncacqtest FxIS VimbaCPP ${OpenCV_LIBS})
 
+add_executable(avtstreamingtest "spikes/avtstreamingtest.cpp")
+target_link_libraries(avtstreamingtest FxIS VimbaCPP ${OpenCV_LIBS})
+
 add_executable(imstreamtest "spikes/imstreamtest.cpp" ${HEADERS})
 target_link_libraries(imstreamtest FxISWithOpenCV)
 

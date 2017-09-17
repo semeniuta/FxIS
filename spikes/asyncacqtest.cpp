@@ -47,21 +47,9 @@ int main(int argc, char* argv[])
     }
 
     cam = cameras[0];
-    //cam = cameras[1];
-
-    err = openCamera(cam, VmbAccessModeFull);
-    if (err != VmbErrorSuccess) {
-        std::cout << "Shutting down!\n";
-        sys.Shutdown();
-        return -1;
-    }
-
     std::map<std::string, VmbInt64_t> camera_features;
-    std::vector<std::string> feature_names = {"Height", "Width", "PixelFormat"};
 
-    err = getFeaturesMap(cam, feature_names, camera_features);
-
-    //cv::namedWindow("Camera stream", cv::WINDOW_AUTOSIZE);
+    err = openCameraWithImageFeatures(cam, camera_features);
 
     MatMaker mm(camera_features);
 
@@ -72,15 +60,8 @@ int main(int argc, char* argv[])
     ImageStream image_stream(20, w, h, mm.getNumberOfChannels());
 
     IFrameObserverPtr observer(new AVTFrameObserverImageStream(cam, mm, image_stream));
-    //IFrameObserverPtr observer(new AVTFrameObserverVideoStream(cam, mm, "Camera stream"));
 
-    err = announceFrames(cam, frames, observer);
-
-    err = cam->StartCapture();
-
-    err = queueFrames(cam, frames);
-
-    err = acquisitionStart(cam);
+    err = streamingStart(cam, frames, observer);
 
     std::cout<< "Press <enter> to stop acquisition...\n" ;
     getchar();

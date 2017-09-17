@@ -11,7 +11,9 @@
 class ImageStream {
 
 public:
+    ImageStream(uint size);
     ImageStream(uint size, uint width, uint height, uint numChannels);
+    void init(uint width, uint height, uint numChannels);
     int storeImageData(unsigned char* imageDataPtr, TimePoint t);
     int getImage(unsigned long index, cv::Mat& out);
     int getImage(TimePoint t, cv::Mat& out);
@@ -24,8 +26,8 @@ private:
     bool first_fill;
     std::vector<cv::Mat> images;
     CircularVectorManager cvm;
-    std::vector<std::chrono::high_resolution_clock::time_point> timestamps;
     std::mutex mutex;
+    bool ready;
 
 
 

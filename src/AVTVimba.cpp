@@ -291,3 +291,24 @@ VmbErrorType openCamera(CameraPtr cameraPointer, VmbAccessModeType accessMode) {
 
     return VmbErrorSuccess;
 }
+
+VmbErrorType openCameraWithImageFeatures(CameraPtr cam, std::map<std::string, VmbInt64_t>& featuresMap) {
+
+    VmbErrorType err;
+
+    err = openCamera(cam, VmbAccessModeFull);
+    if (err != VmbErrorSuccess) {
+        return err;
+    }
+
+    std::vector<std::string> feature_names = {"Height", "Width", "PixelFormat"};
+
+    err = getFeaturesMap(cam, feature_names, featuresMap);
+    if (err != VmbErrorSuccess) {
+        return err;
+    }
+
+    return VmbErrorSuccess;
+
+
+}

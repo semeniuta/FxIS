@@ -3,8 +3,20 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
+ImageStream::ImageStream(uint size) : stream_size(size), cvm(size), ready(false) { }
+
 ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
-        : stream_size(size), cvm(size), w(width), h(height), num_channels(numChannels) {
+        : stream_size(size), cvm(size) {
+
+    this->init(width, height, numChannels);
+
+}
+
+void ImageStream::init(uint width, uint height, uint numChannels) {
+
+    this->w = width;
+    this->h = height;
+    this->num_channels = numChannels;
 
     for (int i = 0; i < this->stream_size; i++) {
 
@@ -12,11 +24,17 @@ ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
         this->images.push_back(im);
     }
 
+    this->ready = true;
+
 }
 
 int ImageStream::storeImageData(unsigned char* imageDataPtr, std::chrono::high_resolution_clock::time_point t) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
+
+    if (!this->ready) {
+        return -1;
+    }
 
     memcpy(this->images[this->cvm.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
 
@@ -30,7 +48,7 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
-    if (index >= this->stream_size) {
+    if (index >= this->stream_size || !this->ready) {
         return -1;
     }
 
@@ -44,6 +62,10 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
 int ImageStream::getImage(TimePoint t, cv::Mat& out) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
+
+    if (!this->ready) {
+        return -1;
+    }
 
     unsigned long index_to_get = this->cvm.searchNearestTime(t);
 

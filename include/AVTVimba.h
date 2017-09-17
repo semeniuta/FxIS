@@ -22,6 +22,8 @@ VmbErrorType queueFrames(CameraPtr cameraPointer, FramePtrVector& frames);
 
 VmbErrorType openCamera(CameraPtr cameraPointer, VmbAccessModeType accessMode);
 
+VmbErrorType openCameraWithImageFeatures(CameraPtr cam, std::map<std::string, VmbInt64_t>& featuresMap);
+
 VmbErrorType acquisitionStart(CameraPtr cameraPointer);
 
 VmbErrorType acquisitionStop(CameraPtr cameraPointer);
