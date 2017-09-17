@@ -164,6 +164,39 @@ VmbErrorType acquisitionStop(CameraPtr cameraPointer) {
 }
 
 
+VmbErrorType streamingStart(CameraPtr cam, FramePtrVector frames, IFrameObserverPtr observer) {
+
+    VmbErrorType err;
+
+    err = announceFrames(cam, frames, observer);
+    if (err != VmbErrorSuccess) {
+        std::cout << "[ERROR] announceFrames(cam, frames, observer)" << std::endl;
+        return err;
+    }
+
+    err = cam->StartCapture();
+    if (err != VmbErrorSuccess) {
+        std::cout << "[ERROR] cam->StartCapture()" << std::endl;
+        return err;
+    }
+
+    err = queueFrames(cam, frames);
+    if (err != VmbErrorSuccess) {
+        std::cout << "[ERROR] queueFrames(cam, frames)" << std::endl;
+        return err;
+    }
+
+    err = acquisitionStart(cam);
+    if (err != VmbErrorSuccess) {
+        std::cout << "[ERROR] acquisitionStart(cam)" << std::endl;
+        return err;
+    }
+
+    return VmbErrorSuccess;
+
+}
+
+
 VmbErrorType describeVimbaCamera(CameraPtr cameraPointer, std::string& result) {
 
     std::stringstream buffer;

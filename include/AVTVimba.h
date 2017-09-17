@@ -26,6 +26,8 @@ VmbErrorType acquisitionStart(CameraPtr cameraPointer);
 
 VmbErrorType acquisitionStop(CameraPtr cameraPointer);
 
+VmbErrorType streamingStart(CameraPtr cam, FramePtrVector frames, IFrameObserverPtr observer);
+
 VmbErrorType getFeaturesMap(CameraPtr cam, const std::vector<std::string>& names, std::map<std::string, VmbInt64_t>& out_map);
 
 #endif

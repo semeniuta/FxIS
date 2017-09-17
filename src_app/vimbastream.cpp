@@ -79,17 +79,7 @@ int main(int argc, char* argv[])
     MatMaker mm(camera_features);
     IFrameObserverPtr observer(new AVTFrameObserverVideoStream(cam, mm, "Camera stream"));
 
-    unsigned int w, h;
-    w = (unsigned int)camera_features["Width"];
-    h = (unsigned int)camera_features["Height"];
-
-    err = announceFrames(cam, frames, observer);
-
-    err = cam->StartCapture();
-
-    err = queueFrames(cam, frames);
-
-    err = acquisitionStart(cam);
+    err = streamingStart(cam, frames, observer);
 
     std::cout<< "Press <enter> to stop streaming...\n" ;
     getchar();
