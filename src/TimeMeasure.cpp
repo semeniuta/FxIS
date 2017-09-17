@@ -1,6 +1,9 @@
 #include "TimeMeasure.h"
 #include <chrono>
 #include <cmath>
+#include <string>
+#include <sstream>
+#include <ratio>
 
 using namespace std::chrono;
 
@@ -17,6 +20,18 @@ nanoseconds absDuration(TimePoint a, TimePoint b) {
     nanoseconds d = b - a;
     return d >= d.zero() ? d : -d;
 
+}
+
+std::string durationAsString(std::chrono::nanoseconds d) {
+
+    std::stringstream ss;
+
+    auto d_ms = std::chrono::duration<double, std::milli>(d);
+
+    ss << d_ms.count() << " ms";
+    //ss << std::chrono::duration_cast<std::chrono::milliseconds>(d).count() << " ms";
+
+    return ss.str();
 }
 
 EventTimeCounter::EventTimeCounter() : first_time(true) { }
