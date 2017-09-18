@@ -14,7 +14,7 @@ LINK_DIRECTORIES("$ENV{VIMBA_DIR}/VimbaCPP/DynamicLib/x86_64bit")
 
 file(GLOB HEADERS "include/*.h" "include/*.hpp")
 file(GLOB SRC_LIB "src/*.c" "src/*.cpp")
-file(GLOB SRC_LIB_JUST_OPENCV "src/MatMaker.cpp" "src/ImageStream.cpp" "src/TimeMeasure.cpp" "src/CircularVectorManager.cpp" "src/ThreadsafeQueue.cpp")
+file(GLOB SRC_LIB_JUST_OPENCV "src/MatMaker.cpp" "src/ImageStream.cpp" "src/TimeMeasure.cpp" "src/CircularVectorManager.cpp" "src/ThreadsafeQueue.cpp" "src/EventObject.cpp")
 
 add_library(FxIS STATIC ${SRC_LIB} ${HEADERS})
 target_link_libraries(FxIS VimbaCPP ${OpenCV_LIBS})
