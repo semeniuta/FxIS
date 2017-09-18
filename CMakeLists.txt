@@ -14,7 +14,16 @@ LINK_DIRECTORIES("$ENV{VIMBA_DIR}/VimbaCPP/DynamicLib/x86_64bit")
 
 file(GLOB HEADERS "include/*.h" "include/*.hpp")
 file(GLOB SRC_LIB "src/*.c" "src/*.cpp")
-file(GLOB SRC_LIB_JUST_OPENCV "src/MatMaker.cpp" "src/ImageStream.cpp" "src/TimeMeasure.cpp" "src/CircularVectorManager.cpp" "src/ThreadsafeQueue.cpp" "src/EventObject.cpp")
+file(
+        GLOB SRC_LIB_JUST_OPENCV
+        "src/MatMaker.cpp"
+        "src/ImageStream.cpp"
+        "src/TimeMeasure.cpp"
+        "src/CircularVectorManager.cpp"
+        "src/ThreadsafeQueue.cpp"
+        "src/EventObject.cpp"
+        "src/BlockingWait.cpp"
+)
 
 add_library(FxIS STATIC ${SRC_LIB} ${HEADERS})
 target_link_libraries(FxIS VimbaCPP ${OpenCV_LIBS})
@@ -37,8 +46,11 @@ target_link_libraries(asyncacqtest FxIS VimbaCPP ${OpenCV_LIBS})
 add_executable(avtstreamingtest "spikes/avtstreamingtest.cpp")
 target_link_libraries(avtstreamingtest FxIS VimbaCPP ${OpenCV_LIBS})
 
-add_executable(qtest "spikes/qtest.cpp" ${qtest})
+add_executable(qtest "spikes/qtest.cpp")
 target_link_libraries(qtest FxISWithOpenCV)
+
+add_executable(bwtest "spikes/bwtest.cpp")
+target_link_libraries(bwtest FxISWithOpenCV)
 
 add_executable(imstreamtest "spikes/imstreamtest.cpp" ${HEADERS})
 target_link_libraries(imstreamtest FxISWithOpenCV)

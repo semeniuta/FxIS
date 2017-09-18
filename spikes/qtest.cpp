@@ -33,6 +33,8 @@ void receiver_thread(ThreadsafeQueue<int>& q, EventObject& ready) {
 
     }
 
+    std::cout << "Exiting receiver_thread." << std::endl;
+
 }
 
 int main() {
@@ -47,6 +49,8 @@ int main() {
 
     std::thread t_recv(receiver_thread, std::ref(q), std::ref(ready));
     t_recv.join();
+
+    std::cout << "Exiting main." << std::endl;
 
     return 0;
 

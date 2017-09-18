@@ -2,7 +2,7 @@
 #define AVTSTREAMING_H
 
 #include <vector>
-//#include <mutex>
+#include "ThreadsafeQueue.h"
 #include "AVTVimba.h"
 #include "MatMaker.h"
 #include "ImageStream.h"
