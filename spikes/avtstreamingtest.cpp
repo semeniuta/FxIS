@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <thread>
 
 #include "AVTVimba.h"
 #include "AVTStreaming.h"
@@ -38,9 +39,8 @@ int main(int argc, char* argv[])
 
     ImageStream image_stream(20);
 
-    AVTStreaming avts(CAMERA_INDEX, N_FRAMES, image_stream);
-
-    avts();
+    AVTStreaming cam1_streaming(0, N_FRAMES, image_stream);
+    AVTStreaming cam2_streaming(1, N_FRAMES, image_stream);
 
     sys.Shutdown();
     std::cout << "Shutting down normally\n";

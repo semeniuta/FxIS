@@ -2,6 +2,7 @@
 #define AVTSTREAMING_H
 
 #include <vector>
+//#include <mutex>
 #include "AVTVimba.h"
 #include "MatMaker.h"
 #include "ImageStream.h"
@@ -43,6 +44,7 @@ private:
     ImageStream& image_stream;
     CameraPtr cam;
     FramePtrVector frames;
+    //std::condition_variable trigger_stop;
 
 };
 
