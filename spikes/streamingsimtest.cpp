@@ -1,6 +1,7 @@
 #include "StreamingSimulation.h"
 #include "BlockingWait.h"
 #include "ImageStream.h"
+#include "TimeMeasure.h"
 #include <vector>
 #include <thread>
 #include <opencv2/opencv.hpp>
@@ -21,8 +22,8 @@ int main() {
     std::vector<cv::Mat> images2;
     images2.push_back(im2);
 
-    ImageStream im_stream_1(25, im1.cols, im1.rows, 1);
-    ImageStream im_stream_2(25, im2.cols, im2.rows, 1);
+    ImageStream im_stream_1(80, im1.cols, im1.rows, 1);
+    ImageStream im_stream_2(80, im2.cols, im2.rows, 1);
 
     BlockingWait bw1;
     BlockingWait bw2;
@@ -37,6 +38,27 @@ int main() {
     //std::thread t2(&StreamingSimulation::operator(), streaming_sim_2);
     //std::thread t2(run_streaming_sim, std::ref(streaming_sim_2));
     std::thread t2(streaming_sim_2);
+
+
+    cv::Mat im_1;
+    cv::Mat im_2;
+    std::chrono::milliseconds sleep_interval{100};
+    for (int i = 0; i < 100; i++) {
+        std::this_thread::sleep_for(sleep_interval);
+
+        TimePoint t_now = currentTime();
+        TimePoint t_im_1;
+        TimePoint t_im_2;
+        im_stream_1.getImage(t_now, im_1, t_im_1);
+        im_stream_2.getImage(t_now, im_2, t_im_2);
+        //im_stream_1.getImage(5, im);
+        std::cout << "Got image" << i << ": ";
+        std::cout << durationAsString(absDuration(t_now, t_im_1)) << ", ";
+        std::cout << durationAsString(absDuration(t_now, t_im_2)) << std::endl;
+
+        //std::cout << absDuration(t_now, t_im).count() << std::endl;
+
+    }
 
     std::cout<< "Press <enter> to stop all the streaming threads...\n" ;
     getchar();

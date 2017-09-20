@@ -1,14 +1,20 @@
 #include "StreamingSimulation.h"
 #include "TimeMeasure.h"
 #include <thread>
+#include <iostream>
 
 const int ONE_BILLION = 1000000000;
 
-void simulate_streaming(std::chrono::nanoseconds interval, std::vector<cv::Mat>& images, ImageStream& imStream, EventObject& eo) {
+void simulate_streaming(std::chrono::nanoseconds interval, std::vector<cv::Mat>& images, ImageStream& imStream, EventObject& eo, EventTimeCounter& counter) {
 
     unsigned int idx = 0;
     int sz = (int)images.size();
     while (true) {
+
+        //std::cout << "t_ia=" << counter.getInterarrivalTime().count() << std::endl;
+
+        std::this_thread::sleep_for(interval);
+        counter.onEventArrival();
 
         imStream.storeImageData(images[idx].data, currentTime());
 
@@ -17,6 +23,8 @@ void simulate_streaming(std::chrono::nanoseconds interval, std::vector<cv::Mat>&
         if (eo.hasOccured()) {
             break;
         }
+
+        counter.onProcessingEnd();
     }
 
 }
@@ -34,7 +42,7 @@ void StreamingSimulation::operator()() {
 
     EventObject eo;
 
-    std::thread t(simulate_streaming, this->interval, std::ref(this->source_images), std::ref(this->image_stream), std::ref(eo));
+    std::thread t(simulate_streaming, this->interval, std::ref(this->source_images), std::ref(this->image_stream), std::ref(eo), std::ref(this->counter));
 
     this->blocking_wait.wait();
     eo.notify();

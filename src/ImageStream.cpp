@@ -59,7 +59,7 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
 
 }
 
-int ImageStream::getImage(TimePoint t, cv::Mat& out) {
+int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
@@ -69,7 +69,12 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out) {
 
     unsigned long index_to_get = this->cvm.searchNearestTime(t);
 
-    return this->getImage(index_to_get, out);
+    cv::Mat im = this->images[this->cvm.getCurrentIndex()];
+    im.copyTo(out);
+
+    tOut = this->cvm.getTimestamp(index_to_get);
+
+    return 0;
 
 }
 

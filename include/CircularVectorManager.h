@@ -12,6 +12,7 @@ public:
     unsigned long searchNearestTime(TimePoint t);
     unsigned long getInd(unsigned long i);
     unsigned int getCurrentIndex();
+    TimePoint getTimestamp(unsigned long i);
 
 private:
 

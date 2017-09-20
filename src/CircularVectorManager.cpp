@@ -37,7 +37,9 @@ unsigned long CircularVectorManager::searchNearestTime(TimePoint t) {
 
     unsigned long nearest_index = this->searchNearestTime(t, 0, this->size - 1);
 
-    return this->getInd(nearest_index);
+    return nearest_index;
+
+    //return this->getInd(nearest_index);
 
 }
 
@@ -114,4 +116,11 @@ unsigned long CircularVectorManager::getInd(unsigned long i) {
 
 unsigned int CircularVectorManager::getCurrentIndex() {
     return this->current_index;
+}
+
+TimePoint CircularVectorManager::getTimestamp(unsigned long i) {
+
+    //TODO Check for correct index
+
+    return this->timestamps[i];
 }
