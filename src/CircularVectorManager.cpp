@@ -16,7 +16,7 @@ void CircularVectorManager::storeTimestamp(TimePoint t) {
 
     this->timestamps[this->current_index] = t;
 
-    std::cout << this->current_index << std::endl;
+    //std::cout << this->current_index << std::endl;
 
     if (this->current_index == this->size - 1) {
         this->current_index = 0;

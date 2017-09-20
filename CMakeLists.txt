@@ -23,6 +23,7 @@ file(
         "src/ThreadsafeQueue.cpp"
         "src/EventObject.cpp"
         "src/BlockingWait.cpp"
+        "src/StreamingSimulation.cpp"
 )
 
 add_library(FxIS STATIC ${SRC_LIB} ${HEADERS})
@@ -51,6 +52,9 @@ target_link_libraries(qtest FxISWithOpenCV)
 
 add_executable(bwtest "spikes/bwtest.cpp")
 target_link_libraries(bwtest FxISWithOpenCV)
+
+add_executable(streamingsimtest "spikes/streamingsimtest.cpp")
+target_link_libraries(streamingsimtest FxISWithOpenCV)
 
 add_executable(imstreamtest "spikes/imstreamtest.cpp" ${HEADERS})
 target_link_libraries(imstreamtest FxISWithOpenCV)
