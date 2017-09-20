@@ -55,8 +55,8 @@ unsigned long CircularVectorManager::searchNearestTime(TimePoint t, unsigned lon
 
     if (input_size == 2) {
 
-        long physical_index_from = getInd(indexFrom);
-        long physical_index_to = getInd(indexTo);
+        auto physical_index_from = getInd(indexFrom);
+        auto physical_index_to = getInd(indexTo);
 
         TimePoint t1 = this->timestamps[physical_index_from];
         TimePoint t2 = this->timestamps[physical_index_to];
@@ -65,16 +65,16 @@ unsigned long CircularVectorManager::searchNearestTime(TimePoint t, unsigned lon
         std::chrono::nanoseconds d2 = absDuration(t, t2);
 
         if (d1 <= d2) {
-            return indexFrom;
+            return physical_index_from;
         }
-        return indexTo;
+        return physical_index_to;
 
     }
 
     unsigned long index_middle = indexFrom + input_size / 2;
 
     if (this->timestamps[getInd(index_middle)] == t) {
-        return index_middle;
+        return getInd(index_middle);
     }
 
     if (this->timestamps[getInd(index_middle)] < t) {
