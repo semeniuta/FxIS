@@ -40,6 +40,8 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, std::chrono::high_r
 
     this->cvm.storeTimestamp(t);
 
+    this->waiting_for_next_image.notify();
+
     return 0;
 
 }
@@ -60,6 +62,8 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
 }
 
 int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
+
+    this->waiting_for_next_image.wait();
 
     std::lock_guard<std::mutex> lock(this->mutex);
 

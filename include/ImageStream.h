@@ -6,6 +6,7 @@
 #include <chrono>
 #include "TimeMeasure.h"
 #include "CircularVectorManager.h"
+#include "BlockingWait.h"
 #include <opencv2/opencv.hpp>
 
 class ImageStream {
@@ -28,6 +29,7 @@ private:
     CircularVectorManager cvm;
     std::mutex mutex;
     bool ready;
+    BlockingWait waiting_for_next_image;
 
 
 
