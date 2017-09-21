@@ -54,12 +54,16 @@ void EventTimeCounter::onEventArrival() {
 }
 
 void EventTimeCounter::onProcessingEnd() {
-    auto now = currentTime();
-    this->d_processing = now - this->t_event;
+    this->t_processing_end = currentTime();
+    this->d_processing = this->t_processing_end - this->t_event;
 }
 
 TimePoint EventTimeCounter::getEventArrivalTimestamp() {
     return this->t_event;
+}
+
+TimePoint EventTimeCounter::getProcessingEndTimestamp() {
+    return this->t_processing_end;
 }
 
 std::chrono::nanoseconds EventTimeCounter::getInterarrivalTime() {

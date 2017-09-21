@@ -10,17 +10,7 @@ uint STREAM_SIZE = 10;
 
 int main() {
 
-//    cv::Mat im;
-//    im = cv::imread("../data/robotmac_1.png");
-//
-//    if (!im.data) {
-//        std::cout << "No image data" << std::endl;
-//        return -1;
-//    }
-//
-//    ImageStream im_stream(STREAM_SIZE, 640, 480, 1);
-
-    CircularTimestampVector cvm(STREAM_SIZE);
+    CircularTimestampVector ctv(STREAM_SIZE);
 
     TimePoint t0 = currentTime();
     std::chrono::milliseconds sleep_interval{10};
@@ -36,13 +26,12 @@ int main() {
         auto diff = ct.time_since_epoch().count() - t_to_find.time_since_epoch().count();
         std::cout << "t=" << ct.time_since_epoch().count() << " " << diff << std::endl;
 
-        cvm.storeTimestamp(ct);
-        //im_stream.storeImageData(im.data, ct);
+        ctv.storeTimestamp(ct);
     }
 
-    std::cout << "Current index: " << cvm.getCurrentIndex() << std::endl;
+    std::cout << "Current index: " << ctv.getCurrentIndex() << std::endl;
 
-    unsigned long res = cvm.searchNearestTime(t_to_find);
+    unsigned long res = ctv.searchNearestTime(t_to_find);
     std::cout << "res: " << res <<  std::endl;
 
     return 0;

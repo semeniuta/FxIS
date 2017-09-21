@@ -8,6 +8,8 @@
 
 int main() {
 
+    srand(time(nullptr));
+
     cv::Mat im1 = cv::imread("../data/robotmac_1.png");
     cv::Mat im2 = cv::imread("../data/robotmac_2.png");
 
@@ -36,10 +38,15 @@ int main() {
     std::vector<TimePoint> timestamps_2;
     unsigned long index_1;
     unsigned long index_2;
+
     std::chrono::milliseconds sleep_interval{100};
+
     for (int i = 0; i < 100; i++) {
 
-        std::this_thread::sleep_for(sleep_interval);
+        std::chrono::milliseconds random_flutuation{rand() % 160 - 80};
+        std::chrono::milliseconds total_sleep = sleep_interval + random_flutuation;
+        //std::cout << durationAsString(total_sleep) << std::endl;
+        std::this_thread::sleep_for(total_sleep);
 
         TimePoint t_now = currentTime();
         TimePoint t_im_1;

@@ -25,10 +25,12 @@ public:
     std::chrono::nanoseconds getInterarrivalTime();
     std::chrono::nanoseconds getProcessingTime();
     TimePoint getEventArrivalTimestamp();
+    TimePoint getProcessingEndTimestamp();
 
 private:
     bool first_time;
     TimePoint t_event;
+    TimePoint t_processing_end;
     TimePoint t_prev_event;
     std::chrono::nanoseconds d_interarrival;
     std::chrono::nanoseconds d_processing;

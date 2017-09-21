@@ -27,7 +27,7 @@ private:
     unsigned int num_channels;
     bool first_fill;
     std::vector<cv::Mat> images;
-    CircularTimestampVector cvm;
+    CircularTimestampVector cvec_t_event;
     std::mutex mutex;
     bool ready;
     BlockingWait waiting_for_next_image;

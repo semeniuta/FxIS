@@ -3,10 +3,10 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-ImageStream::ImageStream(uint size) : stream_size(size), cvm(size), ready(false) { }
+ImageStream::ImageStream(uint size) : stream_size(size), cvec_t_event(size), ready(false) { }
 
 ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
-        : stream_size(size), cvm(size) {
+        : stream_size(size), cvec_t_event(size) {
 
     this->init(width, height, numChannels);
 
@@ -36,9 +36,9 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, std::chrono::high_r
         return -1;
     }
 
-    memcpy(this->images[this->cvm.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
+    memcpy(this->images[this->cvec_t_event.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
 
-    this->cvm.storeTimestamp(t);
+    this->cvec_t_event.storeTimestamp(t);
 
     this->waiting_for_next_image.notify();
 
@@ -54,7 +54,7 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
         return -1;
     }
 
-    cv::Mat im = this->images[this->cvm.getCurrentIndex()];
+    cv::Mat im = this->images[this->cvec_t_event.getCurrentIndex()];
     im.copyTo(out);
 
     return 0;
@@ -71,12 +71,12 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
         return -1;
     }
 
-    unsigned long index_to_get = this->cvm.searchNearestTime(t);
+    unsigned long index_to_get = this->cvec_t_event.searchNearestTime(t);
 
-    cv::Mat im = this->images[this->cvm.getCurrentIndex()];
+    cv::Mat im = this->images[this->cvec_t_event.getCurrentIndex()];
     im.copyTo(out);
 
-    tOut = this->cvm.getTimestamp(index_to_get);
+    tOut = this->cvec_t_event.getTimestamp(index_to_get);
 
     return 0;
 
@@ -92,12 +92,12 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<TimePoint>& tim
         return -1;
     }
 
-    unsigned long index_to_get = this->cvm.searchNearestTime(t);
+    unsigned long index_to_get = this->cvec_t_event.searchNearestTime(t);
 
-    cv::Mat im = this->images[this->cvm.getCurrentIndex()];
+    cv::Mat im = this->images[this->cvec_t_event.getCurrentIndex()];
     im.copyTo(out);
 
-    this->cvm.contentSnapshot(timestamps);
+    this->cvec_t_event.contentSnapshot(timestamps);
 
     index = index_to_get;
 

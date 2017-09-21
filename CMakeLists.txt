@@ -56,8 +56,8 @@ target_link_libraries(bwtest FxISWithOpenCV)
 add_executable(streamingsimtest "spikes/streamingsimtest.cpp")
 target_link_libraries(streamingsimtest FxISWithOpenCV)
 
-add_executable(imstreamtest "spikes/imstreamtest.cpp" ${HEADERS})
-target_link_libraries(imstreamtest FxISWithOpenCV)
+add_executable(ctvfindtest "spikes/ctvfindtest.cpp" ${HEADERS})
+target_link_libraries(ctvfindtest FxISWithOpenCV)
 
 include_directories($ENV{VIMBA_DIR}/VimbaCPP/Examples)
 

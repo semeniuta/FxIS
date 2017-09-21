@@ -14,15 +14,13 @@ void simulate_streaming(
 ) {
 
     unsigned int idx = 0;
-    int sz = (int)images.size();
+    auto sz = (int)images.size();
     while (true) {
-
-        // std::cout << std::this_thread::get_id() << " t_ia=" << counter.getInterarrivalTime().count() << std::endl;
 
         std::this_thread::sleep_for(interval);
         counter.onEventArrival();
 
-        imStream.storeImageData(images[idx].data, currentTime());
+        imStream.storeImageData(images[idx].data, counter.getEventArrivalTimestamp());
 
         idx == sz - 1 ? (idx = 0) : (idx++);
 
