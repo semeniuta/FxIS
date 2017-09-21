@@ -92,7 +92,7 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
 
 }
 
-int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<std::vector<TimePoint>>& timestamps, unsigned long& index) {
+int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<std::vector<TimePoint>>& timestamps, unsigned long& index, TimePointsPair& timespan) {
 
     this->waiting_for_next_image.wait();
 
@@ -115,7 +115,8 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<std::vector<Tim
 
     auto t1 = currentTime();
 
-    //std::cout << "t=" << durationAsString(t1 - t0) << std::endl;
+    timespan.first = t0;
+    timespan.second = t1;
 
     return 0;
 

@@ -9,6 +9,7 @@
 #include <ratio>
 
 using TimePoint = std::chrono::high_resolution_clock::time_point;
+using TimePointsPair = std::pair<TimePoint, TimePoint>;
 using ulong = unsigned long;
 
 TimePoint currentTime();

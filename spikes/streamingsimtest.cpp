@@ -51,12 +51,15 @@ int main() {
         TimePoint t_im_1;
         TimePoint t_im_2;
 
+        TimePointsPair getim1_span;
+        TimePointsPair getim2_span;
+
         TimePoint git0 = currentTime();
-        im_stream_1.getImage(t_now, im_1, timestamps_1, index_1);
+        im_stream_1.getImage(t_now, im_1, timestamps_1, index_1, getim1_span);
         TimePoint git1 = currentTime();
         std::cout << durationAsString(git1 - git0) << " ";
 
-        im_stream_2.getImage(t_now, im_2, timestamps_2, index_2);
+        im_stream_2.getImage(t_now, im_2, timestamps_2, index_2, getim2_span);
 
 
         t_im_1 = timestamps_1[index_1][0];
