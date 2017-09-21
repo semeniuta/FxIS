@@ -18,7 +18,7 @@ public:
     int storeImageData(unsigned char* imageDataPtr, TimePoint t);
     int getImage(unsigned long index, cv::Mat& out);
     int getImage(TimePoint t, cv::Mat& out, TimePoint& tOut);
-    int getImage(TimePoint t, cv::Mat& out, std::vector<TimePoint>& timestamps, unsigned long& index);
+    int getImage(TimePoint t, cv::Mat& out, std::vector<std::vector<TimePoint>>& timestamps, unsigned long& index);
 
 private:
     unsigned int stream_size;
@@ -27,7 +27,7 @@ private:
     unsigned int num_channels;
     bool first_fill;
     std::vector<cv::Mat> images;
-    CircularTimestampVector cvec_t_event;
+    CircularTimestampVector ctv;
     std::mutex mutex;
     bool ready;
     BlockingWait waiting_for_next_image;

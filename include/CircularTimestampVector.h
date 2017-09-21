@@ -8,23 +8,23 @@
 class CircularTimestampVector {
 
 public:
-    CircularTimestampVector(unsigned int vector_size);
-    void storeTimestamp(TimePoint t);
-    unsigned long searchNearestTime(TimePoint t);
+    CircularTimestampVector(unsigned int vector_size, unsigned int numTimestamps);
+    void storeTimestamp(TimePoint t, unsigned int id);
+    unsigned long searchNearestTime(TimePoint t, unsigned int id);
     unsigned int getCurrentIndex();
-    TimePoint getTimestamp(unsigned long i);
-    void contentSnapshot(std::vector<TimePoint>& out);
+    TimePoint getTimestamp(unsigned long i, unsigned int id);
+    void contentSnapshot(std::vector<std::vector<TimePoint>>& out);
 
 private:
 
     unsigned int size;
+    unsigned int n_timestamps;
     unsigned int current_index;
-    std::vector<TimePoint> timestamps;
+    std::vector<std::vector<TimePoint>> timestamps;
     bool first_fill;
-    //std::mutex mutex;
 
     unsigned long getInd(unsigned long i);
-    unsigned long searchNearestTime(TimePoint t, unsigned long indexFrom, unsigned long indexTo);
+    unsigned long searchNearestTime(TimePoint t, unsigned int id, unsigned long indexFrom, unsigned long indexTo);
 
 };
 

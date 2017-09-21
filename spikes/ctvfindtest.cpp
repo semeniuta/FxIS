@@ -10,7 +10,7 @@ uint STREAM_SIZE = 10;
 
 int main() {
 
-    CircularTimestampVector ctv(STREAM_SIZE);
+    CircularTimestampVector ctv(STREAM_SIZE, 1);
 
     TimePoint t0 = currentTime();
     std::chrono::milliseconds sleep_interval{10};
@@ -26,12 +26,12 @@ int main() {
         auto diff = ct.time_since_epoch().count() - t_to_find.time_since_epoch().count();
         std::cout << "t=" << ct.time_since_epoch().count() << " " << diff << std::endl;
 
-        ctv.storeTimestamp(ct);
+        ctv.storeTimestamp(ct, 0);
     }
 
     std::cout << "Current index: " << ctv.getCurrentIndex() << std::endl;
 
-    unsigned long res = ctv.searchNearestTime(t_to_find);
+    unsigned long res = ctv.searchNearestTime(t_to_find, 0);
     std::cout << "res: " << res <<  std::endl;
 
     return 0;

@@ -1,22 +1,31 @@
 #include "CircularTimestampVector.h"
 #include <iostream>
 
-CircularTimestampVector::CircularTimestampVector(unsigned int vector_size) : size(vector_size) {
+CircularTimestampVector::CircularTimestampVector(unsigned int vector_size, unsigned int numTimestamps)
+        : size(vector_size), n_timestamps(numTimestamps) {
 
     for (int i = 0; i < this->size; i++) {
 
-        std::chrono::time_point<std::chrono::high_resolution_clock> tp;
-        this->timestamps.push_back(tp);
+        std::vector<TimePoint> tp_collection;
+
+        for (int j = 0; j < this->n_timestamps; j++) {
+            TimePoint tp;
+            tp_collection.push_back(tp);
+        }
+
+        this->timestamps.push_back(tp_collection);
 
     }
 
 }
 
-void CircularTimestampVector::storeTimestamp(TimePoint t) {
+void CircularTimestampVector::storeTimestamp(TimePoint t, unsigned int id) {
 
-    //std::lock_guard<std::mutex> lock(this->mutex);
+    if (id >= this->n_timestamps) {
+        throw std::range_error("Timestamp ID outside of the bounds");
+    }
 
-    this->timestamps[this->current_index] = t;
+    this->timestamps[this->current_index][id] = t;
 
     if (this->current_index == this->size - 1) {
         this->current_index = 0;
@@ -29,21 +38,23 @@ void CircularTimestampVector::storeTimestamp(TimePoint t) {
 
 }
 
-unsigned long CircularTimestampVector::searchNearestTime(TimePoint t) {
+unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned int id) {
 
-    //std::lock_guard<std::mutex> lock(this->mutex);
+    if (id >= this->n_timestamps) {
+        throw std::range_error("Timestamp ID outside of the bounds");
+    }
 
     if (this->timestamps.empty()) {
         throw std::logic_error("Timestamps vector is empty");
     }
 
-    unsigned long nearest_index = this->searchNearestTime(t, 0, this->size - 1);
+    unsigned long nearest_index = this->searchNearestTime(t, id, 0, this->size - 1);
 
     return nearest_index;
 
 }
 
-unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned long indexFrom, unsigned long indexTo) {
+unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned int id, unsigned long indexFrom, unsigned long indexTo) {
 
     if (indexFrom > indexTo) {
         throw std::range_error("indexFrom > indexTo");
@@ -60,8 +71,8 @@ unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned l
         auto physical_index_from = getInd(indexFrom);
         auto physical_index_to = getInd(indexTo);
 
-        TimePoint t1 = this->timestamps[physical_index_from];
-        TimePoint t2 = this->timestamps[physical_index_to];
+        TimePoint t1 = this->timestamps[physical_index_from][id];
+        TimePoint t2 = this->timestamps[physical_index_to][id];
 
         std::chrono::nanoseconds d1 = absDuration(t, t1);
         std::chrono::nanoseconds d2 = absDuration(t, t2);
@@ -75,14 +86,14 @@ unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned l
 
     unsigned long index_middle = indexFrom + input_size / 2;
 
-    if (this->timestamps[getInd(index_middle)] == t) {
+    if (this->timestamps[getInd(index_middle)][id] == t) {
         return getInd(index_middle);
     }
 
-    if (this->timestamps[getInd(index_middle)] < t) {
-        return searchNearestTime(t, index_middle, indexTo);
+    if (this->timestamps[getInd(index_middle)][id] < t) {
+        return searchNearestTime(t, id, index_middle, indexTo);
     } else {
-        return searchNearestTime(t, indexFrom, index_middle);
+        return searchNearestTime(t, id, indexFrom, index_middle);
     }
 
 }
@@ -114,21 +125,19 @@ unsigned long CircularTimestampVector::getInd(unsigned long i) {
 
 unsigned int CircularTimestampVector::getCurrentIndex() {
 
-    //std::lock_guard<std::mutex> lock(this->mutex);
-
     return this->current_index;
 }
 
-TimePoint CircularTimestampVector::getTimestamp(unsigned long i) {
+TimePoint CircularTimestampVector::getTimestamp(unsigned long i, unsigned int id) {
 
     //std::lock_guard<std::mutex> lock(this->mutex);
 
     //TODO Check for correct index
 
-    return this->timestamps[i];
+    return this->timestamps[i][id];
 }
 
-void CircularTimestampVector::contentSnapshot(std::vector<TimePoint>& out) {
+void CircularTimestampVector::contentSnapshot(std::vector<std::vector<TimePoint>>& out) {
 
     out = this->timestamps;
 
