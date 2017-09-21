@@ -6,11 +6,6 @@
 #include <thread>
 #include <opencv2/opencv.hpp>
 
-void run_streaming_sim(StreamingSimulation& stream_sim) {
-    stream_sim();
-}
-
-
 int main() {
 
     cv::Mat im1 = cv::imread("../data/robotmac_1.png");
@@ -31,17 +26,16 @@ int main() {
     StreamingSimulation streaming_sim_1(images1, 20, bw1, im_stream_1);
     StreamingSimulation streaming_sim_2(images2, 20, bw2, im_stream_2);
 
-    //std::thread t1(&StreamingSimulation::operator(), streaming_sim_1);
-    //std::thread t1(run_streaming_sim, std::ref(streaming_sim_1));
     std::thread t1(streaming_sim_1);
-
-    //std::thread t2(&StreamingSimulation::operator(), streaming_sim_2);
-    //std::thread t2(run_streaming_sim, std::ref(streaming_sim_2));
     std::thread t2(streaming_sim_2);
 
 
     cv::Mat im_1;
     cv::Mat im_2;
+    std::vector<TimePoint> timestamps_1;
+    std::vector<TimePoint> timestamps_2;
+    unsigned long index_1;
+    unsigned long index_2;
     std::chrono::milliseconds sleep_interval{100};
     for (int i = 0; i < 100; i++) {
 
@@ -50,12 +44,18 @@ int main() {
         TimePoint t_now = currentTime();
         TimePoint t_im_1;
         TimePoint t_im_2;
-        im_stream_1.getImage(t_now, im_1, t_im_1);
-        im_stream_2.getImage(t_now, im_2, t_im_2);
+        //im_stream_1.getImage(t_now, im_1, t_im_1);
+        //im_stream_2.getImage(t_now, im_2, t_im_2);
+
+        im_stream_1.getImage(t_now, im_1, timestamps_1, index_1);
+        im_stream_2.getImage(t_now, im_2, timestamps_2, index_2);
+        t_im_1 = timestamps_1[index_1];
+        t_im_2 = timestamps_2[index_2];
 
         std::cout << "Got image " << i << ": ";
         std::cout << durationAsString(absDuration(t_now, t_im_1)) << ", ";
-        std::cout << durationAsString(absDuration(t_now, t_im_2)) << std::endl;
+        std::cout << durationAsString(absDuration(t_now, t_im_2)) << ", ";
+        std::cout << durationAsString(absDuration(t_im_1, t_im_2)) << std::endl;
 
     }
 

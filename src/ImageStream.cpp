@@ -82,3 +82,27 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
 
 }
 
+int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<TimePoint>& timestamps, unsigned long& index) {
+
+    this->waiting_for_next_image.wait();
+
+    std::lock_guard<std::mutex> lock(this->mutex);
+
+    if (!this->ready) {
+        return -1;
+    }
+
+    unsigned long index_to_get = this->cvm.searchNearestTime(t);
+
+    cv::Mat im = this->images[this->cvm.getCurrentIndex()];
+    im.copyTo(out);
+
+    this->cvm.contentSnapshot(timestamps);
+
+    index = index_to_get;
+
+
+    return 0;
+
+}
+

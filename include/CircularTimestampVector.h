@@ -13,12 +13,13 @@ public:
     unsigned long searchNearestTime(TimePoint t);
     unsigned int getCurrentIndex();
     TimePoint getTimestamp(unsigned long i);
+    void contentSnapshot(std::vector<TimePoint>& out);
 
 private:
 
     unsigned int size;
     unsigned int current_index;
-    std::vector<std::chrono::high_resolution_clock::time_point> timestamps;
+    std::vector<TimePoint> timestamps;
     bool first_fill;
     //std::mutex mutex;
 
