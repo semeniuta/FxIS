@@ -19,7 +19,7 @@ file(
         "src/MatMaker.cpp"
         "src/ImageStream.cpp"
         "src/TimeMeasure.cpp"
-        "src/CircularVectorManager.cpp"
+        "src/CircularTimestampVector.cpp"
         "src/ThreadsafeQueue.cpp"
         "src/EventObject.cpp"
         "src/BlockingWait.cpp"

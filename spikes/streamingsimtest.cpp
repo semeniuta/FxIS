@@ -44,6 +44,7 @@ int main() {
     cv::Mat im_2;
     std::chrono::milliseconds sleep_interval{100};
     for (int i = 0; i < 100; i++) {
+
         std::this_thread::sleep_for(sleep_interval);
 
         TimePoint t_now = currentTime();
@@ -51,12 +52,10 @@ int main() {
         TimePoint t_im_2;
         im_stream_1.getImage(t_now, im_1, t_im_1);
         im_stream_2.getImage(t_now, im_2, t_im_2);
-        //im_stream_1.getImage(5, im);
-        std::cout << "Got image" << i << ": ";
+
+        std::cout << "Got image " << i << ": ";
         std::cout << durationAsString(absDuration(t_now, t_im_1)) << ", ";
         std::cout << durationAsString(absDuration(t_now, t_im_2)) << std::endl;
-
-        //std::cout << absDuration(t_now, t_im).count() << std::endl;
 
     }
 

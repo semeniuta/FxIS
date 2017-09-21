@@ -4,7 +4,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "CircularVectorManager.h"
+#include "CircularTimestampVector.h"
 
 uint STREAM_SIZE = 10;
 
@@ -20,7 +20,7 @@ int main() {
 //
 //    ImageStream im_stream(STREAM_SIZE, 640, 480, 1);
 
-    CircularVectorManager cvm(STREAM_SIZE);
+    CircularTimestampVector cvm(STREAM_SIZE);
 
     TimePoint t0 = currentTime();
     std::chrono::milliseconds sleep_interval{10};

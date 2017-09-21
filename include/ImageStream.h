@@ -5,7 +5,7 @@
 #include <mutex>
 #include <chrono>
 #include "TimeMeasure.h"
-#include "CircularVectorManager.h"
+#include "CircularTimestampVector.h"
 #include "BlockingWait.h"
 #include <opencv2/opencv.hpp>
 
@@ -26,7 +26,7 @@ private:
     unsigned int num_channels;
     bool first_fill;
     std::vector<cv::Mat> images;
-    CircularVectorManager cvm;
+    CircularTimestampVector cvm;
     std::mutex mutex;
     bool ready;
     BlockingWait waiting_for_next_image;

@@ -1,7 +1,7 @@
-#include "CircularVectorManager.h"
+#include "CircularTimestampVector.h"
 #include <iostream>
 
-CircularVectorManager::CircularVectorManager(unsigned int vector_size) : size(vector_size) {
+CircularTimestampVector::CircularTimestampVector(unsigned int vector_size) : size(vector_size) {
 
     for (int i = 0; i < this->size; i++) {
 
@@ -12,11 +12,11 @@ CircularVectorManager::CircularVectorManager(unsigned int vector_size) : size(ve
 
 }
 
-void CircularVectorManager::storeTimestamp(TimePoint t) {
+void CircularTimestampVector::storeTimestamp(TimePoint t) {
+
+    //std::lock_guard<std::mutex> lock(this->mutex);
 
     this->timestamps[this->current_index] = t;
-
-    //std::cout << this->current_index << std::endl;
 
     if (this->current_index == this->size - 1) {
         this->current_index = 0;
@@ -29,7 +29,9 @@ void CircularVectorManager::storeTimestamp(TimePoint t) {
 
 }
 
-unsigned long CircularVectorManager::searchNearestTime(TimePoint t) {
+unsigned long CircularTimestampVector::searchNearestTime(TimePoint t) {
+
+    //std::lock_guard<std::mutex> lock(this->mutex);
 
     if (this->timestamps.empty()) {
         throw std::logic_error("Timestamps vector is empty");
@@ -39,11 +41,9 @@ unsigned long CircularVectorManager::searchNearestTime(TimePoint t) {
 
     return nearest_index;
 
-    //return this->getInd(nearest_index);
-
 }
 
-unsigned long CircularVectorManager::searchNearestTime(TimePoint t, unsigned long indexFrom, unsigned long indexTo) {
+unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned long indexFrom, unsigned long indexTo) {
 
     if (indexFrom > indexTo) {
         throw std::range_error("indexFrom > indexTo");
@@ -88,7 +88,7 @@ unsigned long CircularVectorManager::searchNearestTime(TimePoint t, unsigned lon
 }
 
 
-unsigned long CircularVectorManager::getInd(unsigned long i) {
+unsigned long CircularTimestampVector::getInd(unsigned long i) {
 
     if (this->first_fill) {
 
@@ -104,21 +104,24 @@ unsigned long CircularVectorManager::getInd(unsigned long i) {
     }
 
     unsigned long real_index;
-    if (i <= (this->size - 1 - this->current_index)) {
-        // Part of the vector after current_index
+    if (i <= (this->size - 1 - this->current_index)) { // Part of the vector after current_index
         real_index = this->current_index + i;
-    } else {
-        // Part of the vector before current_index
+    } else { // Part of the vector before current_index
         real_index = i - this->size + this->current_index;
     }
     return real_index;
 }
 
-unsigned int CircularVectorManager::getCurrentIndex() {
+unsigned int CircularTimestampVector::getCurrentIndex() {
+
+    //std::lock_guard<std::mutex> lock(this->mutex);
+
     return this->current_index;
 }
 
-TimePoint CircularVectorManager::getTimestamp(unsigned long i) {
+TimePoint CircularTimestampVector::getTimestamp(unsigned long i) {
+
+    //std::lock_guard<std::mutex> lock(this->mutex);
 
     //TODO Check for correct index
 

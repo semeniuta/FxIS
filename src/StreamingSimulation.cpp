@@ -5,13 +5,19 @@
 
 const int ONE_BILLION = 1000000000;
 
-void simulate_streaming(std::chrono::nanoseconds interval, std::vector<cv::Mat>& images, ImageStream& imStream, EventObject& eo, EventTimeCounter& counter) {
+void simulate_streaming(
+        std::chrono::nanoseconds interval,
+        std::vector<cv::Mat>& images,
+        ImageStream& imStream,
+        EventObject& eo,
+        EventTimeCounter& counter
+) {
 
     unsigned int idx = 0;
     int sz = (int)images.size();
     while (true) {
 
-        //std::cout << "t_ia=" << counter.getInterarrivalTime().count() << std::endl;
+        // std::cout << std::this_thread::get_id() << " t_ia=" << counter.getInterarrivalTime().count() << std::endl;
 
         std::this_thread::sleep_for(interval);
         counter.onEventArrival();
