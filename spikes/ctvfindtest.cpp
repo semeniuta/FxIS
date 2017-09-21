@@ -27,6 +27,7 @@ int main() {
         std::cout << "t=" << ct.time_since_epoch().count() << " " << diff << std::endl;
 
         ctv.storeTimestamp(ct, 0);
+        ctv.advance();
     }
 
     std::cout << "Current index: " << ctv.getCurrentIndex() << std::endl;

@@ -27,6 +27,10 @@ void CircularTimestampVector::storeTimestamp(TimePoint t, unsigned int id) {
 
     this->timestamps[this->current_index][id] = t;
 
+}
+
+unsigned int CircularTimestampVector::advance() {
+
     if (this->current_index == this->size - 1) {
         this->current_index = 0;
         if (this->first_fill) {
@@ -35,6 +39,8 @@ void CircularTimestampVector::storeTimestamp(TimePoint t, unsigned int id) {
     } else {
         this->current_index++;
     }
+
+    return this->current_index;
 
 }
 

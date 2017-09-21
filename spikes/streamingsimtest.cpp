@@ -45,19 +45,24 @@ int main() {
 
         std::chrono::milliseconds random_flutuation{rand() % 160 - 80};
         std::chrono::milliseconds total_sleep = sleep_interval + random_flutuation;
-        //std::cout << durationAsString(total_sleep) << std::endl;
         std::this_thread::sleep_for(total_sleep);
 
         TimePoint t_now = currentTime();
         TimePoint t_im_1;
         TimePoint t_im_2;
-        //im_stream_1.getImage(t_now, im_1, t_im_1);
-        //im_stream_2.getImage(t_now, im_2, t_im_2);
 
+        TimePoint git0 = currentTime();
         im_stream_1.getImage(t_now, im_1, timestamps_1, index_1);
+        TimePoint git1 = currentTime();
+        std::cout << durationAsString(git1 - git0) << " ";
+
         im_stream_2.getImage(t_now, im_2, timestamps_2, index_2);
+
+
         t_im_1 = timestamps_1[index_1][0];
         t_im_2 = timestamps_2[index_2][0];
+
+        std::cout << durationAsString(timestamps_1[index_1][1] - timestamps_1[index_1][0]) << " ";
 
         std::cout << "Got image " << i << ": ";
         std::cout << durationAsString(absDuration(t_now, t_im_1)) << ", ";

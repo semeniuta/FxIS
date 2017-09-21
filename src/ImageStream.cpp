@@ -3,10 +3,18 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-ImageStream::ImageStream(uint size) : stream_size(size), ctv(size, 1), ready(false) { }
+const unsigned int NUM_TIMESTAMPS = 2;
+
+/*
+ * 0 - frame arrived
+ * 1 - frame got processed (for now: stored)
+ *
+ * */
+
+ImageStream::ImageStream(uint size) : stream_size(size), ctv(size, NUM_TIMESTAMPS), ready(false) { }
 
 ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
-        : stream_size(size), ctv(size, 1) {
+        : stream_size(size), ctv(size, NUM_TIMESTAMPS) {
 
     this->init(width, height, numChannels);
 
@@ -28,7 +36,7 @@ void ImageStream::init(uint width, uint height, uint numChannels) {
 
 }
 
-int ImageStream::storeImageData(unsigned char* imageDataPtr, std::chrono::high_resolution_clock::time_point t) {
+int ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
@@ -39,6 +47,8 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, std::chrono::high_r
     memcpy(this->images[this->ctv.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     this->ctv.storeTimestamp(t, 0);
+    this->ctv.storeTimestamp(currentTime(), 1);
+    this->ctv.advance();
 
     this->waiting_for_next_image.notify();
 
@@ -86,6 +96,8 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<std::vector<Tim
 
     this->waiting_for_next_image.wait();
 
+    auto t0 = currentTime();
+
     std::lock_guard<std::mutex> lock(this->mutex);
 
     if (!this->ready) {
@@ -101,6 +113,9 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, std::vector<std::vector<Tim
 
     index = index_to_get;
 
+    auto t1 = currentTime();
+
+    //std::cout << "t=" << durationAsString(t1 - t0) << std::endl;
 
     return 0;
 

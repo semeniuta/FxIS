@@ -14,6 +14,7 @@ public:
     unsigned int getCurrentIndex();
     TimePoint getTimestamp(unsigned long i, unsigned int id);
     void contentSnapshot(std::vector<std::vector<TimePoint>>& out);
+    unsigned int advance();
 
 private:
 
