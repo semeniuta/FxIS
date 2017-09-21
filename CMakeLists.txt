@@ -24,6 +24,7 @@ file(
         "src/EventObject.cpp"
         "src/BlockingWait.cpp"
         "src/StreamingSimulation.cpp"
+        "src/Serialize.cpp"
 )
 
 add_library(FxIS STATIC ${SRC_LIB} ${HEADERS})
