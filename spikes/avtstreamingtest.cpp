@@ -37,10 +37,25 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    ImageStream image_stream(20);
+    BlockingWait bw1;
+    BlockingWait bw2;
 
-    AVTStreaming cam1_streaming(0, N_FRAMES, image_stream);
-    AVTStreaming cam2_streaming(1, N_FRAMES, image_stream);
+    ImageStream image_stream_1(20);
+    ImageStream image_stream_2(20);
+
+    AVTStreaming cam1_streaming(0, N_FRAMES, image_stream_1, bw1);
+    AVTStreaming cam2_streaming(1, N_FRAMES, image_stream_2, bw2);
+
+    std::thread t1(cam1_streaming);
+    std::thread t2(cam2_streaming);
+
+    std::cout<< "Press <enter> to stop all the streaming threads...\n" ;
+    getchar();
+    bw1.notify();
+    bw2.notify();
+
+    t1.join();
+    t2.join();
 
     sys.Shutdown();
     std::cout << "Shutting down normally\n";

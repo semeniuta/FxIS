@@ -11,8 +11,6 @@ void AVTFrameObserverImageStream::processFrame(FramePtr frame) {
 
     this->counter.onEventArrival();
 
-    std::cout << durationAsString(this->counter.getInterarrivalTime()) << ", " << durationAsString(this->counter.getProcessingTime()) << std::endl;
-
     VmbErrorType err;
 
     unsigned char* image_buffer;

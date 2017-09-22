@@ -3,8 +3,8 @@
 #include "MatMaker.h"
 #include <iostream>
 
-AVTStreaming::AVTStreaming(int camIndex, unsigned long numFrames, ImageStream& imStream)
-        : image_stream(imStream), frames(numFrames) {
+AVTStreaming::AVTStreaming(int camIndex, unsigned long numFrames, ImageStream& imStream, BlockingWait& bw)
+        : image_stream(imStream), frames(numFrames), blocking_wait(bw) {
 
     VmbErrorType err;
     CameraPtrVector cameras;
@@ -44,6 +44,34 @@ AVTStreaming::AVTStreaming(int camIndex, unsigned long numFrames, ImageStream& i
     err = announceFrames(this->cam, frames, observer);
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when announcing frames");
+    }
+
+}
+
+void AVTStreaming::operator()() {
+
+    VmbErrorType err;
+
+    err = cam->StartCapture();
+    if (err != VmbErrorSuccess) {
+        throw std::runtime_error("Exception when starting capture");
+    }
+
+    err = queueFrames(this->cam, this->frames);
+    if (err != VmbErrorSuccess) {
+        throw std::runtime_error("Exception when queueing frames");
+    }
+
+    err = acquisitionStart(cam);
+    if (err != VmbErrorSuccess) {
+        throw std::runtime_error("Exception when starting acquisition");
+    }
+
+    this->blocking_wait.wait();
+
+    err = acquisitionStop(cam);
+    if (err != VmbErrorSuccess) {
+        throw std::runtime_error("Exception when stopping acquisition");
     }
 
 }
