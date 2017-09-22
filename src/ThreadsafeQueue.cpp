@@ -1,4 +1,5 @@
 #include "ThreadsafeQueue.h"
+#include <iostream>
 
 template <typename T>
 void ThreadsafeQueue<T>::pop(T& result) {
@@ -15,11 +16,9 @@ void ThreadsafeQueue<T>::pop(T& result) {
 template <typename T>
 void ThreadsafeQueue<T>::push(T val) {
 
-    std::unique_lock<std::mutex> lk(this->mx);
+    std::lock_guard<std::mutex> lk(this->mx);
 
     this->q.push(val);
-
-    lk.unlock();
 
     this->cond_var.notify_one();
 

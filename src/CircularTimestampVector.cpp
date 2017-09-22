@@ -2,7 +2,7 @@
 #include <iostream>
 
 CircularTimestampVector::CircularTimestampVector(unsigned int vector_size, unsigned int numTimestamps)
-        : size(vector_size), n_timestamps(numTimestamps) {
+        : size(vector_size), n_timestamps(numTimestamps), current_index(0), first_fill(true) {
 
     for (int i = 0; i < this->size; i++) {
 
@@ -54,7 +54,15 @@ unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned i
         throw std::logic_error("Timestamps vector is empty");
     }
 
-    unsigned long nearest_index = this->searchNearestTime(t, id, 0, this->size - 1);
+    unsigned long index_to;
+
+    if (this->first_fill) {
+        index_to = this->current_index - 1;
+    } else {
+        index_to = this->size - 1;
+    }
+
+    unsigned long nearest_index = this->searchNearestTime(t, id, 0, index_to);
 
     return nearest_index;
 

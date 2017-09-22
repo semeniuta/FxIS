@@ -28,10 +28,10 @@ file(
 )
 
 add_library(FxIS STATIC ${SRC_LIB} ${HEADERS})
-target_link_libraries(FxIS VimbaCPP ${OpenCV_LIBS})
+target_link_libraries(FxIS VimbaCPP ${OpenCV_LIBS} -lpthread)
 
 add_library(FxISWithOpenCV STATIC ${SRC_LIB_JUST_OPENCV} ${HEADERS})
-target_link_libraries(FxISWithOpenCV ${OpenCV_LIBS})
+target_link_libraries(FxISWithOpenCV ${OpenCV_LIBS} -lpthread)
 
 add_executable(fxis-greet "spikes/greet.cpp" ${HEADERS})
 target_link_libraries(fxis-greet FxIS)

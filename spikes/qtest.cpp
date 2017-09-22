@@ -13,9 +13,12 @@ void sender_thread(ThreadsafeQueue<int>& q, EventObject& ready) {
     for (int i = 0; i < 10; i++) {
         std::this_thread::sleep_for(sleep_interval);
         q.push(i);
+        //std::cout << "Pushed " << i << std::endl;
     }
 
     ready.notify();
+
+    std::cout << "Exiting sender_thread." << std::endl;
 
 }
 
@@ -28,6 +31,7 @@ void receiver_thread(ThreadsafeQueue<int>& q, EventObject& ready) {
         std::cout << "Got " << num << std::endl;
 
         if (ready.hasOccured()) {
+            std::cout << "Breaking" << std::endl;
             break;
         }
 

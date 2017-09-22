@@ -44,7 +44,6 @@ private:
     ImageStream& image_stream;
     CameraPtr cam;
     FramePtrVector frames;
-    //std::condition_variable trigger_stop;
 
 };
 

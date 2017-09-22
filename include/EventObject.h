@@ -9,6 +9,7 @@ class EventObject {
 
 public:
 
+    EventObject();
     void notify();
     bool hasOccured();
     TimePoint getTimestamp();

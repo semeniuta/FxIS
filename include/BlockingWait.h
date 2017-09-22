@@ -3,6 +3,7 @@
 #define BLOCKINGWAIT_H
 
 #include <mutex>
+#include <condition_variable>
 
 class BlockingWait {
 
