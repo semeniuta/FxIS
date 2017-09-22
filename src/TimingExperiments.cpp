@@ -3,6 +3,7 @@
 #include <string>
 #include <thread>
 #include <random>
+#include <fstream>
 
 void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, std::string &res) {
 
@@ -31,9 +32,17 @@ void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, std::string &re
 
 }
 
-//void saveCSV() {
-//
-//}
+void saveCSV(const std::string& filename, const std::string& data, const std::string& header) {
+
+    std::ofstream f;
+    f.open(filename);
+
+    f << header << std::endl;
+    f << data;
+
+    f.close();
+
+}
 
 std::chrono::nanoseconds getRandomDuration(std::chrono::nanoseconds a, std::chrono::nanoseconds b) {
 

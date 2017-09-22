@@ -20,4 +20,6 @@ void performImageStreamReadExperiment(
         std::string& csv_qspans_2
 );
 
+void saveCSV(const std::string& filename, const std::string& data, const std::string& header);
+
 #endif

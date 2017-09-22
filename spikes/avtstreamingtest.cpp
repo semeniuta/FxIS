@@ -90,6 +90,11 @@ int main(int argc, char* argv[])
     std::cout << "qs_2,qe_2" << std::endl;
     std::cout << csv_qspans_2 << std::endl;
 
+    saveCSV("timestamps_1.csv", csv_timestamps_1, "start_1,end_1");
+    saveCSV("timestamps_2.csv", csv_timestamps_1, "start_2,end_2");
+    saveCSV("qspans_1.csv", csv_timestamps_1, "qs_1,qe_1");
+    saveCSV("qspans_2.csv", csv_timestamps_1, "qs_2,qe_2");
+
     return 0;
 
 }
