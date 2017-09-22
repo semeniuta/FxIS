@@ -9,6 +9,7 @@
 #include "AVTFrameObserverVideoStream.h"
 #include "AVTFrameObserverImageStream.h"
 #include "ImageStream.h"
+#include "TimingExperiments.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include "Common/StreamSystemInfo.h"
@@ -49,6 +50,23 @@ int main(int argc, char* argv[])
     std::thread t1(cam1_streaming);
     std::thread t2(cam2_streaming);
 
+    std::string csv_timestamps_1;
+    std::string csv_timestamps_2;
+    std::string csv_qspans_1;
+    std::string csv_qspans_2;
+
+    performImageStreamReadExperiment(
+        image_stream_1,
+        image_stream_2,
+        50,
+        std::chrono::milliseconds{150},
+        std::chrono::milliseconds{50},
+        csv_timestamps_1,
+        csv_timestamps_2,
+        csv_qspans_1,
+        csv_qspans_2
+    );
+
     std::cout<< "Press <enter> to stop all the streaming threads...\n" ;
     getchar();
     bw1.notify();
@@ -59,6 +77,18 @@ int main(int argc, char* argv[])
 
     sys.Shutdown();
     std::cout << "Shutting down normally\n";
+
+    std::cout << "start_1,end_1" << std::endl;
+    std::cout << csv_timestamps_1 << std::endl;
+
+    std::cout << "start_2,end_2" << std::endl;
+    std::cout << csv_timestamps_2 << std::endl;
+
+    std::cout << "qs_1,qe_1" << std::endl;
+    std::cout << csv_qspans_1 << std::endl;
+
+    std::cout << "qs_2,qe_2" << std::endl;
+    std::cout << csv_qspans_2 << std::endl;
 
     return 0;
 
