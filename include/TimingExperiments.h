@@ -4,7 +4,7 @@
 #include "TimeMeasure.h"
 #include "ImageStream.h"
 
-void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, std::string &res);
+void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, unsigned long ci, std::string &res);
 
 std::chrono::nanoseconds getRandomDuration(std::chrono::nanoseconds a, std::chrono::nanoseconds b);
 

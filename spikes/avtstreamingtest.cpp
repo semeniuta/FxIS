@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     performImageStreamReadExperiment(
         image_stream_1,
         image_stream_2,
-        50,
+        10,
         std::chrono::milliseconds{150},
         std::chrono::milliseconds{50},
         csv_timestamps_1,
@@ -91,9 +91,9 @@ int main(int argc, char* argv[])
     std::cout << csv_qspans_2 << std::endl;
 
     saveCSV("timestamps_1.csv", csv_timestamps_1, "start_1,end_1");
-    saveCSV("timestamps_2.csv", csv_timestamps_1, "start_2,end_2");
-    saveCSV("qspans_1.csv", csv_timestamps_1, "qs_1,qe_1");
-    saveCSV("qspans_2.csv", csv_timestamps_1, "qs_2,qe_2");
+    saveCSV("timestamps_2.csv", csv_timestamps_2, "start_2,end_2");
+    saveCSV("qspans_1.csv", csv_qspans_1, "qs_1,qe_1");
+    saveCSV("qspans_2.csv", csv_qspans_2, "qs_2,qe_2");
 
     return 0;
 
