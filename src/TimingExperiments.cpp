@@ -12,19 +12,22 @@ void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, unsigned long c
     auto num_rows = timestamps.size();
     auto num_cols = timestamps[0].size();
 
-    std::vector<unsigned int> indices;
-    for (unsigned int i = ci; i < num_rows; i++) {
-        indices.push_back(i);
-    }
-    for (unsigned int i = 0; i < ci; i++) {
-        indices.push_back(i);
-    }
+//    std::vector<unsigned int> indices;
+//    for (unsigned int i = ci; i < num_rows; i++) {
+//        indices.push_back(i);
+//    }
+//    for (unsigned int i = 0; i < ci; i++) {
+//        indices.push_back(i);
+//    }
+//
+//    for (unsigned  int i : indices) {
 
-    for (unsigned  int i : indices) {
+    for (int i = 0; i < num_rows; i++) {
 
         for (int j = 0; j < num_cols; j++) {
 
-            buffer << timestamps[i][j].time_since_epoch().count();
+            TimePoint tp = timestamps[i][j];
+            buffer << tp.time_since_epoch().count();
             if (j < num_cols - 1) {
                 buffer << ",";
             }

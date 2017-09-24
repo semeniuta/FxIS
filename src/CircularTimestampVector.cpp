@@ -153,6 +153,16 @@ TimePoint CircularTimestampVector::getTimestamp(unsigned long i, unsigned int id
 
 void CircularTimestampVector::contentSnapshot(std::vector<std::vector<TimePoint>>& out) {
 
-    out = this->timestamps;
+    if (this->first_fill) {
+
+        for (int i = 0; i < this->current_index; i++) {
+            out.push_back(this->timestamps[i]);
+        }
+
+    }
+
+    for (int i = 0; i < this->size; i++) {
+        out.push_back(this->timestamps[i]);
+    }
 
 }
