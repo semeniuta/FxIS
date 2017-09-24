@@ -155,14 +155,21 @@ void CircularTimestampVector::contentSnapshot(std::vector<std::vector<TimePoint>
 
     if (this->first_fill) {
 
+        //std::cout << "Not the whole vector filled. ci=" << this->current_index << std::endl;
+
         for (int i = 0; i < this->current_index; i++) {
             out.push_back(this->timestamps[i]);
         }
 
+    } else {
+        out = this->timestamps;
     }
 
-    for (int i = 0; i < this->size; i++) {
-        out.push_back(this->timestamps[i]);
-    }
+//
+//    for (int i = 0; i < this->size; i++) {
+//        out.push_back(this->timestamps[i]);
+//    }
+
+
 
 }
