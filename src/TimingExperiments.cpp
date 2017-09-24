@@ -100,7 +100,9 @@ void performImageStreamReadExperiment(
     std::string& csv_timestamps_1,
     std::string& csv_timestamps_2,
     std::string& csv_qspans_1,
-    std::string& csv_qspans_2
+    std::string& csv_qspans_2,
+    std::vector<cv::Mat>& images_1,
+    std::vector<cv::Mat>& images_2
 ) {
 
     cv::Mat im_1;
@@ -140,6 +142,9 @@ void performImageStreamReadExperiment(
 
         image1_query_spans.push_back({getim1_span.first, getim1_span.second});
         image2_query_spans.push_back({getim2_span.first, getim2_span.second});
+
+        images_1.push_back(im_1.clone());
+        images_2.push_back(im_2.clone());
 
     }
 

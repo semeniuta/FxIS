@@ -64,7 +64,7 @@ int ImageStream::getImage(unsigned long index, cv::Mat& out) {
         return -1;
     }
 
-    cv::Mat im = this->images[this->ctv.getCurrentIndex()];
+    cv::Mat im = this->images[index];
     im.copyTo(out);
 
     return 0;
@@ -83,7 +83,7 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
 
     unsigned long index_to_get = this->ctv.searchNearestTime(t, 0);
 
-    cv::Mat im = this->images[this->ctv.getCurrentIndex()];
+    cv::Mat im = this->images[index_to_get];
     im.copyTo(out);
 
     tOut = this->ctv.getTimestamp(index_to_get, 0);

@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <thread>
 
 #include "AVTVimba.h"
@@ -21,6 +22,19 @@ const int N_FRAMES = 3;
 const int CAMERA_INDEX = 0;
 
 using namespace AVT::VmbAPI;
+
+void saveImages(const std::vector<cv::Mat>& images, const std::string& suffix) {
+
+    for (int i = 0; i < images.size(); i++) {
+
+        std::stringstream buff;
+        buff << "image_" << suffix << "_" << i << ".png";
+
+        cv::imwrite(buff.str(), images[i]);
+
+    }
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -55,16 +69,21 @@ int main(int argc, char* argv[])
     std::string csv_qspans_1;
     std::string csv_qspans_2;
 
+    std::vector<cv::Mat> images_1;
+    std::vector<cv::Mat> images_2;
+
     performImageStreamReadExperiment(
         image_stream_1,
         image_stream_2,
         10,
-        std::chrono::milliseconds{150},
-        std::chrono::milliseconds{50},
+        std::chrono::seconds{2}, //std::chrono::milliseconds{180},
+        std::chrono::milliseconds{200}, //std::chrono::milliseconds{50},
         csv_timestamps_1,
         csv_timestamps_2,
         csv_qspans_1,
-        csv_qspans_2
+        csv_qspans_2,
+        images_1,
+        images_2
     );
 
     std::cout<< "Press <enter> to stop all the streaming threads...\n" ;
@@ -77,6 +96,9 @@ int main(int argc, char* argv[])
 
     sys.Shutdown();
     std::cout << "Shutting down normally\n";
+
+    saveImages(images_1, "1");
+    saveImages(images_2, "2");
 
     std::cout << "start_1,end_1" << std::endl;
     std::cout << csv_timestamps_1 << std::endl;

@@ -27,7 +27,9 @@ void performImageStreamReadExperiment(
         std::string& csv_timestamps_1,
         std::string& csv_timestamps_2,
         std::string& csv_qspans_1,
-        std::string& csv_qspans_2
+        std::string& csv_qspans_2,
+        std::vector<cv::Mat>& images_1,
+        std::vector<cv::Mat>& images_2
 );
 
 void saveCSV(const std::string& filename, const std::string& data, const std::string& header);
