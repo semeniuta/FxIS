@@ -8,6 +8,14 @@ void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, unsigned long c
 
 bool compareTimestampsVectorsByFirstEntry(const std::vector<TimePoint>& a, const std::vector<TimePoint>& b);
 
+void copyNewTimestamps(
+
+        const TimestampsMatrix & timestamps,
+        TimestampsMatrix & all_timestamps,
+        int experiment_index
+
+);
+
 std::chrono::nanoseconds getRandomDuration(std::chrono::nanoseconds a, std::chrono::nanoseconds b);
 
 void performImageStreamReadExperiment(

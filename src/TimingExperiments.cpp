@@ -14,16 +14,6 @@ void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, unsigned long c
     auto num_rows = timestamps.size();
     auto num_cols = timestamps[0].size();
 
-//    std::vector<unsigned int> indices;
-//    for (unsigned int i = ci; i < num_rows; i++) {
-//        indices.push_back(i);
-//    }
-//    for (unsigned int i = 0; i < ci; i++) {
-//        indices.push_back(i);
-//    }
-//
-//    for (unsigned  int i : indices) {
-
     for (int i = 0; i < num_rows; i++) {
 
         for (int j = 0; j < num_cols; j++) {
@@ -47,6 +37,38 @@ void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, unsigned long c
 
 bool compareTimestampsVectorsByFirstEntry(const std::vector<TimePoint>& a, const std::vector<TimePoint>& b) {
     return (a[0] < b[0]);
+}
+
+void copyNewTimestamps(
+
+        const TimestampsMatrix & timestamps,
+        TimestampsMatrix & all_timestamps,
+        int experiment_index
+
+) {
+
+    int start_with = 0;
+
+    if (experiment_index > 0) {
+
+        for (int j = 0; j < timestamps.size(); j++) {
+
+            std::vector<TimePoint> to_find = timestamps[j];
+
+            if (!std::binary_search(all_timestamps.begin(), all_timestamps.end(), to_find)) {
+                start_with = j;
+                break;
+            }
+
+        }
+
+    }
+
+    for (int j = start_with; j < timestamps.size(); j++) {
+        auto ts = timestamps[j];
+        all_timestamps.push_back(ts);
+    }
+
 }
 
 void saveCSV(const std::string& filename, const std::string& data, const std::string& header) {
@@ -113,17 +135,8 @@ void performImageStreamReadExperiment(
         std::sort(timestamps_1.begin(), timestamps_1.end(), compareTimestampsVectorsByFirstEntry);
         std::sort(timestamps_2.begin(), timestamps_2.end(), compareTimestampsVectorsByFirstEntry);
 
-        std::cout << "========================" << std::endl;
-
-        for (const std::vector<TimePoint>& ts : timestamps_1) {
-            std::cout << "1: " <<  ts[0].time_since_epoch().count() << std::endl;
-            all_timestamps_1.push_back(ts);
-        }
-
-        for (const std::vector<TimePoint>& ts : timestamps_2) {
-            std::cout << "2: " <<  ts[0].time_since_epoch().count() << std::endl;
-            all_timestamps_2.push_back(ts);
-        }
+        copyNewTimestamps(timestamps_1, all_timestamps_1, i);
+        copyNewTimestamps(timestamps_2, all_timestamps_2, i);
 
         image1_query_spans.push_back({getim1_span.first, getim1_span.second});
         image2_query_spans.push_back({getim2_span.first, getim2_span.second});
