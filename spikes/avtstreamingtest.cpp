@@ -19,7 +19,6 @@
 #include <opencv2/opencv.hpp>
 
 const int N_FRAMES = 3;
-const int CAMERA_INDEX = 0;
 
 using namespace AVT::VmbAPI;
 
@@ -76,8 +75,8 @@ int main(int argc, char* argv[])
         image_stream_1,
         image_stream_2,
         10,
-        std::chrono::seconds{2}, //std::chrono::milliseconds{180},
-        std::chrono::milliseconds{200}, //std::chrono::milliseconds{50},
+        std::chrono::milliseconds{180},
+        std::chrono::milliseconds{50},
         csv_timestamps_1,
         csv_timestamps_2,
         csv_qspans_1,
@@ -100,22 +99,10 @@ int main(int argc, char* argv[])
     saveImages(images_1, "1");
     saveImages(images_2, "2");
 
-    std::cout << "start_1,end_1" << std::endl;
-    std::cout << csv_timestamps_1 << std::endl;
-
-    std::cout << "start_2,end_2" << std::endl;
-    std::cout << csv_timestamps_2 << std::endl;
-
-    std::cout << "qs_1,qe_1" << std::endl;
-    std::cout << csv_qspans_1 << std::endl;
-
-    std::cout << "qs_2,qe_2" << std::endl;
-    std::cout << csv_qspans_2 << std::endl;
-
-    saveCSV("timestamps_1.csv", csv_timestamps_1, "start_1,end_1");
-    saveCSV("timestamps_2.csv", csv_timestamps_2, "start_2,end_2");
-    saveCSV("qspans_1.csv", csv_qspans_1, "qs_1,qe_1");
-    saveCSV("qspans_2.csv", csv_qspans_2, "qs_2,qe_2");
+    saveCSV("timestamps_1.csv", csv_timestamps_1, "t_frame_arrived,t_frame_processed");
+    saveCSV("timestamps_2.csv", csv_timestamps_2, "t_frame_arrived,t_frame_processed");
+    saveCSV("qspans_1.csv", csv_qspans_1, "t_request_image,t_request_mutex,t_got_mutex,t_done_searching,t_done_copying");
+    saveCSV("qspans_2.csv", csv_qspans_2, "t_request_image,t_request_mutex,t_got_mutex,t_done_searching,t_done_copying");
 
     return 0;
 

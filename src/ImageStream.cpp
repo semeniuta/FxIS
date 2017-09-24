@@ -92,13 +92,22 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
 
 }
 
-int ImageStream::getImage(TimePoint t, cv::Mat& out, TimestampsMatrix& timestamps, unsigned long& index, unsigned long& current_index, TimePointsPair& timespan) {
+int ImageStream::getImage(
+        TimePoint t,
+        cv::Mat& out,
+        TimestampsMatrix& timestampsCopy,
+        unsigned long& index,
+        unsigned long& current_index,
+        std::vector<TimePoint>& timeMeasurements
+) {
 
     this->waiting_for_next_image.wait();
 
-    auto t0 = currentTime();
+    auto t_request_mutex = currentTime();
 
     std::lock_guard<std::mutex> lock(this->mutex);
+
+    auto t_got_mutex = currentTime();
 
     if (!this->ready) {
         return -1;
@@ -106,18 +115,19 @@ int ImageStream::getImage(TimePoint t, cv::Mat& out, TimestampsMatrix& timestamp
 
     unsigned long index_to_get = this->ctv.searchNearestTime(t, 0);
 
+    auto t_done_searching = currentTime();
+
     cv::Mat im = this->images[index_to_get];
     im.copyTo(out);
 
-    this->ctv.contentSnapshot(timestamps);
+    this->ctv.contentSnapshot(timestampsCopy);
 
     index = index_to_get;
     current_index = this->ctv.getCurrentIndex();
 
-    auto t1 = currentTime();
+    auto t_done_copying = currentTime();
 
-    timespan.first = t0;
-    timespan.second = t1;
+    timeMeasurements = {t_request_mutex, t_got_mutex, t_done_searching, t_done_copying};
 
     return 0;
 

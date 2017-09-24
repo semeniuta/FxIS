@@ -20,7 +20,15 @@ public:
     int storeImageData(unsigned char* imageDataPtr, TimePoint t);
     int getImage(unsigned long index, cv::Mat& out);
     int getImage(TimePoint t, cv::Mat& out, TimePoint& tOut);
-    int getImage(TimePoint t, cv::Mat& out, TimestampsMatrix& timestamps, unsigned long& index, unsigned long& current_index, TimePointsPair& timespan);
+
+    int getImage(
+            TimePoint t,
+            cv::Mat& out,
+            TimestampsMatrix& timestampsCopy,
+            unsigned long& index,
+            unsigned long& current_index,
+            std::vector<TimePoint>& timeMeasurements
+    );
 
 private:
     unsigned int stream_size;

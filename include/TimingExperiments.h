@@ -4,7 +4,7 @@
 #include "TimeMeasure.h"
 #include "ImageStream.h"
 
-void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, unsigned long ci, std::string &res);
+void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, std::string &res);
 
 bool compareTimestampsVectorsByFirstEntry(const std::vector<TimePoint>& a, const std::vector<TimePoint>& b);
 
