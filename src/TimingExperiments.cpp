@@ -117,6 +117,9 @@ void performImageStreamReadExperiment(
     TimestampsMatrix image1_query_spans;
     TimestampsMatrix image2_query_spans;
 
+    std::vector<TimePoint> target_times_1;
+    std::vector<TimePoint> target_times_2;
+
     TimePoint t_now;
 
     for (int i = 0; i < numReads; i++) {
@@ -136,6 +139,9 @@ void performImageStreamReadExperiment(
         im_stream_1.getImage(t_now, im_1, timestamps_1, index_1, current_index_1, getim1_span);
         im_stream_2.getImage(t_now, im_2, timestamps_2, index_2, current_index_2, getim2_span);
 
+        target_times_1.push_back(timestamps_1[index_1][0]);
+        target_times_2.push_back(timestamps_2[index_2][0]);
+
         std::sort(timestamps_1.begin(), timestamps_1.end(), compareTimestampsVectorsByFirstEntry);
         std::sort(timestamps_2.begin(), timestamps_2.end(), compareTimestampsVectorsByFirstEntry);
 
@@ -151,6 +157,16 @@ void performImageStreamReadExperiment(
         images_1.push_back(im_1.clone());
         images_2.push_back(im_2.clone());
 
+    }
+
+    std::cout << "Target times 1" << std::endl;
+    for (int i = 0; i < numReads; i++) {
+        std::cout << target_times_1[i].time_since_epoch().count() << std::endl;
+    }
+
+    std::cout << "Target times 2" << std::endl;
+    for (int i = 0; i < numReads; i++) {
+        std::cout << target_times_2[i].time_since_epoch().count() << std::endl;
     }
 
     csvStringFromTimestampsMatrix(all_timestamps_1, csv_timestamps_1);

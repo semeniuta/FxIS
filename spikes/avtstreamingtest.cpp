@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
     performImageStreamReadExperiment(
         image_stream_1,
         image_stream_2,
-        10,
+        30,
         std::chrono::milliseconds{180},
         std::chrono::milliseconds{50},
         csv_timestamps_1,
