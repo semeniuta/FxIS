@@ -85,7 +85,9 @@ void saveCSV(const std::string& filename, const std::string& data, const std::st
 
 std::chrono::nanoseconds getRandomDuration(std::chrono::nanoseconds a, std::chrono::nanoseconds b) {
 
-    std::default_random_engine generator;
+    std::random_device rd;
+
+    std::default_random_engine generator{rd()};
     std::uniform_int_distribution<long long> distrib{a.count(), b.count()};
     return std::chrono::nanoseconds{distrib(generator)};
 
