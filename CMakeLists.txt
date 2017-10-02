@@ -63,6 +63,9 @@ target_link_libraries(streamingsimtest FxISWithOpenCV)
 add_executable(ctvfindtest "spikes/ctvfindtest.cpp" ${HEADERS})
 target_link_libraries(ctvfindtest FxISWithOpenCV)
 
+add_executable(ctvfindtest2 "spikes/ctvfindtest2.cpp" ${HEADERS})
+target_link_libraries(ctvfindtest2 FxISWithOpenCV)
+
 include_directories($ENV{VIMBA_DIR}/VimbaCPP/Examples)
 
 file(GLOB VIMBA_EXAMPLE_LISTCAMS_FILES "$ENV{VIMBA_DIR}/VimbaCPP/Examples/ListCameras/Source/*")

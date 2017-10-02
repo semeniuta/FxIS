@@ -24,7 +24,7 @@ int main() {
 
         TimePoint ct = currentTime();
         auto diff = ct.time_since_epoch().count() - t_to_find.time_since_epoch().count();
-        std::cout << "t=" << ct.time_since_epoch().count() << " " << diff << std::endl;
+        std::cout << ctv.getCurrentIndex() << " t=" << ct.time_since_epoch().count() << " " << diff << std::endl;
 
         ctv.storeTimestamp(ct, 0);
         ctv.advance();

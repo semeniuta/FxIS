@@ -44,6 +44,11 @@ unsigned int CircularTimestampVector::advance() {
 
 }
 
+unsigned int CircularTimestampVector::getSize() {
+    return this->size;
+}
+
+
 unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned int id) {
 
     if (id >= this->n_timestamps) {

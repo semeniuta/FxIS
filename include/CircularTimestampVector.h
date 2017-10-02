@@ -15,6 +15,7 @@ public:
     TimePoint getTimestamp(unsigned long i, unsigned int id);
     void contentSnapshot(std::vector<std::vector<TimePoint>>& out);
     unsigned int advance();
+    unsigned int getSize();
 
 private:
 
