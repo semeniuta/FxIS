@@ -35,6 +35,19 @@ void saveImages(const std::vector<cv::Mat>& images, const std::string& suffix) {
 
 }
 
+void saveTimestamps(
+        TimestampsMatrix& timestamps,
+        const std::string& filename,
+        const std::string& header
+) {
+
+    std::string csv_str;
+
+    csvStringFromTimestampsMatrix(timestamps, csv_str);
+    saveCSV(filename, csv_str, header);
+
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -63,24 +76,29 @@ int main(int argc, char* argv[])
     std::thread t1(cam1_streaming);
     std::thread t2(cam2_streaming);
 
-    std::string csv_timestamps_1;
-    std::string csv_timestamps_2;
-    std::string csv_qspans_1;
-    std::string csv_qspans_2;
+    std::string csv_timestamps_1, csv_timestamps_2, csv_qspans_1, csv_qspans_2;
 
+    TimestampsMatrix read_1_measurements;
+    TimestampsMatrix read_2_measurements;
+    std::vector<TimestampsMatrix> all_wts_1;
+    std::vector<TimestampsMatrix> all_wts_2;
+    TimestampsMatrix target_times_1;
+    TimestampsMatrix target_times_2;
     std::vector<cv::Mat> images_1;
     std::vector<cv::Mat> images_2;
 
     performImageStreamReadExperiment(
         image_stream_1,
         image_stream_2,
-        30,
+        15,
         std::chrono::milliseconds{180},
         std::chrono::milliseconds{50},
-        csv_timestamps_1,
-        csv_timestamps_2,
-        csv_qspans_1,
-        csv_qspans_2,
+        read_1_measurements,
+        read_2_measurements,
+        all_wts_1,
+        all_wts_2,
+        target_times_1,
+        target_times_2,
         images_1,
         images_2
     );
@@ -99,10 +117,19 @@ int main(int argc, char* argv[])
     saveImages(images_1, "1");
     saveImages(images_2, "2");
 
-    saveCSV("timestamps_1.csv", csv_timestamps_1, "t_frame_arrived,t_frame_processed");
-    saveCSV("timestamps_2.csv", csv_timestamps_2, "t_frame_arrived,t_frame_processed");
-    saveCSV("qspans_1.csv", csv_qspans_1, "t_request_image,t_request_mutex,t_got_mutex,t_done_searching,t_done_copying");
-    saveCSV("qspans_2.csv", csv_qspans_2, "t_request_image,t_request_mutex,t_got_mutex,t_done_searching,t_done_copying");
+    TimestampsMatrix wts_1_vector, wts_2_vector;
+    createVectorOfUniqueWriteTimestamps(all_wts_1, wts_1_vector);
+    createVectorOfUniqueWriteTimestamps(all_wts_2, wts_2_vector);
+
+    std::string header_writes = "t_frame_arrived,t_frame_processed";
+    std::string header_reads = "t_request_image,t_request_mutex,t_got_mutex,t_done_searching,t_done_copying";
+
+    saveTimestamps(wts_1_vector, "timestamps_1.csv", header_writes);
+    saveTimestamps(wts_2_vector, "timestamps_2.csv", header_writes);
+    saveTimestamps(read_1_measurements, "qspans_1.csv", header_reads);
+    saveTimestamps(read_2_measurements, "qspans_2.csv", header_reads);
+    saveTimestamps(target_times_1, "target_times_1.csv", header_writes);
+    saveTimestamps(target_times_2, "target_times_2.csv", header_writes);
 
     return 0;
 

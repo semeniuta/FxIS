@@ -4,19 +4,26 @@
 #include "TimeMeasure.h"
 #include "ImageStream.h"
 
-void csvStringFromTimestampsMatrix(TimestampsMatrix &timestamps, std::string &res);
+void csvStringFromTimestampsMatrix(TimestampsMatrix& timestamps, std::string &res);
 
 bool compareTimestampsVectorsByFirstEntry(const std::vector<TimePoint>& a, const std::vector<TimePoint>& b);
 
 void copyNewTimestamps(
 
-        const TimestampsMatrix & timestamps,
-        TimestampsMatrix & all_timestamps,
+        const TimestampsMatrix& timestamps,
+        TimestampsMatrix& all_timestamps,
         int experiment_index
 
 );
 
 std::chrono::nanoseconds getRandomDuration(std::chrono::nanoseconds a, std::chrono::nanoseconds b);
+
+void printTimestampsSnapshot(
+        TimestampsMatrix& timestamps,
+        TimePoint targetTime,
+        unsigned long currentIndex,
+        unsigned long targetIndex
+);
 
 void performImageStreamReadExperiment(
         ImageStream& im_stream_1,
@@ -24,13 +31,17 @@ void performImageStreamReadExperiment(
         unsigned int numReads,
         std::chrono::nanoseconds sleepInterval,
         std::chrono::nanoseconds sleepFluctuationMax,
-        std::string& csv_timestamps_1,
-        std::string& csv_timestamps_2,
-        std::string& csv_qspans_1,
-        std::string& csv_qspans_2,
+        TimestampsMatrix& read_1_measurements,
+        TimestampsMatrix& read_2_measurements,
+        std::vector<TimestampsMatrix>& all_wts_1,
+        std::vector<TimestampsMatrix>& all_wts_2,
+        TimestampsMatrix& target_times_1,
+        TimestampsMatrix& target_times_2,
         std::vector<cv::Mat>& images_1,
         std::vector<cv::Mat>& images_2
 );
+
+void createVectorOfUniqueWriteTimestamps(std::vector<TimestampsMatrix>& all_wts, TimestampsMatrix& res);
 
 void saveCSV(const std::string& filename, const std::string& data, const std::string& header);
 
