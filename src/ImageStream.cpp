@@ -51,7 +51,6 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
     this->ctv.advance();
 
     this->waiting_for_next_image.notify();
-    std::cout << "bw notified, " << this->ctv.getCurrentIndex() << std::endl;
 
     return 0;
 
@@ -102,9 +101,7 @@ int ImageStream::getImage(
         std::vector<TimePoint>& timeMeasurements
 ) {
 
-    std::cout << "bw locked, " << this->ctv.getCurrentIndex() << std::endl;
     this->waiting_for_next_image.wait();
-    std::cout << "bw unlocked, " << this->ctv.getCurrentIndex() << std::endl;
 
     auto t_request_mutex = currentTime();
 

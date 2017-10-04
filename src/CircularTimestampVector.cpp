@@ -165,30 +165,9 @@ void CircularTimestampVector::contentSnapshot(std::vector<std::vector<TimePoint>
         out = std::vector<std::vector<TimePoint>>(this->current_index);
         std::copy(itr0, itr1, out.begin());
 
-        //out = std::vector{itr0, itr1};
-
     } else {
 
         out = this->timestamps;
     }
-
-//    if (this->first_fill) {
-//
-//        std::cout << "Filling from 0 through " << this->current_index - 1 << std::endl;
-//        for (int i = 0; i < this->current_index; i++) {
-//            std::cout << i << ", " << this->current_index << std::endl;
-//            out.push_back(this->timestamps[i]);
-//        }
-//        std::cout << "Size of out: " << out.size() << std::endl;
-//
-//    } else {
-//        out = this->timestamps;
-//    }
-
-//    if (this->first_fill) {
-//        std::cout << "Filled from 0 through " << this->current_index - 1 << std::endl;
-//    }
-//
-//    out = this->timestamps;
 
 }
