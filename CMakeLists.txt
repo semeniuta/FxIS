@@ -29,55 +29,55 @@ file(GLOB SRC_LIB_AVT "src/DriverAVT/*.c" "src/DriverAVT/*.cpp")
 
 # ======== LIBRARIES ======== #
 
-add_library(FxIS STATIC ${SRC_LIB} ${SRC_LIB_AVT} ${HEADERS} ${HEADERS_AVT})
-target_link_libraries(FxIS VimbaCPP ${OpenCV_LIBS} -lpthread)
+add_library(FxIS-core STATIC ${SRC_LIB} ${HEADERS})
+target_link_libraries(FxIS-core ${OpenCV_LIBS} -lpthread)
 
-add_library(FxISWithOpenCV STATIC ${SRC_LIB} ${HEADERS})
-target_link_libraries(FxISWithOpenCV ${OpenCV_LIBS} -lpthread)
+add_library(FxIS-avt STATIC ${SRC_LIB_AVT} ${HEADERS_AVT})
+target_link_libraries(FxIS-avt FxIS-core VimbaCPP)
 
 # ======== APPS ======== #
 
 add_executable(vimbadescribe "src_app/vimbadescribe.cpp")
-target_link_libraries(vimbadescribe FxIS VimbaCPP ${OpenCV_LIBS})
+target_link_libraries(vimbadescribe FxIS-avt)
 
 add_executable(vimbastream "src_app/vimbastream.cpp")
-target_link_libraries(vimbastream FxIS VimbaCPP ${OpenCV_LIBS})
+target_link_libraries(vimbastream FxIS-avt)
 
 # ======== SPIKES ======== #
 
 add_executable(fxis-greet "spikes/greet.cpp" ${HEADERS})
-target_link_libraries(fxis-greet FxIS)
 
 add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
-target_link_libraries(asyncacqtest FxIS VimbaCPP ${OpenCV_LIBS})
+target_link_libraries(asyncacqtest FxIS-avt)
 
 add_executable(avtstreamingtest "spikes/avtstreamingtest.cpp")
-target_link_libraries(avtstreamingtest FxIS VimbaCPP ${OpenCV_LIBS})
+target_link_libraries(avtstreamingtest FxIS-avt)
 
 add_executable(randomdurationtest "spikes/randomdurationtest.cpp")
-target_link_libraries(randomdurationtest FxISWithOpenCV)
+target_link_libraries(randomdurationtest FxIS-core)
 
 add_executable(qtest "spikes/qtest.cpp")
-target_link_libraries(qtest FxISWithOpenCV)
+target_link_libraries(qtest FxIS-core)
 
 add_executable(bwtest "spikes/bwtest.cpp")
-target_link_libraries(bwtest FxISWithOpenCV)
+target_link_libraries(bwtest FxIS-core)
 
 add_executable(streamingsimtest "spikes/streamingsimtest.cpp")
-target_link_libraries(streamingsimtest FxISWithOpenCV)
+target_link_libraries(streamingsimtest FxIS-core)
 
 add_executable(ctvfindtest "spikes/ctvfindtest.cpp" ${HEADERS})
-target_link_libraries(ctvfindtest FxISWithOpenCV)
+target_link_libraries(ctvfindtest FxIS-core)
 
 add_executable(ctvfindtest2 "spikes/ctvfindtest2.cpp" ${HEADERS})
-target_link_libraries(ctvfindtest2 FxISWithOpenCV)
+target_link_libraries(ctvfindtest2 FxIS-core)
 
 add_executable(demo-opencv-blur "spikes/BlurImage.cpp" ${HEADERS})
 target_link_libraries(demo-opencv-blur ${OpenCV_LIBS})
 
 # ======== INSTALLS ======== #
 
-install(TARGETS FxIS DESTINATION lib)
+install(TARGETS FxIS-core DESTINATION lib)
+install(TARGETS FxIS-avt DESTINATION lib)
 install(TARGETS fxis-greet demo-opencv-blur DESTINATION bin)
 install(FILES ${HEADERS} DESTINATION include)
 install(FILES "data/coffee.jpg" DESTINATION bin)
