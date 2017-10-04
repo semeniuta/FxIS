@@ -1,5 +1,6 @@
 #include "CircularTimestampVector.h"
 #include <iostream>
+#include <algorithm>
 
 CircularTimestampVector::CircularTimestampVector(unsigned int vector_size, unsigned int numTimestamps)
         : size(vector_size), n_timestamps(numTimestamps), current_index(0), first_fill(true) {
@@ -158,12 +159,36 @@ void CircularTimestampVector::contentSnapshot(std::vector<std::vector<TimePoint>
 
     if (this->first_fill) {
 
-        for (int i = 0; i < this->current_index; i++) {
-            out.push_back(this->timestamps[i]);
-        }
+        auto itr0 = this->timestamps.begin();
+        auto itr1 = this->timestamps.begin() + this->current_index;
+
+        out = std::vector<std::vector<TimePoint>>(this->current_index);
+        std::copy(itr0, itr1, out.begin());
+
+        //out = std::vector{itr0, itr1};
 
     } else {
+
         out = this->timestamps;
     }
+
+//    if (this->first_fill) {
+//
+//        std::cout << "Filling from 0 through " << this->current_index - 1 << std::endl;
+//        for (int i = 0; i < this->current_index; i++) {
+//            std::cout << i << ", " << this->current_index << std::endl;
+//            out.push_back(this->timestamps[i]);
+//        }
+//        std::cout << "Size of out: " << out.size() << std::endl;
+//
+//    } else {
+//        out = this->timestamps;
+//    }
+
+//    if (this->first_fill) {
+//        std::cout << "Filled from 0 through " << this->current_index - 1 << std::endl;
+//    }
+//
+//    out = this->timestamps;
 
 }
