@@ -1,5 +1,5 @@
-#include "AVTFrameObserverImageStream.h"
-#include "AVTFrameObserverBasic.h"
+#include "DriverAVT/AVTFrameObserverImageStream.h"
+#include "DriverAVT/AVTFrameObserverBasic.h"
 #include "TimeMeasure.h"
 #include <chrono>
 #include <iostream>

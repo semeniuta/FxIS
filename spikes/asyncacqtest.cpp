@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 
-#include "AVTVimba.h"
-#include "AVTFrameObserverVideoStream.h"
-#include "AVTFrameObserverImageStream.h"
+#include "DriverAVT/AVTVimba.h"
+#include "DriverAVT/AVTFrameObserverVideoStream.h"
+#include "DriverAVT/AVTFrameObserverImageStream.h"
 #include "ImageStream.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"

@@ -5,10 +5,10 @@
 #include <sstream>
 #include <thread>
 
-#include "AVTVimba.h"
-#include "AVTStreaming.h"
-#include "AVTFrameObserverVideoStream.h"
-#include "AVTFrameObserverImageStream.h"
+#include "DriverAVT/AVTVimba.h"
+#include "DriverAVT/AVTStreaming.h"
+#include "DriverAVT/AVTFrameObserverVideoStream.h"
+#include "DriverAVT/AVTFrameObserverImageStream.h"
 #include "ImageStream.h"
 #include "TimingExperiments.h"
 

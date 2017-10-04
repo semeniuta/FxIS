@@ -1,5 +1,5 @@
-#include "AVTFrameObserverVideoStream.h"
-#include "AVTFrameObserverBasic.h"
+#include "DriverAVT/AVTFrameObserverVideoStream.h"
+#include "DriverAVT/AVTFrameObserverBasic.h"
 #include <opencv2/opencv.hpp>
 #include <string>
 

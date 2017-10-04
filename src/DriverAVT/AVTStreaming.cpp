@@ -1,5 +1,5 @@
-#include "AVTStreaming.h"
-#include "AVTFrameObserverImageStream.h"
+#include "DriverAVT/AVTStreaming.h"
+#include "DriverAVT/AVTFrameObserverImageStream.h"
 #include "MatMaker.h"
 #include <iostream>
 

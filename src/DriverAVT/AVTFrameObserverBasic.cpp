@@ -1,4 +1,4 @@
-#include "AVTFrameObserverBasic.h"
+#include "DriverAVT/AVTFrameObserverBasic.h"
 
 AVTFrameObserverBasic::AVTFrameObserverBasic(CameraPtr cam) : IFrameObserver(cam) { }
 

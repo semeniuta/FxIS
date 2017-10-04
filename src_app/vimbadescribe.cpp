@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "AVTVimba.h"
+#include "DriverAVT/AVTVimba.h"
 
 int main( int argc, char* argv[] )
 {
