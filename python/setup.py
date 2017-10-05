@@ -1,35 +1,27 @@
-'''
+from setuptools import setup
+from distutils.sysconfig import get_python_lib
+import glob
+import os
+import sys
 
-To build the extension:
+if os.path.exists('readme.rst'):
+    print("""The setup.py script should be executed from the build directory.
 
-python setup.py build_ext --inplace
-
-'''
-
-from distutils.core import setup
-from distutils.extension import Extension
-
-from Cython.Distutils import build_ext
-from Cython.Build import cythonize
-
-extensions = [
-    Extension(
-            'pyfxis',
-            sources=['pyfxis.pyx', '../src/TimingExperiments.cpp'],
-            language="c++",
-            extra_compile_args=["-std=c++14"],
-            extra_link_args=["-std=c++14", "-static"],
-            include_dirs=['../include', '/opt/Vimba_2_1', '/opt/Vimba_2_1/VimbaCPP/Examples'],
-            libraries=['VimbaCPP'],
-            library_dirs=['/opt/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit']
-            #extra_compile_args=["-std=c++14", "-I../include", "-I/opt/Vimba_2_1", "-I/opt/Vimba_2_1/VimbaCPP/Examples"],
-            #extra_link_args=["-std=c++14", "-L/opt/Vimba_2_1/VimbaCPP/DynamicLib/x86_64bit", "-lVimbaCPP"]
-        )
-    ]
+Please see the file 'readme.rst' for further instructions.""")
+    sys.exit(1)
 
 setup(
-    cmdclass={'buid_ext': build_ext},
-    ext_modules=cythonize(
-        extensions
-    )
+    name = "pyfxis",
+    package_dir = {'': 'src'},
+    data_files = [
+        (get_python_lib(), glob.glob('src/*.so')),
+        ('bin', ['bin/isr-experiment.py'])
+    ],
+    author = 'Oleksandr Semeniuta',
+    #description = 'Use the CMake build system to make Cython modules.',
+    #license = 'Apache',
+    #keywords = 'cmake cython build',
+    #url = 'http://github.com/thewtex/cython-cmake-example',
+    #test_require = ['nose'],
+    zip_safe = False
 )

@@ -14,7 +14,7 @@ int launchImageStreamReadExperiment(
         unsigned int streamSize,
         unsigned int numRequests,
         unsigned int tauSleep,
-        unsigned int tauMaxFluctation,
+        unsigned int tauMaxFluctuation,
         bool verbose,
         bool doSaveImages
 ) {
@@ -60,7 +60,7 @@ int launchImageStreamReadExperiment(
             image_stream_2,
             numRequests,
             std::chrono::milliseconds{tauSleep},
-            std::chrono::milliseconds{tauMaxFluctation},
+            std::chrono::milliseconds{tauMaxFluctuation},
             read_1_measurements,
             read_2_measurements,
             all_wts_1,
