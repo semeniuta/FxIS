@@ -38,11 +38,29 @@ void performImageStreamReadExperiment(
         TimestampsMatrix& target_times_1,
         TimestampsMatrix& target_times_2,
         std::vector<cv::Mat>& images_1,
-        std::vector<cv::Mat>& images_2
+        std::vector<cv::Mat>& images_2,
+        bool verbose
 );
 
 void createVectorOfUniqueWriteTimestamps(std::vector<TimestampsMatrix>& all_wts, TimestampsMatrix& res);
 
 void saveCSV(const std::string& filename, const std::string& data, const std::string& header);
+
+void saveImages(const std::vector<cv::Mat>& images, const std::string& suffix);
+
+void saveTimestamps(
+        TimestampsMatrix& timestamps,
+        const std::string& filename,
+        const std::string& header
+);
+
+int launchImageStreamReadExperiment(
+        unsigned int streamSize,
+        unsigned int numRequests,
+        unsigned int tauSleep,
+        unsigned int tauMaxFluctation,
+        bool verbose,
+        bool doSaveImages
+);
 
 #endif

@@ -6,3 +6,5 @@ xcode/*
 cmake-build-debug/*
 *.pyc
 *.DS_Store
+python/*.cpp
+python/build/*

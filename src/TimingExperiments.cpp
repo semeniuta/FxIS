@@ -142,7 +142,8 @@ void performImageStreamReadExperiment(
     TimestampsMatrix& target_times_1,
     TimestampsMatrix& target_times_2,
     std::vector<cv::Mat>& images_1,
-    std::vector<cv::Mat>& images_2
+    std::vector<cv::Mat>& images_2,
+    bool verbose
 ) {
 
     cv::Mat im_1, im_2;
@@ -157,18 +158,23 @@ void performImageStreamReadExperiment(
         std::chrono::nanoseconds total_sleep = sleepInterval + random_fluctuation;
 
         std::this_thread::sleep_for(total_sleep);
+        if (verbose) {
+            std::cout << "Sleeping " << durationAsString(total_sleep) << std::endl;
+        }
 
         t_now = currentTime();
 
         im_stream_1.getImage(t_now, im_1, write_timestamps_1_snapshot, index_1, current_index_1, current_read_measurement_1);
         im_stream_2.getImage(t_now, im_2, write_timestamps_2_snapshot, index_2, current_index_2, current_read_measurement_2);
 
-        std::cout << "===== Read #" << i << "=====" << std::endl;
-        std::cout << "Camera 1" << std::endl;
-        printTimestampsSnapshot(write_timestamps_1_snapshot, t_now, current_index_1, index_1);
-        std::cout << "Camera 2" << std::endl;
-        printTimestampsSnapshot(write_timestamps_2_snapshot, t_now, current_index_2, index_2);
-        std::cout << std::endl;
+        if (verbose) {
+            std::cout << "===== Read #" << i << "=====" << std::endl;
+            std::cout << "Camera 1" << std::endl;
+            printTimestampsSnapshot(write_timestamps_1_snapshot, t_now, current_index_1, index_1);
+            std::cout << "Camera 2" << std::endl;
+            printTimestampsSnapshot(write_timestamps_2_snapshot, t_now, current_index_2, index_2);
+            std::cout << std::endl;
+        }
 
         target_times_1.push_back(write_timestamps_1_snapshot[index_1]);
         target_times_2.push_back(write_timestamps_2_snapshot[index_2]);
@@ -189,5 +195,31 @@ void performImageStreamReadExperiment(
         images_2.push_back(im_2.clone());
 
     }
+
+}
+
+void saveImages(const std::vector<cv::Mat>& images, const std::string& suffix) {
+
+    for (int i = 0; i < images.size(); i++) {
+
+        std::stringstream buff;
+        buff << "image_" << suffix << "_" << i << ".png";
+
+        cv::imwrite(buff.str(), images[i]);
+
+    }
+
+}
+
+void saveTimestamps(
+        TimestampsMatrix& timestamps,
+        const std::string& filename,
+        const std::string& header
+) {
+
+    std::string csv_str;
+
+    csvStringFromTimestampsMatrix(timestamps, csv_str);
+    saveCSV(filename, csv_str, header);
 
 }
