@@ -1,7 +1,9 @@
 #include "ArgsManager.h"
 
 ArgsManager::ArgsManager(int argc, char* argv[])
+        : n_args(argc - 1) {
 
+    for (unsigned int i = 1; i < this->n_args + 1; i++) {
 
         std::string argument{argv[i]};
 
