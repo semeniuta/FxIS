@@ -71,6 +71,9 @@ target_link_libraries(ctvfindtest FxIS-core)
 add_executable(ctvfindtest2 "spikes/ctvfindtest2.cpp" ${HEADERS})
 target_link_libraries(ctvfindtest2 FxIS-core)
 
+add_executable(argsmgrtest "spikes/argsmgrtest.cpp" ${HEADERS})
+target_link_libraries(argsmgrtest FxIS-core)
+
 add_executable(demo-opencv-blur "spikes/BlurImage.cpp" ${HEADERS})
 target_link_libraries(demo-opencv-blur ${OpenCV_LIBS})
 
