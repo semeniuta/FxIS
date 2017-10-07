@@ -56,42 +56,6 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
 
 }
 
-int ImageStream::getImage(unsigned long index, cv::Mat& out) {
-
-    std::lock_guard<std::mutex> lock(this->mutex);
-
-    if (index >= this->stream_size || !this->ready) {
-        return -1;
-    }
-
-    cv::Mat im = this->images[index];
-    im.copyTo(out);
-
-    return 0;
-
-}
-
-int ImageStream::getImage(TimePoint t, cv::Mat& out, TimePoint& tOut) {
-
-    this->waiting_for_next_image.wait();
-
-    std::lock_guard<std::mutex> lock(this->mutex);
-
-    if (!this->ready) {
-        return -1;
-    }
-
-    unsigned long index_to_get = this->ctv.searchNearestTime(t, 0);
-
-    cv::Mat im = this->images[index_to_get];
-    im.copyTo(out);
-
-    tOut = this->ctv.getTimestamp(index_to_get, 0);
-
-    return 0;
-
-}
-
 int ImageStream::getImage(
         TimePoint t,
         cv::Mat& out,

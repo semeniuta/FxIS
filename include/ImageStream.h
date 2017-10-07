@@ -18,8 +18,6 @@ public:
     ImageStream(uint size, uint width, uint height, uint numChannels);
     void init(uint width, uint height, uint numChannels);
     int storeImageData(unsigned char* imageDataPtr, TimePoint t);
-    int getImage(unsigned long index, cv::Mat& out);
-    int getImage(TimePoint t, cv::Mat& out, TimePoint& tOut);
 
     int getImage(
             TimePoint t,
