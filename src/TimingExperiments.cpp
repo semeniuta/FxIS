@@ -1,4 +1,5 @@
 #include "TimingExperiments.h"
+#include "ImageStreamRequester.h"
 #include <sstream>
 #include <string>
 #include <thread>
@@ -152,6 +153,9 @@ void performImageStreamReadExperiment(
     std::vector<TimePoint> current_read_measurement_1, current_read_measurement_2;
     TimePoint t_now;
 
+    ImageStreamRequester isr_1(im_stream_1);
+    ImageStreamRequester isr_2(im_stream_2);
+
     for (int i = 0; i < numReads; i++) {
 
         std::chrono::nanoseconds random_fluctuation = getRandomDuration(-sleepFluctuationMax, sleepFluctuationMax);
@@ -164,8 +168,17 @@ void performImageStreamReadExperiment(
 
         t_now = currentTime();
 
-        im_stream_1.getImage(t_now, im_1, write_timestamps_1_snapshot, index_1, current_index_1, current_read_measurement_1);
-        im_stream_2.getImage(t_now, im_2, write_timestamps_2_snapshot, index_2, current_index_2, current_read_measurement_2);
+        //im_stream_1.getImage(t_now, im_1, write_timestamps_1_snapshot, index_1, current_index_1, current_read_measurement_1);
+        //im_stream_2.getImage(t_now, im_2, write_timestamps_2_snapshot, index_2, current_index_2, current_read_measurement_2);
+
+        std::future<bool> future_1 = isr_1.requestImage(t_now);
+        std::future<bool> future_2 = isr_2.requestImage(t_now);
+
+        future_1.wait();
+        isr_1.copyData(im_1, write_timestamps_1_snapshot, index_1, current_index_1, current_read_measurement_1);
+
+        future_2.wait();
+        isr_2.copyData(im_2, write_timestamps_2_snapshot, index_2, current_index_2, current_read_measurement_2);
 
         if (verbose) {
             std::cout << "===== Read #" << i << "=====" << std::endl;

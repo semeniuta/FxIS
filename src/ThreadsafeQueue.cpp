@@ -1,4 +1,5 @@
 #include "ThreadsafeQueue.h"
+#include "ImageStreamRequester.h"
 #include <iostream>
 
 template <typename T>
@@ -26,3 +27,4 @@ void ThreadsafeQueue<T>::push(T val) {
 
 template class ThreadsafeQueue<int>;
 template class ThreadsafeQueue<bool>;
+template class ThreadsafeQueue<AsyncImageRequest>;

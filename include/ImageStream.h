@@ -33,7 +33,6 @@ private:
     unsigned int w;
     unsigned int h;
     unsigned int num_channels;
-    bool first_fill;
     std::vector<cv::Mat> images;
     CircularTimestampVector ctv;
     std::mutex mutex;
