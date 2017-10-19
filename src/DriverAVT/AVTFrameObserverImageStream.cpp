@@ -9,16 +9,14 @@ AVTFrameObserverImageStream::AVTFrameObserverImageStream(CameraPtr cam, MatMaker
 
 void AVTFrameObserverImageStream::processFrame(FramePtr frame) {
 
-    this->counter.onEventArrival();
+    TimePoint t_arrival = currentTime();
 
     VmbErrorType err;
 
     unsigned char* image_buffer;
     err = frame->GetImage(image_buffer);
 
-    this->image_stream.storeImageData(image_buffer, this->counter.getEventArrivalTimestamp());
-
-    this->counter.onProcessingEnd();
+    this->image_stream.storeImageData(image_buffer, t_arrival);
 
 }
 

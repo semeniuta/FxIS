@@ -18,7 +18,6 @@ private:
 
     MatMaker& mat_maker;
     ImageStream& image_stream;
-    EventTimeCounter counter;
 
 
 };
