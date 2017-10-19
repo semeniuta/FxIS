@@ -57,7 +57,8 @@ int main(int argc, char* argv[])
     w = (unsigned int)camera_features["Width"];
     h = (unsigned int)camera_features["Height"];
 
-    ImageStream image_stream(20, w, h, mm.getNumberOfChannels());
+    ImageStream image_stream(20);
+    image_stream.init(w, h, mm.getNumberOfChannels());
 
     IFrameObserverPtr observer(new AVTFrameObserverImageStream(cam, mm, image_stream));
 

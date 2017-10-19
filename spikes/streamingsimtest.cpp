@@ -20,8 +20,11 @@ int main() {
     std::vector<cv::Mat> images2;
     images2.push_back(im2);
 
-    ImageStream im_stream_1(80, im1.cols, im1.rows, 1);
-    ImageStream im_stream_2(80, im2.cols, im2.rows, 1);
+    ImageStream im_stream_1(80);
+    im_stream_1.init(im1.cols, im1.rows, 1);
+
+    ImageStream im_stream_2(80);
+    im_stream_2.init(im2.cols, im2.rows, 1);
 
     BlockingWait bw1;
     BlockingWait bw2;

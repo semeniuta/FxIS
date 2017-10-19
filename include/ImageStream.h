@@ -11,15 +11,16 @@
 
 using TimestampsMatrix = std::vector<std::vector<TimePoint>>;
 
+const unsigned int NUM_TIMESTAMPS_IN_IMAGESTREAM = 2;
+
 class ImageStream {
 
 public:
-    ImageStream(uint size);
-    ImageStream(uint size, uint width, uint height, uint numChannels);
-    void init(uint width, uint height, uint numChannels);
-    int storeImageData(unsigned char* imageDataPtr, TimePoint t);
+    explicit ImageStream(uint size);
+    virtual void init(uint width, uint height, uint numChannels);
+    virtual void storeImageData(unsigned char* imageDataPtr, TimePoint t);
 
-    int getImage(
+    void getImage(
             TimePoint t,
             cv::Mat& out,
             TimestampsMatrix& timestampsCopy,
@@ -28,18 +29,16 @@ public:
             std::vector<TimePoint>& timeMeasurements
     );
 
-private:
+protected:
     unsigned int stream_size;
     unsigned int w;
     unsigned int h;
     unsigned int num_channels;
     std::vector<cv::Mat> images;
     CircularTimestampVector ctv;
-    std::mutex mutex;
     bool ready;
     BlockingWait waiting_for_next_image;
-
-
+    std::mutex mutex;
 
 };
 

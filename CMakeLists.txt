@@ -21,7 +21,7 @@ LINK_DIRECTORIES("$ENV{VIMBA_DIR}/VimbaCPP/DynamicLib/x86_64bit")
 
 # ======== GLOBS ======== #
 
-file(GLOB HEADERS "include/*.h", "include/VisionAlg/*.h")
+file(GLOB HEADERS "include/*.h" "include/VisionAlg/*.h")
 file(GLOB SRC_LIB "src/*.cpp" "src/VisionAlg/*.cpp")
 
 file(GLOB HEADERS_AVT "include/DriverAVT/*.h")

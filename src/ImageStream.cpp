@@ -3,22 +3,14 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-const unsigned int NUM_TIMESTAMPS = 2;
-
 /*
  * 0 - frame arrived
  * 1 - frame got processed (for now: stored)
  *
  * */
 
-ImageStream::ImageStream(uint size) : stream_size(size), ctv(size, NUM_TIMESTAMPS), ready(false) { }
-
-ImageStream::ImageStream(uint size, uint width, uint height, uint numChannels)
-        : stream_size(size), ctv(size, NUM_TIMESTAMPS) {
-
-    this->init(width, height, numChannels);
-
-}
+ImageStream::ImageStream(uint size)
+        : stream_size(size), ctv(size, NUM_TIMESTAMPS_IN_IMAGESTREAM), ready(false) { }
 
 void ImageStream::init(uint width, uint height, uint numChannels) {
 
@@ -36,12 +28,12 @@ void ImageStream::init(uint width, uint height, uint numChannels) {
 
 }
 
-int ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
+void ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
     if (!this->ready) {
-        return -1;
+        throw std::runtime_error("ImageStream is not yet ready");
     }
 
     memcpy(this->images[this->ctv.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
@@ -52,11 +44,9 @@ int ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
 
     this->waiting_for_next_image.notify();
 
-    return 0;
-
 }
 
-int ImageStream::getImage(
+void ImageStream::getImage(
         TimePoint t,
         cv::Mat& out,
         TimestampsMatrix& timestampsCopy,
@@ -74,7 +64,7 @@ int ImageStream::getImage(
     auto t_got_mutex = currentTime();
 
     if (!this->ready) {
-        return -1;
+        throw std::runtime_error("ImageStream is not yet ready");
     }
 
     unsigned long index_to_get = this->ctv.searchNearestTime(t, 0);
@@ -92,8 +82,6 @@ int ImageStream::getImage(
     auto t_done_copying = currentTime();
 
     timeMeasurements = {t_request_mutex, t_got_mutex, t_done_searching, t_done_copying};
-
-    return 0;
 
 }
 
