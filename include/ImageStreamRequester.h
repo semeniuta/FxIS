@@ -35,7 +35,7 @@ class ImageStreamRequester {
 
 public:
 
-    ImageStreamRequester(ImageStream& im_stream);
+    explicit ImageStreamRequester(ImageStream& im_stream);
 
     std::future<bool> requestImage(TimePoint t);
 

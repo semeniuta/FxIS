@@ -77,6 +77,9 @@ target_link_libraries(argsmgrtest FxIS-core)
 add_executable(demo-opencv-blur "spikes/BlurImage.cpp" ${HEADERS})
 target_link_libraries(demo-opencv-blur ${OpenCV_LIBS})
 
+add_executable(demo-opencv-cb "spikes/testcbc.cpp" ${HEADERS})
+target_link_libraries(demo-opencv-cb FxIS-core)
+
 # ======== INSTALLS ======== #
 
 install(TARGETS FxIS-core DESTINATION lib)

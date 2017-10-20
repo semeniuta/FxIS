@@ -33,3 +33,8 @@ void ExtendedImageStream<T>::storeImageData(unsigned char* imageDataPtr, T& data
     this->waiting_for_next_image.notify();
 
 }
+
+template class ExtendedImageStream<int>;
+template class ExtendedImageStream<bool>;
+template class ExtendedImageStream<double>;
+template class ExtendedImageStream<cv::Mat>;
