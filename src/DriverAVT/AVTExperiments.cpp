@@ -1,12 +1,4 @@
 #include "DriverAVT/AVTExperiments.h"
-#include "TimingExperiments.h"
-
-#include <thread>
-
-#include "DriverAVT/AVTVimba.h"
-#include "DriverAVT/AVTStreaming.h"
-#include "VimbaCPP/Include/VimbaCPP.h"
-#include "Common/StreamSystemInfo.h"
 
 using namespace AVT::VmbAPI;
 
@@ -38,8 +30,11 @@ int launchImageStreamReadExperiment(
     ImageStream image_stream_1(streamSize);
     ImageStream image_stream_2(streamSize);
 
-    AVTStreaming cam1_streaming(0, N_FRAMES, image_stream_1, bw1);
-    AVTStreaming cam2_streaming(1, N_FRAMES, image_stream_2, bw2);
+    JustStoreTask just_save_1(image_stream_1);
+    JustStoreTask just_save_2(image_stream_2);
+
+    AVTStreaming cam1_streaming(0, N_FRAMES, image_stream_1, just_save_1, bw1);
+    AVTStreaming cam2_streaming(1, N_FRAMES, image_stream_2, just_save_2, bw2);
 
     std::thread t1(cam1_streaming);
     std::thread t2(cam2_streaming);

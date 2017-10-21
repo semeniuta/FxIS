@@ -85,3 +85,9 @@ void ImageStream::getImage(
 
 }
 
+cv::Size ImageStream::getImageDimension() {
+
+    return cv::Size(this->w, this->h);
+
+}
+

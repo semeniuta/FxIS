@@ -3,8 +3,13 @@
 #include "MatMaker.h"
 #include <iostream>
 
-AVTStreaming::AVTStreaming(int camIndex, unsigned long numFrames, ImageStream& imStream, BlockingWait& bw)
-        : image_stream(imStream), frames(numFrames), blocking_wait(bw) {
+AVTStreaming::AVTStreaming(
+        int camIndex,
+        unsigned long numFrames,
+        ImageStream& imStream,
+        ProcessingTask& task,
+        BlockingWait& bw
+) : image_stream(imStream), frames(numFrames), blocking_wait(bw) {
 
     VmbErrorType err;
     CameraPtrVector cameras;
@@ -39,7 +44,7 @@ AVTStreaming::AVTStreaming(int camIndex, unsigned long numFrames, ImageStream& i
 
     image_stream.init(w, h, mm.getNumberOfChannels());
 
-    IFrameObserverPtr observer(new AVTFrameObserverImageStream(this->cam, mm, image_stream));
+    IFrameObserverPtr observer(new AVTFrameObserverImageStream(this->cam, mm, image_stream, task));
 
     err = announceFrames(this->cam, frames, observer);
     if (err != VmbErrorSuccess) {

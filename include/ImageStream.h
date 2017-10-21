@@ -29,6 +29,8 @@ public:
             std::vector<TimePoint>& timeMeasurements
     );
 
+    cv::Size getImageDimension();
+
 protected:
     unsigned int stream_size;
     unsigned int w;

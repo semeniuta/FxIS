@@ -38,3 +38,4 @@ template class ExtendedImageStream<int>;
 template class ExtendedImageStream<bool>;
 template class ExtendedImageStream<double>;
 template class ExtendedImageStream<cv::Mat>;
+template class ExtendedImageStream<std::vector<cv::Point3f>>;

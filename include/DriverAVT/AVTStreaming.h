@@ -7,11 +7,20 @@
 #include "MatMaker.h"
 #include "ImageStream.h"
 #include "BlockingWait.h"
+#include "ProcessingTask.h"
 
 class AVTStreaming {
 
 public:
-    AVTStreaming(int camIndex, unsigned long numFrames, ImageStream& imStream, BlockingWait& bw);
+
+    AVTStreaming(
+            int camIndex,
+            unsigned long numFrames,
+            ImageStream& imStream,
+            ProcessingTask& task,
+            BlockingWait& bw
+    );
+
     void operator()();
 
 private:

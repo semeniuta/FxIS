@@ -7,6 +7,7 @@
 #include "DriverAVT/AVTFrameObserverVideoStream.h"
 #include "DriverAVT/AVTFrameObserverImageStream.h"
 #include "ImageStream.h"
+#include "ProcessingTask.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
 #include "Common/StreamSystemInfo.h"
@@ -60,7 +61,9 @@ int main(int argc, char* argv[])
     ImageStream image_stream(20);
     image_stream.init(w, h, mm.getNumberOfChannels());
 
-    IFrameObserverPtr observer(new AVTFrameObserverImageStream(cam, mm, image_stream));
+    JustStoreTask store_task(image_stream);
+
+    IFrameObserverPtr observer(new AVTFrameObserverImageStream(cam, mm, image_stream, store_task));
 
     err = streamingStart(cam, frames, observer);
 
