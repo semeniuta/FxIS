@@ -1,9 +1,12 @@
 #ifndef PROCESSINGTASK_H
 #define PROCESSINGTASK_H
 
+#include <functional>
+#include <vector>
 #include <opencv2/opencv.hpp>
 #include "ImageStream.h"
 #include "TimeMeasure.h"
+#include "ExtendedImageStream.h"
 
 class ProcessingTask {
 
@@ -31,9 +34,9 @@ class TypedProcessingTask : public ProcessingTask {
 public:
 
     TypedProcessingTask(
-            ImageStream& im_stream,
-            bool (*f)(unsigned char* p_im, ImageStream& is, T& out)
-    ) : image_stream(im_stream), function(f) { };
+            ExtendedImageStream<T>& im_stream,
+            std::function<bool(unsigned char*, ExtendedImageStream<T>&, T&)> f
+    );
 
     void run(unsigned char* image_ptr, TimePoint t) override;
 
@@ -41,8 +44,8 @@ public:
 
 private:
 
-    ImageStream& image_stream;
-    bool (*function)(unsigned char* p_im, ImageStream& is, T& out);
+    ExtendedImageStream<T>& image_stream;
+    std::function<bool(unsigned char*, ExtendedImageStream<T>&, T&)> function;
     T last_output;
 
 };
