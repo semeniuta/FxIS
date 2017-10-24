@@ -5,12 +5,23 @@
 #include <functional>
 
 using CBCResults = std::vector<cv::Point2f>;
-using ProcessingFunction = std::function<bool(unsigned char*, ExtendedImageStream<CBCResults>&, CBCResults&)>;
+using ProcessingFunction = std::function<bool(cv::Mat, ExtendedImageStream<CBCResults>&, CBCResults&)>;
 
-bool hardcoded_cbc_func(cv::Mat image, ExtendedImageStream<CBCResults> &is, CBCResults &out) {
+ProcessingFunction get_cbc_func(int width, int height, const std::string& window_name) {
 
-    cv::Size pattern_size_wh{9, 6};
-    return findCBC(image, pattern_size_wh, out);
+    cv::Size pattern_size_wh{width, height};
+
+    return [pattern_size_wh, window_name](cv::Mat image, ExtendedImageStream<CBCResults>& image_stream, CBCResults& res) {
+        bool found = findCBC(image, pattern_size_wh, res);
+        if (found) {
+
+            cv::imshow(window_name, image);
+            cv::waitKey(1);
+
+        }
+
+        return found;
+    };
 
 }
 
@@ -36,11 +47,15 @@ int main() {
     ExtendedImageStream<CBCResults> image_stream_1(STREAM_SIZE);
     ExtendedImageStream<CBCResults> image_stream_2(STREAM_SIZE);
 
-    //ChessboardTask task_1(image_stream_1, cv::Size{9, 6});
-    //ChessboardTask task_2(image_stream_2, cv::Size{9, 6});
+    ProcessingFunction f1 = get_cbc_func(15, 9, "Camera 1");
+    ProcessingFunction f2 = get_cbc_func(15, 9, "Camera 2");
+    cv::namedWindow("Camera 1", cv::WINDOW_NORMAL);
+    cv::namedWindow("Camera 2", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Camera 1", 640, 480);
+    cv::resizeWindow("Camera 2", 640, 480);
 
-    TypedProcessingTask<CBCResults> task_1(image_stream_1, hardcoded_cbc_func);
-    TypedProcessingTask<CBCResults> task_2(image_stream_2, hardcoded_cbc_func);
+    TypedProcessingTask<CBCResults> task_1(image_stream_1, f1);
+    TypedProcessingTask<CBCResults> task_2(image_stream_2, f2);
 
     AVTStreaming cam1_streaming(0, N_FRAMES, image_stream_1, task_1, bw1);
     AVTStreaming cam2_streaming(1, N_FRAMES, image_stream_2, task_2, bw2);

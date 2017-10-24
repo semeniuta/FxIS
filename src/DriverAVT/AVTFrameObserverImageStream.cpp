@@ -23,10 +23,6 @@ void AVTFrameObserverImageStream::processFrame(FramePtr frame) {
 
     cv::Mat image;
     this->mat_maker.fillMat(image, image_buffer);
-//    unsigned int r = this->image_stream.getHeight();
-//    unsigned int c = this->image_stream.getWidth();
-//    image.create(r, c, CV_8UC1);
-//    memcpy(image.data, image_buffer, r * c);
 
     this->processing_task.run(image, t_arrival);
 
