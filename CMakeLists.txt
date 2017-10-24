@@ -4,6 +4,8 @@ project(FxIS)
 
 set(CMAKE_CXX_STANDARD 14)
 
+add_subdirectory(pybind11)
+
 # ======== PACKAGES ======== #
 
 find_package(OpenCV REQUIRED)
@@ -30,9 +32,11 @@ file(GLOB SRC_LIB_AVT "src/DriverAVT/*.cpp")
 # ======== LIBRARIES ======== #
 
 add_library(FxIS-core STATIC ${SRC_LIB} ${HEADERS})
+set_target_properties(FxIS-core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(FxIS-core ${OpenCV_LIBS} -lpthread)
 
 add_library(FxIS-avt STATIC ${SRC_LIB_AVT} ${HEADERS_AVT})
+set_target_properties(FxIS-avt PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(FxIS-avt FxIS-core VimbaCPP)
 
 # ======== APPS ======== #
@@ -82,6 +86,11 @@ target_link_libraries(demo-opencv-blur ${OpenCV_LIBS})
 
 add_executable(demo-opencv-cb "spikes/testcbc.cpp" ${HEADERS})
 target_link_libraries(demo-opencv-cb FxIS-core)
+
+# ======== PYTHON ======== #
+
+pybind11_add_module(avtfuncs pyfxis/avtfuncs.cpp)
+target_link_libraries(avtfuncs PRIVATE FxIS-avt)
 
 # ======== INSTALLS ======== #
 
