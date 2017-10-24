@@ -28,7 +28,7 @@ void ImageStream::init(uint width, uint height, uint numChannels) {
 
 }
 
-void ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
+void ImageStream::storeImageData(cv::Mat image, TimePoint t) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
@@ -36,7 +36,8 @@ void ImageStream::storeImageData(unsigned char* imageDataPtr, TimePoint t) {
         throw std::runtime_error("ImageStream is not yet ready");
     }
 
-    memcpy(this->images[this->ctv.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
+    this->images[this->ctv.getCurrentIndex()] = image;
+    //memcpy(this->images[this->ctv.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     this->ctv.storeTimestamp(t, 0);
     this->ctv.storeTimestamp(currentTime(), 1);
@@ -95,5 +96,13 @@ unsigned int ImageStream::getNumberOfChannels() {
 
     return this->num_channels;
 
+}
+
+unsigned int ImageStream::getWidth() {
+    return this->w;
+}
+
+unsigned int ImageStream::getHeight() {
+    return this->h;
 }
 

@@ -20,7 +20,7 @@ void simulate_streaming(
         std::this_thread::sleep_for(interval);
         counter.onEventArrival();
 
-        imStream.storeImageData(images[idx].data, counter.getEventArrivalTimestamp());
+        imStream.storeImageData(images[idx], counter.getEventArrivalTimestamp());
 
         idx == sz - 1 ? (idx = 0) : (idx++);
 

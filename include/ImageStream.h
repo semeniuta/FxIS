@@ -18,7 +18,7 @@ class ImageStream {
 public:
     explicit ImageStream(uint size);
     virtual void init(uint width, uint height, uint numChannels);
-    virtual void storeImageData(unsigned char* imageDataPtr, TimePoint t);
+    virtual void storeImageData(cv::Mat image, TimePoint t);
 
     void getImage(
             TimePoint t,
@@ -31,6 +31,8 @@ public:
 
     cv::Size getImageDimension();
     unsigned int getNumberOfChannels();
+    unsigned int getWidth();
+    unsigned int getHeight();
 
 protected:
     unsigned int stream_size;

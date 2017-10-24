@@ -11,7 +11,7 @@
 class ProcessingTask {
 
 public:
-    virtual void run(unsigned char* image_ptr, TimePoint t) = 0;
+    virtual void run(cv::Mat image, TimePoint t) = 0;
 
 };
 
@@ -21,7 +21,7 @@ public:
 
     explicit JustStoreTask(ImageStream& im_stream) : image_stream(im_stream) { }
 
-    void run(unsigned char* image_ptr, TimePoint t) override;
+    void run(cv::Mat image, TimePoint t) override;
 
 private:
     ImageStream& image_stream;
@@ -35,17 +35,17 @@ public:
 
     TypedProcessingTask(
             ExtendedImageStream<T>& im_stream,
-            std::function<bool(unsigned char*, ExtendedImageStream<T>&, T&)> f
+            std::function<bool(cv::Mat, ExtendedImageStream<T>&, T&)> f
     );
 
-    void run(unsigned char* image_ptr, TimePoint t) override;
+    void run(cv::Mat image, TimePoint t) override;
 
     void copyResult(T& out);
 
 private:
 
     ExtendedImageStream<T>& image_stream;
-    std::function<bool(unsigned char*, ExtendedImageStream<T>&, T&)> function;
+    std::function<bool(cv::Mat, ExtendedImageStream<T>&, T&)> function;
     T last_output;
 
 };

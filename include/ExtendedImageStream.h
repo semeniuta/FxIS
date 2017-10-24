@@ -12,7 +12,7 @@ public:
 
     void init(uint width, uint height, uint numChannels) override;
 
-    void storeImageData(unsigned char* imageDataPtr, T& data, TimePoint t);
+    void storeImageData(cv::Mat image, T& data, TimePoint t);
 
 private:
 

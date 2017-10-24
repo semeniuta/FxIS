@@ -13,7 +13,7 @@ void ExtendedImageStream<T>::init(uint width, uint height, uint numChannels) {
 }
 
 template <class T>
-void ExtendedImageStream<T>::storeImageData(unsigned char* imageDataPtr, T& data, TimePoint t) {
+void ExtendedImageStream<T>::storeImageData(cv::Mat image, T& data, TimePoint t) {
 
     std::lock_guard<std::mutex> lock(this->mutex);
 
@@ -22,7 +22,8 @@ void ExtendedImageStream<T>::storeImageData(unsigned char* imageDataPtr, T& data
     }
 
     int current_index = this->ctv.getCurrentIndex();
-    memcpy(this->images[current_index].data, imageDataPtr, this->h * this->w * this->num_channels);
+    this->images[current_index] = image;
+    //memcpy(this->images[current_index].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     this->processing_data[current_index] = data; // copy constructor used
 

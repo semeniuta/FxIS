@@ -13,7 +13,7 @@ public:
 
     AVTFrameObserverImageStream(
             CameraPtr cam,
-            MatMaker& mm,
+            MatMaker mm,
             ImageStream& imStream,
             ProcessingTask& task
     );
@@ -22,7 +22,7 @@ public:
 
 private:
 
-    MatMaker& mat_maker;
+    MatMaker mat_maker;
     ImageStream& image_stream;
     ProcessingTask& processing_task;
 

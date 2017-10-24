@@ -3,7 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 
-AVTFrameObserverVideoStream::AVTFrameObserverVideoStream(CameraPtr cam, MatMaker& mm, std::string windowName)
+AVTFrameObserverVideoStream::AVTFrameObserverVideoStream(CameraPtr cam, MatMaker mm, std::string windowName)
         : AVTFrameObserverBasic(cam), mat_maker(mm), window_name(windowName) { }
 
 void AVTFrameObserverVideoStream::processFrame(FramePtr frame) {
