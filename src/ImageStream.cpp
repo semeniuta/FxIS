@@ -91,3 +91,9 @@ cv::Size ImageStream::getImageDimension() {
 
 }
 
+unsigned int ImageStream::getNumberOfChannels() {
+
+    return this->num_channels;
+
+}
+

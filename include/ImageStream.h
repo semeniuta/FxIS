@@ -30,6 +30,7 @@ public:
     );
 
     cv::Size getImageDimension();
+    unsigned int getNumberOfChannels();
 
 protected:
     unsigned int stream_size;

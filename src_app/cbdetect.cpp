@@ -9,8 +9,14 @@ using ProcessingFunction = std::function<bool(unsigned char*, ExtendedImageStrea
 
 bool hardcoded_cbc_func(unsigned char *p_im, ExtendedImageStream<CBCResults> &is, CBCResults &out) {
     cv::Size pattern_size_wh{9, 6};
-    cv::Mat im;
-    im.data = p_im;
+
+    auto dim = is.getImageDimension();
+    auto num_channels = is.getNumberOfChannels();
+
+    cv::Mat im(dim.height, dim.width, CV_8UC1);
+
+    memcpy(im.data, p_im, dim.height * dim.width * num_channels);
+
     return findCBC(im, pattern_size_wh, out);
 }
 
