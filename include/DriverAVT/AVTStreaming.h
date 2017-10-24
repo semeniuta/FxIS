@@ -8,8 +8,9 @@
 #include "ImageStream.h"
 #include "BlockingWait.h"
 #include "ProcessingTask.h"
+#include "Streaming.h"
 
-class AVTStreaming {
+class AVTStreaming : public Streaming {
 
 public:
 
@@ -21,7 +22,7 @@ public:
             BlockingWait& bw
     );
 
-    void operator()();
+    void operator()() override;
 
 private:
     ImageStream& image_stream;
