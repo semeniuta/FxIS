@@ -92,6 +92,9 @@ target_link_libraries(demo-opencv-cb FxIS-core)
 pybind11_add_module(avtfuncs pyfxis/avtfuncs.cpp)
 target_link_libraries(avtfuncs PRIVATE FxIS-avt)
 
+pybind11_add_module(testnp pyfxis/testnp.cpp)
+target_link_libraries(testnp PRIVATE FxIS-core)
+
 # ======== INSTALLS ======== #
 
 install(TARGETS FxIS-core DESTINATION lib)
