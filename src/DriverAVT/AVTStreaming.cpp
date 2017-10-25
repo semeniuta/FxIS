@@ -99,5 +99,18 @@ void AVTStreaming::operator()() {
         throw std::runtime_error("Exception when stopping acquisition");
     }
 
+    if (this->streaming_finished) { // if subscribeToCompletion was called
+        this->streaming_finished->set_value(true);
+    }
+
+}
+
+std::future<bool> AVTStreaming::subscribeToCompletion() {
+
+    std::shared_ptr<std::promise<bool>> promise_ptr(new std::promise<bool>{});
+    this->streaming_finished = promise_ptr;
+
+    return promise_ptr->get_future();
+
 }
 

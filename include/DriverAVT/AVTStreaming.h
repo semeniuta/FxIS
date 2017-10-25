@@ -11,6 +11,8 @@
 #include "BlockingWait.h"
 #include "ProcessingTask.h"
 #include "Streaming.h"
+#include <future>
+#include <memory>
 
 void initFramePtrVector(FramePtrVector& v, int n_frames);
 
@@ -28,6 +30,8 @@ public:
             ProcessingTask& task
     );
 
+    std::future<bool> subscribeToCompletion();
+
     void operator()() override;
 
 private:
@@ -36,6 +40,7 @@ private:
     CameraPtr cam;
     FramePtrVector frames;
     BlockingWait& blocking_wait;
+    std::shared_ptr<std::promise<bool>> streaming_finished;
 
 };
 
