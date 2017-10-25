@@ -3,16 +3,30 @@
 #include "MatMaker.h"
 #include <iostream>
 
+void initFramePtrVector(FramePtrVector& v, unsigned long n_frames) {
+
+    v = FramePtrVector(n_frames);
+
+}
+
 AVTStreaming::AVTStreaming(
-        int camIndex,
-        unsigned long numFrames,
         ImageStream& imStream,
-        ProcessingTask& task,
         BlockingWait& bw
-) : image_stream(imStream), frames(numFrames), blocking_wait(bw) {
+) : image_stream(imStream), blocking_wait(bw), ready(false) { }
+
+
+void AVTStreaming::init(
+        const std::map<std::string, int>& cam_parameters,
+        ProcessingTask& task
+) {
 
     VmbErrorType err;
     CameraPtrVector cameras;
+
+    int camera_index = cam_parameters.at("camera_index");
+    unsigned long n_frames = (unsigned long)cam_parameters.at("n_frames");
+
+    initFramePtrVector(this->frames, n_frames);
 
     VimbaSystem& sys = VimbaSystem::GetInstance();
 
@@ -27,7 +41,7 @@ AVTStreaming::AVTStreaming(
         throw std::runtime_error("Zero cameras available");
     }
 
-    this->cam = cameras[camIndex];
+    this->cam = cameras[camera_index];
 
     std::map<std::string, VmbInt64_t> camera_features;
 
@@ -51,9 +65,15 @@ AVTStreaming::AVTStreaming(
         throw std::runtime_error("Exception when announcing frames");
     }
 
+    this->ready = true;
+
 }
 
 void AVTStreaming::operator()() {
+
+    if (!this->ready) {
+        throw std::runtime_error("AVTStreaming object is not initialized");
+    }
 
     VmbErrorType err;
 

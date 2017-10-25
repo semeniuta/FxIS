@@ -1,23 +1,26 @@
 #include "Service.h"
 
-Service::Service(std::vector<int> camera_indices) {
+template <class StreamingT, class ResT>
+Service<StreamingT, ResT>::Service(std::vector<int> camera_indices) {
 
 
 
 }
 
-void Service::start() {
+template <class StreamingT, class ResT>
+void Service<StreamingT, ResT>::start() {
 
 
 }
 
-
-void Service::stop() {
+template <class StreamingT, class ResT>
+void Service<StreamingT, ResT>::stop() {
 
 
 }
 
-void Service::grab(std::vector<cv::Mat>& res) {
+template <class StreamingT, class ResT>
+void Service<StreamingT, ResT>::grab(std::vector<cv::Mat>& res) {
 
 
 }

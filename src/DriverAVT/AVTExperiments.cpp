@@ -33,8 +33,13 @@ int launchImageStreamReadExperiment(
     JustStoreTask just_save_1(image_stream_1);
     JustStoreTask just_save_2(image_stream_2);
 
-    AVTStreaming cam1_streaming(0, N_FRAMES, image_stream_1, just_save_1, bw1);
-    AVTStreaming cam2_streaming(1, N_FRAMES, image_stream_2, just_save_2, bw2);
+    std::map<std::string, int> params_1 = {{"camera_index", 0}, {"n_frames", N_FRAMES}};
+    std::map<std::string, int> params_2 = {{"camera_index", 1}, {"n_frames", N_FRAMES}};
+
+    AVTStreaming cam1_streaming(image_stream_1, bw1);
+    AVTStreaming cam2_streaming(image_stream_2, bw2);
+    cam1_streaming.init(params_1, just_save_1);
+    cam2_streaming.init(params_2, just_save_2);
 
     std::thread t1(cam1_streaming);
     std::thread t2(cam2_streaming);
