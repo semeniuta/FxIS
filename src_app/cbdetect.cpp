@@ -3,6 +3,8 @@
 #include "VisionAlg/CBCalib.h"
 #include <vector>
 #include <functional>
+#include "TimeMeasure.h"
+#include <iostream>
 
 using CBCResults = std::vector<cv::Point2f>;
 using ProcessingFunction = std::function<bool(cv::Mat, ExtendedImageStream<CBCResults>&, CBCResults&)>;
@@ -12,13 +14,16 @@ ProcessingFunction get_cbc_func(int width, int height, const std::string& window
     cv::Size pattern_size_wh{width, height};
 
     return [pattern_size_wh, window_name](cv::Mat image, ExtendedImageStream<CBCResults>& image_stream, CBCResults& res) {
+
+        auto t0 = currentTime();
         bool found = findCBC(image, pattern_size_wh, res);
-        if (found) {
+        auto t1 = currentTime();
 
-            cv::imshow(window_name, image);
-            cv::waitKey(1);
+        std::cout << durationAsString(t1 - t0) << std::endl;
 
-        }
+        cv::drawChessboardCorners(image, pattern_size_wh, res, found);
+        cv::imshow(window_name, image);
+        cv::waitKey(1);
 
         return found;
     };
