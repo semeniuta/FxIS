@@ -7,9 +7,9 @@
 #include <iostream>
 
 using CBCResults = std::vector<cv::Point2f>;
-using ProcessingFunction = std::function<bool(cv::Mat, ExtendedImageStream<CBCResults>&, CBCResults&)>;
+using CBCFunc = std::function<bool(cv::Mat, ExtendedImageStream<CBCResults>&, CBCResults&)>;
 
-ProcessingFunction get_cbc_func(int width, int height, const std::string& window_name) {
+CBCFunc get_cbc_func(int width, int height, const std::string& window_name) {
 
     cv::Size pattern_size_wh{width, height};
 
@@ -52,8 +52,8 @@ int main() {
     ExtendedImageStream<CBCResults> image_stream_1(STREAM_SIZE);
     ExtendedImageStream<CBCResults> image_stream_2(STREAM_SIZE);
 
-    ProcessingFunction f1 = get_cbc_func(15, 9, "Camera 1");
-    ProcessingFunction f2 = get_cbc_func(15, 9, "Camera 2");
+    CBCFunc f1 = get_cbc_func(15, 9, "Camera 1");
+    CBCFunc f2 = get_cbc_func(15, 9, "Camera 2");
     cv::namedWindow("Camera 1", cv::WINDOW_NORMAL);
     cv::namedWindow("Camera 2", cv::WINDOW_NORMAL);
     cv::resizeWindow("Camera 1", 640, 480);
