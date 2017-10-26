@@ -7,6 +7,7 @@
 #include "ProcessingTask.h"
 #include "BlockingWait.h"
 #include <vector>
+#include <stack>
 #include <memory>
 #include <future>
 #include <functional>
@@ -43,7 +44,7 @@ private:
     std::vector<std::unique_ptr<ExtendedImageStream<ResT>>> image_streams;
     std::vector<std::unique_ptr<StreamingT>> streaming_objects;
     std::vector<std::unique_ptr<BlockingWait>> blocking_waits;
-    std::vector<std::unique_ptr<std::future<bool>>> streaming_finished_futures;
+    std::vector<std::shared_future<bool>> streaming_finished_futures;
 
 
 };

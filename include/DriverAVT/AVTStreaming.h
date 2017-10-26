@@ -30,7 +30,7 @@ public:
             ProcessingTask& task
     );
 
-    std::future<bool> subscribeToCompletion();
+    std::shared_future<bool> subscribeToCompletion();
 
     void operator()() override;
 

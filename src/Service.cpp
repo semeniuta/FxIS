@@ -78,8 +78,8 @@ void Service<StreamingT, ResT>::start() {
 
     for (auto& streaming_obj_ptr : this->streaming_objects) {
 
-        //std::future<bool> future = streaming_obj_ptr->subscribeToCompletion();
-        //this->streaming_finished_futures.push_back(future);
+        std::shared_future<bool> future = streaming_obj_ptr->subscribeToCompletion();
+        this->streaming_finished_futures.push_back(future);
 
         std::thread t(*streaming_obj_ptr);
         t.detach();
@@ -94,9 +94,15 @@ void Service<StreamingT, ResT>::stop() {
         bw->notify();
     }
 
-    // TODO Check futures
-    // TODO Temporarily
-    std::this_thread::sleep_for(std::chrono::milliseconds{50});
+    std::stack<std::shared_future<bool>> not_ready_futures;
+    for (std::shared_future<bool> f : this->streaming_finished_futures) {
+        not_ready_futures.push(f);
+    }
+
+    while(!not_ready_futures.empty()) {
+        not_ready_futures.top().wait();;
+        not_ready_futures.pop();
+    }
 
     VimbaSystem& sys = VimbaSystem::GetInstance();
     sys.Shutdown();
