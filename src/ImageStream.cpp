@@ -37,7 +37,6 @@ void ImageStream::storeImageData(cv::Mat image, TimePoint t) {
     }
 
     this->images[this->ctv.getCurrentIndex()] = image;
-    //memcpy(this->images[this->ctv.getCurrentIndex()].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     this->ctv.storeTimestamp(t, 0);
     this->ctv.storeTimestamp(currentTime(), 1);

@@ -40,22 +40,12 @@ void Service<StreamingT, ResT>::init(
                 std::make_unique<ExtendedImageStream<ResT>>(stream_size)
         );
 
-        if (task_funcs.empty()) {
-
-            this->tasks.push_back(
-                    std::make_unique<JustStoreTask>( *(this->image_streams[i]) )
-            );
-
-        } else {
-
-            this->tasks.push_back(
-                    std::make_unique<TypedProcessingTask<ResT>>(
-                            *(this->image_streams[i]),
-                            task_funcs[i]
-                    )
-            );
-
-        }
+        this->tasks.push_back(
+                std::make_unique<TypedProcessingTask<ResT>>(
+                        *(this->image_streams[i]),
+                        task_funcs[i]
+                )
+        );
 
         this->streaming_objects.push_back(
                 std::make_unique<StreamingT>(
@@ -112,6 +102,7 @@ void Service<StreamingT, ResT>::stop() {
 
 template <class StreamingT, class ResT>
 void Service<StreamingT, ResT>::grab(std::vector<cv::Mat>& res) {
+
 
 
 }

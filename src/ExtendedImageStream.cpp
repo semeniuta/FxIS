@@ -23,7 +23,6 @@ void ExtendedImageStream<T>::storeImageData(cv::Mat image, T& data, TimePoint t)
 
     int current_index = this->ctv.getCurrentIndex();
     this->images[current_index] = image;
-    //memcpy(this->images[current_index].data, imageDataPtr, this->h * this->w * this->num_channels);
 
     this->processing_data[current_index] = data; // copy constructor used
 
