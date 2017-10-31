@@ -37,9 +37,21 @@ public:
 
     void grab(std::vector<cv::Mat>& res);
 
+protected:
+
+    void initBlockingWaits();
+
+    void initImageStreamsAndTasks(
+            unsigned int stream_size,
+            const std::vector<ProcessingFunction<ResT>>& task_funcs
+    );
+
+    void initStreamingObjects(const CamerasParameters& cam_parameters);
+
 private:
 
     bool ready;
+    unsigned long n_cameras;
     std::vector<std::unique_ptr<ProcessingTask>> tasks;
     std::vector<std::unique_ptr<ExtendedImageStream<ResT>>> image_streams;
     std::vector<std::unique_ptr<StreamingT>> streaming_objects;

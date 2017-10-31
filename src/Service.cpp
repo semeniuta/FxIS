@@ -5,7 +5,7 @@
 #include <chrono>
 
 template <class StreamingT, class ResT>
-Service<StreamingT, ResT>::Service() : ready(false) { }
+Service<StreamingT, ResT>::Service() : ready(false), n_cameras(0) { }
 
 template <class StreamingT, class ResT>
 void Service<StreamingT, ResT>::init(
@@ -24,17 +24,41 @@ void Service<StreamingT, ResT>::init(
         throw std::runtime_error("Failed to start up Vimba system");
     }
 
-    auto n_cameras = cam_parameters.size();
+    this->n_cameras = cam_parameters.size();
 
     if (task_funcs.size() != n_cameras) {
         throw std::runtime_error("Size mismatch between number of cameras and number of task functions");
     }
 
-    for (int i = 0; i < n_cameras; i++) {
+    initBlockingWaits();
+    initImageStreamsAndTasks(stream_size, task_funcs);
+    initStreamingObjects(cam_parameters);
+
+    this->ready = true;
+
+}
+
+
+template <class StreamingT, class ResT>
+void Service<StreamingT, ResT>::initBlockingWaits() {
+
+    for (int i = 0; i < this->n_cameras; i++) {
 
         this->blocking_waits.push_back(
                 std::make_unique<BlockingWait>()
         );
+
+    }
+
+}
+
+template <class StreamingT, class ResT>
+void Service<StreamingT, ResT>::initImageStreamsAndTasks(
+        unsigned int stream_size,
+        const std::vector<ProcessingFunction<ResT>>& task_funcs
+) {
+
+    for (int i = 0; i < this->n_cameras; i++) {
 
         this->image_streams.push_back(
                 std::make_unique<ExtendedImageStream<ResT>>(stream_size)
@@ -47,6 +71,15 @@ void Service<StreamingT, ResT>::init(
                 )
         );
 
+    }
+
+}
+
+template <class StreamingT, class ResT>
+void Service<StreamingT, ResT>::initStreamingObjects(const CamerasParameters& cam_parameters) {
+
+    for (int i = 0; i < this->n_cameras; i++) {
+
         this->streaming_objects.push_back(
                 std::make_unique<StreamingT>(
                         *(this->image_streams[i]),
@@ -55,11 +88,10 @@ void Service<StreamingT, ResT>::init(
         );
         this->streaming_objects[i]->init(
                 cam_parameters[i],
-                *(tasks[i])
+                *(this->tasks[i])
         );
-    }
 
-    this->ready = true;
+    }
 
 }
 
