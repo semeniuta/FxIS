@@ -15,11 +15,7 @@ void imageRequestThread(
 
         im_stream.getImage(
                 req.timestamp,
-                resp.image,
-                resp.timestamps_snapshot,
-                resp.target_index,
-                resp.current_index,
-                resp.time_measurements
+                resp
         );
 
         req.promise_ptr->set_value(true);
@@ -63,18 +59,8 @@ std::future<bool> ImageStreamRequester::requestImage(TimePoint t) {
 
 }
 
-void ImageStreamRequester::copyData(
-        cv::Mat& im,
-        TimestampsMatrix& timestampsCopy,
-        unsigned long& index,
-        unsigned long& current_index,
-        std::vector<TimePoint>& timeMeasurements
-) {
+void ImageStreamRequester::copyData(ImageResponse& out) {
 
-    im = this->image_response.image;
-    timestampsCopy = this->image_response.timestamps_snapshot;
-    index = this->image_response.target_index;
-    current_index = this->image_response.current_index;
-    timeMeasurements = this->image_response.time_measurements;
+    out = this->image_response;
 
 }

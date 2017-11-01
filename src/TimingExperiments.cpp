@@ -147,10 +147,9 @@ void performImageStreamReadExperiment(
     bool verbose
 ) {
 
-    cv::Mat im_1, im_2;
-    TimestampsMatrix write_timestamps_1_snapshot, write_timestamps_2_snapshot;
-    unsigned long index_1, index_2, current_index_1, current_index_2;
-    std::vector<TimePoint> current_read_measurement_1, current_read_measurement_2;
+    ImageResponse resp_1;
+    ImageResponse resp_2;
+
     TimePoint t_now;
 
     ImageStreamRequester isr_1(im_stream_1);
@@ -168,44 +167,41 @@ void performImageStreamReadExperiment(
 
         t_now = currentTime();
 
-        //im_stream_1.getImage(t_now, im_1, write_timestamps_1_snapshot, index_1, current_index_1, current_read_measurement_1);
-        //im_stream_2.getImage(t_now, im_2, write_timestamps_2_snapshot, index_2, current_index_2, current_read_measurement_2);
-
         std::future<bool> future_1 = isr_1.requestImage(t_now);
         std::future<bool> future_2 = isr_2.requestImage(t_now);
 
         future_1.wait();
-        isr_1.copyData(im_1, write_timestamps_1_snapshot, index_1, current_index_1, current_read_measurement_1);
+        isr_1.copyData(resp_1);
 
         future_2.wait();
-        isr_2.copyData(im_2, write_timestamps_2_snapshot, index_2, current_index_2, current_read_measurement_2);
+        isr_2.copyData(resp_2);
 
         if (verbose) {
             std::cout << "===== Read #" << i << "=====" << std::endl;
             std::cout << "Camera 1" << std::endl;
-            printTimestampsSnapshot(write_timestamps_1_snapshot, t_now, current_index_1, index_1);
+            printTimestampsSnapshot(resp_1.timestamps_snapshot, t_now, resp_1.current_index, resp_1.target_index);
             std::cout << "Camera 2" << std::endl;
-            printTimestampsSnapshot(write_timestamps_2_snapshot, t_now, current_index_2, index_2);
+            printTimestampsSnapshot(resp_2.timestamps_snapshot, t_now, resp_2.current_index, resp_2.target_index);
             std::cout << std::endl;
         }
 
-        target_times_1.push_back(write_timestamps_1_snapshot[index_1]);
-        target_times_2.push_back(write_timestamps_2_snapshot[index_2]);
+        target_times_1.push_back(resp_1.timestamps_snapshot[resp_1.target_index]);
+        target_times_2.push_back(resp_2.timestamps_snapshot[resp_2.target_index]);
 
-        std::sort(write_timestamps_1_snapshot.begin(), write_timestamps_1_snapshot.end(), compareTimestampsVectorsByFirstEntry);
-        std::sort(write_timestamps_2_snapshot.begin(), write_timestamps_2_snapshot.end(), compareTimestampsVectorsByFirstEntry);
+        std::sort(resp_1.timestamps_snapshot.begin(), resp_1.timestamps_snapshot.end(), compareTimestampsVectorsByFirstEntry);
+        std::sort(resp_2.timestamps_snapshot.begin(), resp_2.timestamps_snapshot.end(), compareTimestampsVectorsByFirstEntry);
 
-        all_wts_1.push_back(write_timestamps_1_snapshot);
-        all_wts_2.push_back(write_timestamps_2_snapshot);
+        all_wts_1.push_back(resp_1.timestamps_snapshot);
+        all_wts_2.push_back(resp_2.timestamps_snapshot);
 
-        current_read_measurement_1.insert(current_read_measurement_1.begin(), t_now);
-        current_read_measurement_2.insert(current_read_measurement_2.begin(), t_now);
+        resp_1.time_measurements.insert(resp_1.time_measurements.begin(), t_now);
+        resp_2.time_measurements.insert(resp_2.time_measurements.begin(), t_now);
 
-        read_1_measurements.push_back(current_read_measurement_1);
-        read_2_measurements.push_back(current_read_measurement_2);
+        read_1_measurements.push_back(resp_1.time_measurements);
+        read_2_measurements.push_back(resp_2.time_measurements);
 
-        images_1.push_back(im_1.clone());
-        images_2.push_back(im_2.clone());
+        images_1.push_back(resp_1.image.clone());
+        images_2.push_back(resp_2.image.clone());
 
     }
 

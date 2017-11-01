@@ -13,6 +13,14 @@ using TimestampsMatrix = std::vector<std::vector<TimePoint>>;
 
 const unsigned int NUM_TIMESTAMPS_IN_IMAGESTREAM = 2;
 
+struct ImageResponse {
+    cv::Mat image;
+    TimestampsMatrix timestamps_snapshot;
+    unsigned long target_index;
+    unsigned long current_index;
+    std::vector<TimePoint> time_measurements;
+};
+
 class ImageStream {
 
 public:
@@ -22,11 +30,7 @@ public:
 
     void getImage(
             TimePoint t,
-            cv::Mat& out,
-            TimestampsMatrix& timestampsCopy,
-            unsigned long& index,
-            unsigned long& current_index,
-            std::vector<TimePoint>& timeMeasurements
+            ImageResponse& out
     );
 
     cv::Size getImageDimension();

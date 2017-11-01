@@ -5,7 +5,7 @@
 
 /*
  * 0 - frame arrived
- * 1 - frame got processed (for now: stored)
+ * 1 - frame processed and stored
  *
  * */
 
@@ -48,11 +48,7 @@ void ImageStream::storeImageData(cv::Mat image, TimePoint t) {
 
 void ImageStream::getImage(
         TimePoint t,
-        cv::Mat& out,
-        TimestampsMatrix& timestampsCopy,
-        unsigned long& index,
-        unsigned long& current_index,
-        std::vector<TimePoint>& timeMeasurements
+        ImageResponse& out
 ) {
 
     this->waiting_for_next_image.wait();
@@ -72,16 +68,16 @@ void ImageStream::getImage(
     auto t_done_searching = currentTime();
 
     cv::Mat im = this->images[index_to_get];
-    im.copyTo(out);
+    im.copyTo(out.image);
 
-    this->ctv.contentSnapshot(timestampsCopy);
+    this->ctv.contentSnapshot(out.timestamps_snapshot);
 
-    index = index_to_get;
-    current_index = this->ctv.getCurrentIndex();
+    out.target_index = index_to_get;
+    out.current_index = this->ctv.getCurrentIndex();
 
     auto t_done_copying = currentTime();
 
-    timeMeasurements = {t_request_mutex, t_got_mutex, t_done_searching, t_done_copying};
+    out.time_measurements = {t_request_mutex, t_got_mutex, t_done_searching, t_done_copying};
 
 }
 
