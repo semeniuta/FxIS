@@ -165,4 +165,8 @@ void Service<StreamingT, ResT>::grab(std::vector<ImageResponse>& out_im, std::ve
 
 }
 
+template class Service<AVTStreaming, int>;
+template class Service<AVTStreaming, bool>;
+template class Service<AVTStreaming, double>;
+template class Service<AVTStreaming, cv::Mat>;
 template class Service<AVTStreaming, std::vector<cv::Point2f>>;

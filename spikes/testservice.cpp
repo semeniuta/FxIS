@@ -1,11 +1,6 @@
 #include "Service.h"
 #include "DriverAVT/AVTExperiments.h"
-#include "ProcessingTask.h"
 #include "VisionAlg/CBCalib.h"
-#include <vector>
-#include <functional>
-#include "TimeMeasure.h"
-#include <iostream>
 
 using CBCResults = std::vector<cv::Point2f>;
 using CBCFunc = std::function<bool(cv::Mat, ExtendedImageStream<CBCResults>&, CBCResults&)>;
@@ -51,7 +46,6 @@ int main() {
         {params_1, params_2},
         funcs
     );
-
 
     srv.start();
 

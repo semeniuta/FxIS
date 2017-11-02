@@ -30,4 +30,8 @@ void TypedProcessingTask<T>::copyResult(T& out) {
 
 }
 
+template class TypedProcessingTask<int>;
+template class TypedProcessingTask<bool>;
+template class TypedProcessingTask<double>;
+template class TypedProcessingTask<cv::Mat>;
 template class TypedProcessingTask<std::vector<cv::Point2f>>;

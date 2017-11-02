@@ -63,6 +63,9 @@ target_link_libraries(avtstreamingtest FxIS-avt)
 add_executable(testservice "spikes/testservice.cpp")
 target_link_libraries(testservice FxIS-avt)
 
+add_executable(testservicegrab "spikes/testservicegrab.cpp")
+target_link_libraries(testservicegrab FxIS-avt)
+
 add_executable(randomdurationtest "spikes/randomdurationtest.cpp")
 target_link_libraries(randomdurationtest FxIS-core)
 
