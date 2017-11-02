@@ -28,7 +28,7 @@ public:
     virtual void init(uint width, uint height, uint numChannels);
     virtual void storeImageData(cv::Mat image, TimePoint t);
 
-    void getImage(
+    virtual void getImage(
             TimePoint t,
             ImageResponse& out
     );

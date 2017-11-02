@@ -34,6 +34,19 @@ void ExtendedImageStream<T>::storeImageData(cv::Mat image, T& data, TimePoint t)
 
 }
 
+template <class T>
+void ExtendedImageStream<T>::getImage(
+        TimePoint t,
+        ImageResponse& out,
+        T processing_result
+) {
+
+    ImageStream::getImage(t, out);
+
+    processing_result = this->processing_data[out.target_index];
+
+}
+
 template class ExtendedImageStream<int>;
 template class ExtendedImageStream<bool>;
 template class ExtendedImageStream<double>;

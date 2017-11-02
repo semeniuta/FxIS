@@ -4,6 +4,7 @@
 
 #include "Streaming.h"
 #include "ImageStream.h"
+#include "ImageStreamRequester.h"
 #include "ProcessingTask.h"
 #include "BlockingWait.h"
 #include <vector>
@@ -35,7 +36,7 @@ public:
 
     void stop();
 
-    void grab(std::vector<cv::Mat>& res);
+    void grab(std::vector<ImageResponse>& out_im, std::vector<ResT>& out_proc_res);
 
 protected:
 
@@ -54,6 +55,7 @@ private:
     unsigned long n_cameras;
     std::vector<std::unique_ptr<ProcessingTask>> tasks;
     std::vector<std::unique_ptr<ExtendedImageStream<ResT>>> image_streams;
+    std::vector<std::unique_ptr<ExtendedImageStreamRequester<ResT>>> image_requesters;
     std::vector<std::unique_ptr<StreamingT>> streaming_objects;
     std::vector<std::unique_ptr<BlockingWait>> blocking_waits;
     std::vector<std::shared_future<bool>> streaming_finished_futures;

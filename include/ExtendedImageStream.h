@@ -14,6 +14,12 @@ public:
 
     void storeImageData(cv::Mat image, T& data, TimePoint t);
 
+    void getImage(
+            TimePoint t,
+            ImageResponse& out,
+            T processing_result
+    );
+
 private:
 
     std::vector<T> processing_data;

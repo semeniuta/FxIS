@@ -155,6 +155,9 @@ void performImageStreamReadExperiment(
     ImageStreamRequester isr_1(im_stream_1);
     ImageStreamRequester isr_2(im_stream_2);
 
+    isr_1.start();
+    isr_2.start();
+
     for (int i = 0; i < numReads; i++) {
 
         std::chrono::nanoseconds random_fluctuation = getRandomDuration(-sleepFluctuationMax, sleepFluctuationMax);
