@@ -28,12 +28,12 @@ void imageRequestThread(
 }
 
 template <class ResT>
-void typedImageRequestThread(
-        ExtendedImageStream<ResT>& im_stream,
-        ImageResponse& resp,
-        ResT& processing_result,
-        ThreadsafeQueue<AsyncImageRequest>& q,
-        EventObject& stop_event
+void extendedImageRequestThread(
+        ExtendedImageStream<ResT> &im_stream,
+        ImageResponse &resp,
+        ResT &processing_result,
+        ThreadsafeQueue<AsyncImageRequest> &q,
+        EventObject &stop_event
 ) {
 
     AsyncImageRequest req;
@@ -89,7 +89,7 @@ template <class ResT>
 void ExtendedImageStreamRequester<ResT>::start() {
 
     thread_ptr = std::unique_ptr<std::thread>(new std::thread(
-            typedImageRequestThread<ResT>,
+            extendedImageRequestThread<ResT>,
             std::ref(this->image_stream),
             std::ref(this->image_response),
             std::ref(this->processing_result),

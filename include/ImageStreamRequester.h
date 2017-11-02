@@ -26,48 +26,16 @@ void imageRequestThread(
 );
 
 template <class ResT>
-struct TypedImageRequestThread {
-
-    ExtendedImageStream<ResT>& image_stream;
-    ImageResponse& response;
-    ResT& processing_result;
-    ThreadsafeQueue<AsyncImageRequest>& q;
-    EventObject& stop_event;
-
-    void operator()() {
-        AsyncImageRequest req;
-
-        while (true) {
-
-            q.pop(req);
-
-            image_stream.getImage(
-                    req.timestamp,
-                    response,
-                    processing_result
-            );
-
-            req.promise_ptr->set_value(true);
-
-            if (stop_event.hasOccured()) {
-                break;
-            }
-        }
-    }
-
-};
-
-template <class ResT>
-void typedImageRequestThread(
-        ExtendedImageStream<ResT>& im_stream,
-        ImageResponse& resp,
-        ResT& processing_result,
-        ThreadsafeQueue<AsyncImageRequest>& q,
-        EventObject& stop_event
+void extendedImageRequestThread(
+        ExtendedImageStream<ResT> &im_stream,
+        ImageResponse &resp,
+        ResT &processing_result,
+        ThreadsafeQueue<AsyncImageRequest> &q,
+        EventObject &stop_event
 );
 
 
-class BaseImageRequester {
+class BaseImageStreamRequester {
 
 public:
 
@@ -97,7 +65,7 @@ protected:
 
 };
 
-class ImageStreamRequester : public BaseImageRequester {
+class ImageStreamRequester : public BaseImageStreamRequester {
 
 public:
 
@@ -115,7 +83,7 @@ private:
 };
 
 template <class ResT>
-class ExtendedImageStreamRequester : public BaseImageRequester {
+class ExtendedImageStreamRequester : public BaseImageStreamRequester {
 
 public:
 
