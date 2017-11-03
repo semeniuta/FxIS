@@ -87,16 +87,25 @@ void Service<StreamingT, ResT>::initStreamingObjects(const CamerasParameters& ca
 
     for (int i = 0; i < this->n_cameras; i++) {
 
+        TimePoint t0 = currentTime();
+
         this->streaming_objects.push_back(
                 std::make_unique<StreamingT>(
                         *(this->image_streams[i]),
                         *(this->blocking_waits[i])
                 )
         );
+
+        TimePoint t1 = currentTime();
+
         this->streaming_objects[i]->init(
                 cam_parameters[i],
                 *(this->tasks[i])
         );
+
+        TimePoint t2 = currentTime();
+
+        std::cout << "Streaming " << i << " startup time: " <<durationAsString(t2 - t1) << std::endl;
 
     }
 
