@@ -101,6 +101,9 @@ target_link_libraries(avtfuncs PRIVATE FxIS-avt)
 pybind11_add_module(testnp pyfxis/testnp.cpp)
 target_link_libraries(testnp PRIVATE FxIS-core)
 
+pybind11_add_module(avtgrabber pyfxis/avtgrabber.cpp)
+target_link_libraries(avtgrabber PRIVATE FxIS-avt)
+
 # ======== INSTALLS ======== #
 
 install(TARGETS FxIS-core DESTINATION lib)
