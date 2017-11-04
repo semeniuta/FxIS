@@ -87,8 +87,6 @@ void Service<StreamingT, ResT>::initStreamingObjects(const CamerasParameters& ca
 
     for (int i = 0; i < this->n_cameras; i++) {
 
-        TimePoint t0 = currentTime();
-
         this->streaming_objects.push_back(
                 std::make_unique<StreamingT>(
                         *(this->image_streams[i]),
@@ -96,16 +94,13 @@ void Service<StreamingT, ResT>::initStreamingObjects(const CamerasParameters& ca
                 )
         );
 
-        TimePoint t1 = currentTime();
-
         this->streaming_objects[i]->init(
                 cam_parameters[i],
                 *(this->tasks[i])
         );
 
-        TimePoint t2 = currentTime();
-
-        std::cout << "Streaming " << i << " startup time: " <<durationAsString(t2 - t1) << std::endl;
+        std::shared_future<bool> future = this->streaming_objects[i]->subscribeToCompletion();
+        this->streaming_finished_futures.push_back(future);
 
     }
 
@@ -114,10 +109,9 @@ void Service<StreamingT, ResT>::initStreamingObjects(const CamerasParameters& ca
 template <class StreamingT, class ResT>
 void Service<StreamingT, ResT>::start() {
 
-    for (auto& streaming_obj_ptr : this->streaming_objects) {
+    // TODO Look here
 
-        std::shared_future<bool> future = streaming_obj_ptr->subscribeToCompletion();
-        this->streaming_finished_futures.push_back(future);
+    for (auto& streaming_obj_ptr : this->streaming_objects) {
 
         std::thread t(*streaming_obj_ptr);
         t.detach();
