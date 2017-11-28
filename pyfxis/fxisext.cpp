@@ -1,20 +1,14 @@
 #include <pybind11/pybind11.h>
-
-#include <string>
-#include <opencv2/opencv.hpp>
-#include "DriverAVT/AVTVimba.h"
+#include <pybind11/stl.h>
+#include "DriverAVT/AVTSimpleGrabService.h"
 
 namespace py = pybind11;
 
-cv::Mat open_image(std::string filename) {
-
-    cv::Mat image = cv::imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
-
-    return image;
-}
-
-PYBIND11_MODULE(testnp, m)
+PYBIND11_MODULE(fxisext, m)
 {
+
+    m.def("describe_system", describeVimbaSetup);
+
     py::class_<cv::Mat>(m, "Image", py::buffer_protocol())
             .def_buffer([](cv::Mat &im) -> py::buffer_info {
                 return py::buffer_info(
@@ -28,5 +22,19 @@ PYBIND11_MODULE(testnp, m)
                 );
             });
 
-    m.def("open_image", open_image);
+    py::class_<ImageResponse>(m, "ImageResponse")
+            .def_readwrite("image", &ImageResponse::image)
+            .def_readwrite("timestamps_snapshot", &ImageResponse::timestamps_snapshot)
+            .def_readwrite("target_index", &ImageResponse::target_index)
+            .def_readwrite("current_index", &ImageResponse::current_index)
+            .def_readwrite("time_measurements", &ImageResponse::time_measurements);
+
+    py::class_<AVTSimpleGrabService>(m, "AVTSimpleGrabService")
+            .def(py::init<>())
+            .def("init", &AVTSimpleGrabService::init)
+            .def("start", &AVTSimpleGrabService::start)
+            .def("stop", &AVTSimpleGrabService::stop)
+            .def("grab", &AVTSimpleGrabService::grab);
+
+
 }

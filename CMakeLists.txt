@@ -66,6 +66,9 @@ target_link_libraries(testservice FxIS-avt)
 add_executable(testservicegrab "spikes/testservicegrab.cpp")
 target_link_libraries(testservicegrab FxIS-avt)
 
+add_executable(testsimplegrabservice "spikes/testsimplegrabservice.cpp")
+target_link_libraries(testsimplegrabservice FxIS-avt)
+
 add_executable(avtsgstest "spikes/avtsgstest.cpp")
 target_link_libraries(avtsgstest FxIS-avt)
 
@@ -98,14 +101,12 @@ target_link_libraries(demo-opencv-cb FxIS-core)
 
 # ======== PYTHON ======== #
 
-pybind11_add_module(avtfuncs pyfxis/avtfuncs.cpp)
-target_link_libraries(avtfuncs PRIVATE FxIS-avt)
+pybind11_add_module(fxisext pyfxis/fxisext.cpp)
+target_link_libraries(fxisext PRIVATE FxIS-avt)
 
-pybind11_add_module(testnp pyfxis/testnp.cpp)
-target_link_libraries(testnp PRIVATE FxIS-core)
-
-pybind11_add_module(avtgrabber pyfxis/avtgrabber.cpp)
-target_link_libraries(avtgrabber PRIVATE FxIS-avt)
+configure_file(pyfxis/grabber.py grabber.py COPYONLY)
+configure_file(pyfxis/testgrabwith.py testgrabwith.py COPYONLY)
+configure_file(pyfxis/testgrab.py testgrab.py COPYONLY)
 
 # ======== INSTALLS ======== #
 
