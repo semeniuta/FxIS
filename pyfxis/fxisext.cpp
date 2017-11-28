@@ -1,13 +1,31 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/chrono.h>
+
 #include "DriverAVT/AVTSimpleGrabService.h"
 
 namespace py = pybind11;
+
+std::vector<long> timepoints_to_counts(const ImageResponse& im_resp) {
+
+    std::vector<long> res;
+
+    for (const auto& t : im_resp.time_measurements) {
+        res.push_back(
+            t.time_since_epoch().count()
+        );
+    }
+
+    return res;
+
+}
 
 PYBIND11_MODULE(fxisext, m)
 {
 
     m.def("describe_system", describeVimbaSetup);
+
+    m.def("get_timepoints", timepoints_to_counts);
 
     py::class_<cv::Mat>(m, "Image", py::buffer_protocol())
             .def_buffer([](cv::Mat &im) -> py::buffer_info {

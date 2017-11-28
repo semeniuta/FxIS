@@ -4,7 +4,7 @@
 #include "Service.h"
 #include "AVTStreaming.h"
 
-using ImshowFunc = std::function<bool(cv::Mat, ExtendedImageStream<bool>&, bool&)>;
+using ImshowFunc = std::function<bool(cv::Mat, ExtendedImageStream<int>&, int&)>;
 
 ImshowFunc get_imshow_func(const std::string& window_name = "");
 
@@ -26,7 +26,7 @@ public:
 private:
 
     std::vector<ImshowFunc> funcs;
-    Service<AVTStreaming, bool> srv;
+    Service<AVTStreaming, int> srv;
 
 };
 

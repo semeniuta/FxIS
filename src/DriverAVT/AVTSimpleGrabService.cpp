@@ -1,15 +1,17 @@
 #include "DriverAVT/AVTSimpleGrabService.h"
+#include "TimeMeasure.h"
+#include <iostream>
 
 ImshowFunc get_imshow_func(const std::string& window_name) {
 
-    return [window_name](cv::Mat image, ExtendedImageStream<bool>& image_stream, bool& res) {
+    return [window_name](cv::Mat image, ExtendedImageStream<int>& image_stream, int& res) {
 
         if (!window_name.empty()) {
             cv::imshow(window_name, image);
             cv::waitKey(1);
         }
 
-        return true;
+        return true; // always save an image
     };
 
 }
@@ -45,7 +47,7 @@ void AVTSimpleGrabService::init(
 std::vector<ImageResponse> AVTSimpleGrabService::grab() {
 
     std::vector<ImageResponse> res;
-    std::vector<bool> _;
+    std::vector<int> _;
 
     this->srv.grab(res, _);
 

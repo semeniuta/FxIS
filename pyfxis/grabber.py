@@ -10,31 +10,30 @@ class AVTGrabber:
         self._stream_size = stream_size
         self._cam_params = [{'camera_index': ci, 'n_frames': n_frames} for ci in cam_indices]
 
-
     def start(self):
 
         self._service.init(self._stream_size, self._cam_params, False)
         self._service.start()
 
-
     def stop(self):
         self._service.stop()
-
 
     def __enter__(self):
 
         self.start()
         return self
 
-
     def __exit__(self, type, value, traceback):
         self._service.stop()
 
-
-    def grab(self):
+    def grab(self, meta=False):
 
         responses = self._service.grab()
-        return tuple(np.array(resp.image, copy=False) for resp in responses)
+
+        if not meta:
+            return tuple(np.array(resp.image, copy=False) for resp in responses)
+
+        return responses
 
 
 
