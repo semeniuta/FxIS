@@ -20,14 +20,29 @@ from epypes import pipeline
 from epypes import compgraph
 from epypes.queue import Queue
 
+def get_timing_measurements(resp):
 
-def in_loop_save(index, responses, runner):
+    t_snap = np.array(get_timestamps_snaphot(resp))
+    t_read = np.array(get_timepoints(resp))
+
+    return t_snap, t_read
+
+def print_grab_missync(resp_1, resp_2):
+
+    t_snap_1 = get_timepoints(resp_1)
+    t_snap_2 = get_timepoints(resp_2)
+
+    t_ms = abs(t_snap_1[0] - t_snap_2[0]) * 1e-6
+
+    print('Missync: {:.3f} ms'.format(t_ms))
+
+
+def save_data(index, responses, runner):
 
     def save_one(resp, suffix):
 
         im = runner['image_' + suffix]
-        t_snap = np.array(get_timestamps_snaphot(resp))
-        t_read = np.array(get_timepoints(resp))
+        t_snap, t_read = get_timing_measurements(resp)
 
         cv2.imwrite('img_{}_{}.jpg'.format(suffix, index), im)
         np.save('tsnap_{}_{}.npy'.format(suffix, index), t_snap)
@@ -37,10 +52,10 @@ def in_loop_save(index, responses, runner):
     save_one(responses[1], '2')
 
 
-def main_loop(runner):
+def main_loop(runner, sleep_time, do_stream=True, do_save=False):
 
     g = AVTGrabber([0, 1])
-    g.start(show_video=True)
+    g.start(show_video=do_stream)
 
     time.sleep(1)
 
@@ -54,49 +69,50 @@ def main_loop(runner):
 
             resp_1, resp_2 = g.grab(meta=True)
 
+            print_grab_missync(resp_1, resp_2)
+
             t0 = time.time()
             runner.run(
                 image_1=np.array(resp_1.image, copy=False),
                 image_2=np.array(resp_2.image, copy=False)
             )
             t1 = time.time()
+            t_proc = t1 - t0
 
             success = runner['success_1'] and runner['success_2']
+
             if success:
-                #in_loop_save(attempt, (resp_1, resp_2), runner)
-                print('Success:', t1 - t0)
+                if do_save:
+                    save_data(attempt, (resp_1, resp_2), runner)
+
+                print('Success, {:.3f} ms'.format(t_proc * 1e3))
             else:
-                print('Fail:', t1 - t0)
+                print('Fail, {:.3f} ms'.format(t_proc * 1e3))
 
             attempt += 1
+            if t_proc < sleep_time:
+                time.sleep(sleep_time)
 
         except KeyboardInterrupt as e:
-
             g.stop()
             break
 
 
-cg_corners_stereo = compgraph.graph_union_with_suffixing(
-    cbcalib.CGFindCorners(),
-    cbcalib.CGFindCorners(),
-    exclude=['pattern_size_wh']
-)
-
 if __name__ == '__main__':
 
     psize = (15, 9)
+    sleep_time = 1
+    data_dir = 'data'
+
+    cg_corners_stereo = compgraph.graph_union_with_suffixing(
+        cbcalib.CGFindCorners(),
+        cbcalib.CGFindCorners(),
+        exclude=['pattern_size_wh']
+    )
 
     runner = compgraph.CompGraphRunner(
         cg_corners_stereo,
         frozen_tokens={'pattern_size_wh': psize}
     )
 
-    main_loop(runner)
-
-    # pipe = pipeline.SinkPipeline(
-    #     'StereoChessboardDetector',
-    #     cg_corners_stereo,
-    #     q_images,
-    #     dispatch_from_q,
-    #     frozen_tokens={'pattern_size_wh': psize}
-    # )
+    main_loop(runner, sleep_time, do_stream=False, do_save=False)
