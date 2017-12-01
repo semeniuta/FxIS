@@ -30,7 +30,7 @@ void AVTSimpleGrabService::init(
         if (show_video) {
 
             window_name = "Camera " + std::to_string(cam_idx);
-            cv::namedWindow(window_name);
+            cv::namedWindow(window_name, cv::WINDOW_NORMAL);
             cv::resizeWindow(window_name, 640, 480);
         }
 
