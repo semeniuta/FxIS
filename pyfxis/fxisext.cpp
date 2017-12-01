@@ -6,7 +6,7 @@
 
 namespace py = pybind11;
 
-std::vector<long> timepoints_to_counts(const ImageResponse& im_resp) {
+std::vector<long> time_measurements_to_counts(const ImageResponse& im_resp) {
 
     std::vector<long> res;
 
@@ -20,12 +20,31 @@ std::vector<long> timepoints_to_counts(const ImageResponse& im_resp) {
 
 }
 
+std::vector<std::vector<long>> timestamps_snapshots_to_counts(const ImageResponse& im_resp) {
+
+    std::vector<std::vector<long>> res;
+
+    for (const auto& snapshot : im_resp.timestamps_snapshot) {
+        std::vector<long> entry;
+        for (const auto& t : snapshot) {
+            entry.push_back(
+                    t.time_since_epoch().count()
+            );
+        }
+        res.push_back(entry);
+    }
+
+    return res;
+
+}
+
 PYBIND11_MODULE(fxisext, m)
 {
 
     m.def("describe_system", describeVimbaSetup);
 
-    m.def("get_timepoints", timepoints_to_counts);
+    m.def("get_timepoints", time_measurements_to_counts);
+    m.def("get_timestamps_snaphot", timestamps_snapshots_to_counts);
 
     py::class_<cv::Mat>(m, "Image", py::buffer_protocol())
             .def_buffer([](cv::Mat &im) -> py::buffer_info {

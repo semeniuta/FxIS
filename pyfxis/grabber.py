@@ -10,9 +10,9 @@ class AVTGrabber:
         self._stream_size = stream_size
         self._cam_params = [{'camera_index': ci, 'n_frames': n_frames} for ci in cam_indices]
 
-    def start(self):
+    def start(self, show_video=False):
 
-        self._service.init(self._stream_size, self._cam_params, False)
+        self._service.init(self._stream_size, self._cam_params, show_video)
         self._service.start()
 
     def stop(self):
@@ -34,8 +34,3 @@ class AVTGrabber:
             return tuple(np.array(resp.image, copy=False) for resp in responses)
 
         return responses
-
-
-
-
-
