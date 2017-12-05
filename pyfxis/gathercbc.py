@@ -5,6 +5,7 @@ import sys
 import os
 import time
 import numpy as np
+import argparse
 import cv2
 
 PHD_CODE = os.environ['PHD_CODE']
@@ -37,22 +38,29 @@ def print_grab_missync(resp_1, resp_2):
     print('Missync: {:.3f} ms'.format(t_ms))
 
 
-def save_data(index, responses, runner):
+def save_data(index, responses, runner, save_dir):
 
     def save_one(resp, suffix):
 
         im = runner['image_' + suffix]
         t_snap, t_read = get_timing_measurements(resp)
 
-        cv2.imwrite('img_{}_{}.jpg'.format(suffix, index), im)
-        np.save('tsnap_{}_{}.npy'.format(suffix, index), t_snap)
-        np.save('tread_{}_{}.npy'.format(suffix, index), t_read)
+        path_im = os.path.join(save_dir, 'img_{}_{}.jpg'.format(suffix, index))
+        path_tsnap = os.path.join(save_dir, 'tsnap_{}_{}.npy'.format(suffix, index))
+        path_tread = os.path.join(save_dir, 'tread_{}_{}.npy'.format(suffix, index))
+
+        cv2.imwrite(path_im, im)
+        np.save(path_tsnap, t_snap)
+        np.save(path_tread, t_read)
+
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
 
     save_one(responses[0], '1')
     save_one(responses[1], '2')
 
 
-def main_loop(runner, sleep_time, do_stream=True, do_save=False):
+def main_loop(runner, sleep_time, save_dir, do_stream=True, do_save=False):
 
     g = AVTGrabber([0, 1])
     g.start(show_video=do_stream)
@@ -83,7 +91,7 @@ def main_loop(runner, sleep_time, do_stream=True, do_save=False):
 
             if success:
                 if do_save:
-                    save_data(attempt, (resp_1, resp_2), runner)
+                    save_data(attempt, (resp_1, resp_2), runner, save_dir)
 
                 print('Success, {:.3f} ms'.format(t_proc * 1e3))
             else:
@@ -100,9 +108,14 @@ def main_loop(runner, sleep_time, do_stream=True, do_save=False):
 
 if __name__ == '__main__':
 
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('--dir')
+    arg_parser.add_argument('--stream', action='store_true')
+    arg_parser.add_argument('--save', action='store_true')
+    args = arg_parser.parse_args()
+
     psize = (15, 9)
     sleep_time = 1
-    data_dir = 'data'
 
     cg_corners_stereo = compgraph.graph_union_with_suffixing(
         cbcalib.CGFindCorners(),
@@ -115,4 +128,6 @@ if __name__ == '__main__':
         frozen_tokens={'pattern_size_wh': psize}
     )
 
-    main_loop(runner, sleep_time, do_stream=False, do_save=False)
+    save_dir = 'data' if args.dir is None else args.dir
+
+    main_loop(runner, sleep_time, save_dir, do_stream=args.stream, do_save=args.save)
