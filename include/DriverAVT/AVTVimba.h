@@ -32,4 +32,8 @@ VmbErrorType streamingStart(CameraPtr cam, FramePtrVector frames, IFrameObserver
 
 VmbErrorType getFeaturesMap(CameraPtr cam, const std::vector<std::string>& names, std::map<std::string, VmbInt64_t>& out_map);
 
+VmbErrorType getCamerasByIndices(const std::vector<unsigned int>& indices, CameraPtrVector& cameras);
+
+VmbErrorType getCamerasByIP(const std::vector<std::string>& ip_addresses, CameraPtrVector& cameras);
+
 #endif

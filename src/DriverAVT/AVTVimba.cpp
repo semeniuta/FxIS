@@ -312,3 +312,51 @@ VmbErrorType openCameraWithImageFeatures(CameraPtr cam, std::map<std::string, Vm
 
 
 }
+
+VmbErrorType getCamerasByIndices(const std::vector<unsigned int>& indices, CameraPtrVector& cameras) {
+
+    VmbErrorType err;
+
+    CameraPtrVector all_cameras;
+
+    VimbaSystem& sys = VimbaSystem::GetInstance();
+
+    err = sys.GetCameras(all_cameras);
+    if (err != VmbErrorSuccess) {
+        return err;
+    }
+
+    unsigned long n_cameras = all_cameras.size();
+
+    if (n_cameras == 0) {
+        return VmbErrorOther;
+    }
+
+    for (auto& idx : indices) {
+        if (idx < n_cameras)
+            cameras.push_back( all_cameras[idx] );
+    }
+
+    return VmbErrorSuccess;
+
+}
+
+VmbErrorType getCamerasByIP(const std::vector<std::string>& ip_addresses, CameraPtrVector& cameras) {
+
+    VmbErrorType err;
+
+    VimbaSystem& sys = VimbaSystem::GetInstance();
+
+    for (const auto& ip : ip_addresses) {
+        CameraPtr cam;
+
+        err = sys.GetCameraByID(ip.c_str(), cam);
+        if (err != VmbErrorSuccess)
+            return err;
+
+        cameras.push_back(cam);
+    }
+
+    return VmbErrorSuccess;
+
+}
