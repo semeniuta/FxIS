@@ -7,7 +7,7 @@
 class MatMaker {
 
 public:
-    MatMaker(std::map<std::string, VmbInt64_t>& features);
+    explicit MatMaker(std::map<std::string, VmbInt64_t>& features);
     void fillMat(cv::Mat& res, unsigned char* imageBuffer);
     unsigned int getNumberOfChannels();
 

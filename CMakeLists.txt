@@ -105,8 +105,6 @@ pybind11_add_module(fxisext pyfxis/fxisext.cpp)
 target_link_libraries(fxisext PRIVATE FxIS-avt)
 
 configure_file(pyfxis/grabber.py grabber.py COPYONLY)
-configure_file(pyfxis/testgrabwith.py testgrabwith.py COPYONLY)
-configure_file(pyfxis/testgrab.py testgrab.py COPYONLY)
 
 # ======== INSTALLS ======== #
 
