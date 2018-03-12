@@ -25,7 +25,7 @@ void AVTSimpleGrabService::init(
     for (auto& params : cam_parameters) {
         int cam_idx = params.at("camera_index");
 
-        std::string window_name = "";
+        std::string window_name{};
 
         if (show_video) {
 
