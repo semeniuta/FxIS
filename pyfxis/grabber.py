@@ -24,7 +24,7 @@ class AVTGrabber:
         return self
 
     def __exit__(self, type, value, traceback):
-        self._service.stop()
+        self.stop()
 
     def grab(self, meta=False):
 
