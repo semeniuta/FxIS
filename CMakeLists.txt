@@ -99,10 +99,16 @@ target_link_libraries(demo-opencv-blur ${OpenCV_LIBS})
 add_executable(demo-opencv-cb "spikes/testcbc.cpp" ${HEADERS})
 target_link_libraries(demo-opencv-cb FxIS-core)
 
+add_executable(opencvcolor "spikes/opencvcolor.cpp" ${HEADERS})
+target_link_libraries(opencvcolor FxIS-core)
+
 # ======== PYTHON ======== #
 
 pybind11_add_module(fxisext pyfxis/fxisext.cpp)
 target_link_libraries(fxisext PRIVATE FxIS-avt)
+
+pybind11_add_module(fxisext2 pyfxis/fxisext2.cpp)
+target_link_libraries(fxisext2 PRIVATE FxIS-core)
 
 configure_file(pyfxis/grabber.py grabber.py COPYONLY)
 

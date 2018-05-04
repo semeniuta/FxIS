@@ -52,10 +52,13 @@ PYBIND11_MODULE(fxisext, m)
                         im.data,                                            /* Pointer to buffer */
                         sizeof(unsigned char),                              /* Size of one scalar */
                         py::format_descriptor<unsigned char>::format(),     /* Python struct-style format descriptor */
-                        2,                                                  /* Number of dimensions */
-                        { im.rows, im.cols },                                       /* Buffer dimensions */
-                        { sizeof(unsigned char) * im.cols, sizeof(unsigned char) }  /* Strides (in bytes) for each index */
-
+                        3,                                                  /* Number of dimensions */
+                        { im.rows, im.cols, im.channels() },                /* Buffer dimensions */
+                        {                                                   /* Strides (in bytes) for each index */
+                                sizeof(unsigned char) * im.channels() * im.cols,
+                                sizeof(unsigned char) * im.channels(),
+                                sizeof(unsigned char)
+                        }
                 );
             });
 
