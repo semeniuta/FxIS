@@ -12,11 +12,13 @@ from fxisext import get_timepoints
 if __name__ == '__main__':
 
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('--file', '-f')
+    arg_parser.add_argument('--file', '-f', default='timeviz.pdf')
     arg_parser.add_argument('--stream', '-s', action='store_true')
+    arg_parser.add_argument('--cameras', nargs='+', type=int, default=[0])
     args = arg_parser.parse_args()
+    print(args)
 
-    g = grabber.AVTGrabber([0, 1])
+    g = grabber.AVTGrabber(args.cameras)
     g.start(show_video=args.stream)
     time.sleep(2)
 
