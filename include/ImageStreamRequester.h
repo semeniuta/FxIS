@@ -27,11 +27,11 @@ void imageRequestThread(
 
 template <class ResT>
 void extendedImageRequestThread(
-        ExtendedImageStream<ResT> &im_stream,
-        ImageResponse &resp,
-        ResT &processing_result,
-        ThreadsafeQueue<AsyncImageRequest> &q,
-        EventObject &stop_event
+        ExtendedImageStream<ResT>& im_stream,
+        ImageResponse& resp,
+        ResT& processing_result,
+        ThreadsafeQueue<AsyncImageRequest>& q,
+        EventObject& stop_event
 );
 
 
