@@ -145,7 +145,7 @@ void Service<StreamingT, ResT>::stop() {
 template <class StreamingT, class ResT>
 void Service<StreamingT, ResT>::grab(std::vector<ImageResponse>& out_im, std::vector<ResT>& out_proc_res) {
 
-    TimePoint t;
+    TimePoint t = currentTime();
 
     std::vector<std::future<bool>> all_futures;
 
