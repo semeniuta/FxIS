@@ -51,6 +51,8 @@ void ImageStream::getImage(
         ImageResponse& out
 ) {
 
+    std::cout << "[DEBUG] getImage requested. ci=" << this->ctv.getCurrentIndex() << std::endl;
+
     this->waiting_for_next_image.wait();
 
     auto t_request_mutex = currentTime();
@@ -64,6 +66,9 @@ void ImageStream::getImage(
     }
 
     unsigned long index_to_get = this->ctv.searchNearestTime(t, 0);
+
+    std::cout << "[DEBUG] target index found (after new frame is acquired). ci=" << this->ctv.getCurrentIndex();
+    std::cout << ", target=" << index_to_get << std::endl;
 
     auto t_done_searching = currentTime();
 

@@ -91,6 +91,8 @@ unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned i
         auto physical_index_from = getInd(indexFrom);
         auto physical_index_to = getInd(indexTo);
 
+        std::cout << "[DEBUG] In CVT:" << physical_index_from << ", " << physical_index_to << std::endl;
+
         TimePoint t1 = this->timestamps[physical_index_from][id];
         TimePoint t2 = this->timestamps[physical_index_to][id];
 
@@ -111,8 +113,10 @@ unsigned long CircularTimestampVector::searchNearestTime(TimePoint t, unsigned i
     }
 
     if (this->timestamps[getInd(index_middle)][id] < t) {
+        std::cout << "[DEBUG] " << index_middle << " search right\n";
         return searchNearestTime(t, id, index_middle, indexTo);
     } else {
+        std::cout << "[DEBUG] " << index_middle << " search left\n";
         return searchNearestTime(t, id, indexFrom, index_middle);
     }
 

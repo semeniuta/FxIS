@@ -56,9 +56,12 @@ int main() {
         if (query == "grab") {
 
             srv.grab(im_response, dummy_processing_results);
-            std::cout << durationAsString(
+            std::cout << "Missync: " << durationAsString(
                     im_response[2 * grab_idx + 0].timestamps_snapshot[im_response[2 * grab_idx + 0].target_index][0] - im_response[2 * grab_idx + 1].timestamps_snapshot[im_response[2 * grab_idx + 1].target_index][0]
             ) << std::endl;
+
+            std::cout << "Target indices: " << im_response[2 * grab_idx + 0].target_index << ", " << im_response[2 * grab_idx + 1].target_index << "\n";
+            std::cout << "Current indices: " << im_response[2 * grab_idx + 0].current_index << ", " << im_response[2 * grab_idx + 1].current_index << "\n";
 
             grab_idx++;
 
