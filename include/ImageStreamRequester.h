@@ -132,6 +132,12 @@ public:
 
     }
 
+    void copyData(ImageResponse& out_im) {
+
+        out_im = this->image_response;
+
+    }
+
 private:
 
     ExtendedImageStream<ResT>& image_stream;
