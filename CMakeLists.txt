@@ -52,8 +52,6 @@ target_link_libraries(cbdetect FxIS-avt)
 
 # ======== SPIKES ======== #
 
-add_executable(fxis-greet "spikes/greet.cpp" ${HEADERS})
-
 add_executable(asyncacqtest "spikes/asyncacqtest.cpp")
 target_link_libraries(asyncacqtest FxIS-avt)
 
@@ -116,6 +114,5 @@ configure_file(pyfxis/grabber.py grabber.py COPYONLY)
 
 install(TARGETS FxIS-core DESTINATION lib)
 install(TARGETS FxIS-avt DESTINATION lib)
-install(TARGETS fxis-greet demo-opencv-blur DESTINATION bin)
 install(FILES ${HEADERS} DESTINATION include)
 install(FILES "data/coffee.jpg" DESTINATION bin)

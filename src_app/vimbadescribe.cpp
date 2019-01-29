@@ -1,3 +1,10 @@
+/*
+ * Describe the current Vimba setup in the terminal.
+ *
+ * Uses describeVimbaSetup function from DriverAVT/AVTVimba.h
+ *
+ */
+
 #include <iostream>
 
 #include "DriverAVT/AVTVimba.h"

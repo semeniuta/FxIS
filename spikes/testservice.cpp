@@ -1,3 +1,8 @@
+/*
+ * Demonstrates the functionality of Service<AVTStreaming, CBCResults>
+ * for two cameras and the chessboard detection task.
+ */
+
 #include "Service.h"
 #include "DriverAVT/AVTExperiments.h"
 #include "VisionAlg/CBCalib.h"

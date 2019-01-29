@@ -1,3 +1,14 @@
+/*
+ * Perform video streaming from a single camera in an OpenCV's cv::namedWindow.
+ *
+ * Usage:
+ * vimbastream [cam_index]
+ * If no camera index is specified, the first camera is used.
+ *
+ * Directly uses functions in DriverAVT
+ *
+ */
+
 #include <iostream>
 #include <map>
 #include <vector>

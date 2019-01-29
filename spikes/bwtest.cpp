@@ -1,3 +1,7 @@
+/*
+ * Demonstrates functionality of BlockingWait and ThreadsafeQueue
+ */
+
 #include <iostream>
 #include <thread>
 #include <chrono>

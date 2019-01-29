@@ -1,3 +1,13 @@
+/*
+ * Launches two Service<AVTStreaming, DummyResult> threads and enables
+ * a command interface in the main thread with possible commands "grab" and "exit".
+ *
+ * On each grab, missynchronization and indices information is displayed.
+ *
+ * Video streaming in two cv::namedWindow's is realized with a dummy processing function.
+ *
+ */
+
 #include "Service.h"
 #include "DriverAVT/AVTExperiments.h"
 #include "TimingExperiments.h"

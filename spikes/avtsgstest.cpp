@@ -1,3 +1,14 @@
+/*
+ * Similarly to testsimplegrabservice,
+ * launches AVTSimpleGrabService connected to two cameras and enables
+ * a command interface in the main thread with possible commands "grab" and "exit".
+ * In addition, on each grab, prints the difference between target timestamps
+ * of the two cameras.
+ *
+ * An optional flag --stream enables video streaming.
+ *
+ */
+
 #include "Service.h"
 #include "DriverAVT/AVTSimpleGrabService.h"
 #include "ArgsManager.h"

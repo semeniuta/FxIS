@@ -1,3 +1,12 @@
+/*
+ * Perform streaming from two cameras and attempt to detect chessboard corners
+ * in each image.
+ *
+ * Uses two pairs of ExtendedImageStream/AVTStreaming
+ * with manual thread management and BlockingWait's.
+ *
+ */
+
 #include "DriverAVT/AVTExperiments.h"
 #include "ProcessingTask.h"
 #include "VisionAlg/CBCalib.h"

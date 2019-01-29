@@ -1,3 +1,7 @@
+/*
+ * Demonstrates functionality of ArgsManager
+ */
+
 #include <iostream>
 #include <vector>
 #include <string>

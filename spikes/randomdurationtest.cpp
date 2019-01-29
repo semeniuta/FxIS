@@ -1,3 +1,8 @@
+/*
+ * Demonstrates functionality of the
+ * getRandomDuration function from TimingExperiments.h
+ */
+
 #include <chrono>
 #include <iostream>
 #include "TimingExperiments.h"

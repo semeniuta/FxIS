@@ -1,3 +1,9 @@
+/*
+ * Launches AVTSimpleGrabService connected to two cameras and enables
+ * a command interface in the main thread with possible commands "grab" and "exit".
+ *
+ */
+
 #include "DriverAVT/AVTSimpleGrabService.h"
 
 int main() {

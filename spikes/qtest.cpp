@@ -1,3 +1,8 @@
+/*
+ * Demonstrates functionality of ThreadsafeQueue and EventObject
+ * in the thread-based producer/consumer scenario.
+ */
+
 #include <iostream>
 #include <thread>
 #include <queue>

@@ -1,3 +1,13 @@
+/*
+ * Launch ImageStream reading experiment
+ * with specified parameters
+ *
+ * Uses launchImageStreamReadExperiment function from DriverAVT/AVTExperiments.h.
+ * Internally, launchImageStreamReadExperiment uses two pairs of ImageStream/AVTStreaming
+ * with manual thread management and BlockingWait's.
+ *
+ */
+
 #include <iostream>
 #include "DriverAVT/AVTExperiments.h"
 #include "ArgsManager.h"

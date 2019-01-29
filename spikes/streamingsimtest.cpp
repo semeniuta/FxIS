@@ -1,3 +1,10 @@
+/*
+ * The first version of the ImageStream reading experiment
+ * using StreamingSimulation.
+ *
+ * The new version is avtstreamingtest
+ */
+
 #include "StreamingSimulation.h"
 #include "BlockingWait.h"
 #include "ImageStream.h"
