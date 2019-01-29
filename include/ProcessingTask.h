@@ -19,16 +19,16 @@ class JustStoreTask : public ProcessingTask {
 
 public:
 
-    explicit JustStoreTask(ImageStream& im_stream) : image_stream(im_stream) { }
+    explicit JustStoreTask(ImageStream& im_stream) : image_stream_(im_stream) { }
 
     void run(cv::Mat image, TimePoint t) override {
 
-        this->image_stream.storeImageData(image, t);
+        image_stream_.storeImageData(image, t);
 
     }
 
 private:
-    ImageStream& image_stream;
+    ImageStream& image_stream_;
 
 };
 
@@ -40,29 +40,29 @@ public:
     TypedProcessingTask(
             ExtendedImageStream<T>& im_stream,
             std::function<bool(cv::Mat, ExtendedImageStream<T>&, T&)> f
-    ) : image_stream(im_stream), function(f) { }
+    ) : image_stream_(im_stream), function_(f) { }
 
     void run(cv::Mat image, TimePoint t) override {
 
-        bool do_save = this->function(image, this->image_stream, this->last_output);
+        bool do_save = function_(image, image_stream_, last_output_);
 
         if (do_save) {
-            this->image_stream.storeImageData(image, this->last_output, t);
+            image_stream_.storeImageData(image, last_output_, t);
         }
 
     };
 
     void copyResult(T& out) {
 
-        out = this->last_output;
+        out = last_output_;
 
     }
 
 private:
 
-    ExtendedImageStream<T>& image_stream;
-    std::function<bool(cv::Mat, ExtendedImageStream<T>&, T&)> function;
-    T last_output;
+    ExtendedImageStream<T>& image_stream_;
+    std::function<bool(cv::Mat, ExtendedImageStream<T>&, T&)> function_;
+    T last_output_;
 
 };
 
