@@ -40,14 +40,14 @@ public:
 
 protected:
     unsigned int stream_size;
-    unsigned int w;
-    unsigned int h;
-    unsigned int num_channels;
-    std::vector<cv::Mat> images;
-    CircularTimestampVector ctv;
-    bool ready;
-    BlockingWait waiting_for_next_image;
-    std::mutex mutex;
+    unsigned int image_width_;
+    unsigned int image_height_;
+    unsigned int num_channels_;
+    std::vector<cv::Mat> images_;
+    CircularTimestampVector ctv_;
+    bool ready_;
+    BlockingWait waiting_for_next_image_;
+    std::mutex mutex_;
 
 };
 

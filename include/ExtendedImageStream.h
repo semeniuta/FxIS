@@ -22,7 +22,7 @@ public:
 
 private:
 
-    std::vector<T> processing_data;
+    std::vector<T> processing_data_;
 
 };
 

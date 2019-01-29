@@ -3,9 +3,9 @@
 template <class T>
 void ExtendedImageStream<T>::init(uint width, uint height, uint numChannels) {
 
-    for (int i = 0; i < this->stream_size; i++) {
+    for (int i = 0; i < stream_size; i++) {
         T data{};
-        this->processing_data.push_back(data);
+        processing_data_.push_back(data);
     }
 
     ImageStream::init(width, height, numChannels);
@@ -15,22 +15,22 @@ void ExtendedImageStream<T>::init(uint width, uint height, uint numChannels) {
 template <class T>
 void ExtendedImageStream<T>::storeImageData(cv::Mat image, T& data, TimePoint t) {
 
-    std::lock_guard<std::mutex> lock(this->mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
-    if (!this->ready) {
+    if (!ready_) {
         throw std::runtime_error("ExtendedImageStream is not yet ready");
     }
 
-    int current_index = this->ctv.getCurrentIndex();
-    this->images[current_index] = image;
+    int current_index = ctv_.getCurrentIndex();
+    images_[current_index] = image;
 
-    this->processing_data[current_index] = data; // copy constructor used
+    processing_data_[current_index] = data; // copy constructor used
 
-    this->ctv.storeTimestamp(t, 0);
-    this->ctv.storeTimestamp(currentTime(), 1);
-    this->ctv.advance();
+    ctv_.storeTimestamp(t, 0);
+    ctv_.storeTimestamp(currentTime(), 1);
+    ctv_.advance();
 
-    this->waiting_for_next_image.notify();
+    waiting_for_next_image_.notify();
 
 }
 
@@ -43,7 +43,7 @@ void ExtendedImageStream<T>::getImage(
 
     ImageStream::getImage(t, out);
 
-    processing_result = this->processing_data[out.target_index];
+    processing_result = processing_data_[out.target_index];
 
 }
 
