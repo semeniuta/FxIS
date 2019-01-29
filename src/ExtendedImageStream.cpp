@@ -4,7 +4,7 @@ template <class T>
 void ExtendedImageStream<T>::init(uint width, uint height, uint numChannels) {
 
     for (int i = 0; i < this->stream_size; i++) {
-        T data;
+        T data{};
         this->processing_data.push_back(data);
     }
 
@@ -38,7 +38,7 @@ template <class T>
 void ExtendedImageStream<T>::getImage(
         TimePoint t,
         ImageResponse& out,
-        T processing_result
+        T& processing_result
 ) {
 
     ImageStream::getImage(t, out);

@@ -17,7 +17,7 @@ public:
     void getImage(
             TimePoint t,
             ImageResponse& out,
-            T processing_result
+            T& processing_result
     );
 
 private:
