@@ -61,8 +61,8 @@ int main() {
     ExtendedImageStream<CBCResults> image_stream_1(STREAM_SIZE);
     ExtendedImageStream<CBCResults> image_stream_2(STREAM_SIZE);
 
-    CBCFunc f1 = get_cbc_func(15, 9, "Camera 1");
-    CBCFunc f2 = get_cbc_func(15, 9, "Camera 2");
+    CBCFunc f1 = get_cbc_func(9, 7, "Camera 1");
+    CBCFunc f2 = get_cbc_func(9, 7, "Camera 2");
     cv::namedWindow("Camera 1", cv::WINDOW_NORMAL);
     cv::namedWindow("Camera 2", cv::WINDOW_NORMAL);
     cv::resizeWindow("Camera 1", 640, 480);
