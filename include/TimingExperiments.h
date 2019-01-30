@@ -2,7 +2,7 @@
 #define SERIALIZE_H
 
 #include "TimeMeasure.h"
-#include "ImageStream.h"
+#include "ExtendedImageStream.h"
 
 void csvStringFromTimestampsMatrix(TimestampsMatrix& timestamps, std::string &res);
 
@@ -26,8 +26,8 @@ void printTimestampsSnapshot(
 );
 
 void performImageStreamReadExperiment(
-        ImageStream& im_stream_1,
-        ImageStream& im_stream_2,
+        ExtendedImageStream<bool>& im_stream_1,
+        ExtendedImageStream<bool>& im_stream_2,
         unsigned int numReads,
         std::chrono::nanoseconds sleepInterval,
         std::chrono::nanoseconds sleepFluctuationMax,

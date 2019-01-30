@@ -131,8 +131,8 @@ void printTimestampsSnapshot(
 }
 
 void performImageStreamReadExperiment(
-    ImageStream& im_stream_1,
-    ImageStream& im_stream_2,
+    ExtendedImageStream<bool>& im_stream_1,
+    ExtendedImageStream<bool>& im_stream_2,
     unsigned int numReads,
     std::chrono::nanoseconds sleepInterval,
     std::chrono::nanoseconds sleepFluctuationMax,
@@ -152,8 +152,8 @@ void performImageStreamReadExperiment(
 
     TimePoint t_now;
 
-    ImageStreamRequester isr_1(im_stream_1);
-    ImageStreamRequester isr_2(im_stream_2);
+    ExtendedImageStreamRequester<bool> isr_1{im_stream_1};
+    ExtendedImageStreamRequester<bool> isr_2{im_stream_2};
 
     isr_1.start();
     isr_2.start();
