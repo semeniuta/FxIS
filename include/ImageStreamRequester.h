@@ -77,6 +77,12 @@ public:
 
     }
 
+    void stop() {
+
+        this->eo_stop.notify();
+
+    }
+
     std::future<bool> requestImage(TimePoint t) {
 
         std::shared_ptr<std::promise<bool>> promise_ptr(new std::promise<bool>{});

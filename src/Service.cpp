@@ -122,6 +122,10 @@ void Service<StreamingT, ResT>::start() {
 template <class StreamingT, class ResT>
 void Service<StreamingT, ResT>::stop() {
 
+    for (int i = 0; i < this->n_cameras; i++) {
+        this->image_requesters[i]->stop();
+    }
+
     for (auto& bw : this->blocking_waits) {
         bw->notify();
     }
