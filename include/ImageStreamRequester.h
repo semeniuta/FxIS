@@ -55,12 +55,27 @@ void extendedImageRequestThread(
 
 }
 
-
-class BaseImageStreamRequester {
+template <class ResT>
+class ExtendedImageStreamRequester {
 
 public:
 
-    virtual void start() = 0;
+    explicit ExtendedImageStreamRequester(ExtendedImageStream<ResT>& im_stream) : image_stream(im_stream) { }
+
+    void start() {
+
+        thread_ptr = std::unique_ptr<std::thread>(new std::thread(
+                extendedImageRequestThread<ResT>,
+                std::ref(this->image_stream),
+                std::ref(this->image_response),
+                std::ref(this->processing_result),
+                std::ref(this->q_in),
+                std::ref(this->eo_stop)
+        ));
+
+        thread_ptr->detach();
+
+    }
 
     std::future<bool> requestImage(TimePoint t) {
 
@@ -78,53 +93,6 @@ public:
 
     };
 
-protected:
-
-    ThreadsafeQueue<AsyncImageRequest> q_in;
-    EventObject eo_stop;
-    std::unique_ptr<std::thread> thread_ptr;
-
-};
-
-class ImageStreamRequester : public BaseImageStreamRequester {
-
-public:
-
-    explicit ImageStreamRequester(ImageStream& im_stream);
-
-    void start() override;
-
-    virtual void copyData(ImageResponse& out);
-
-private:
-
-    ImageStream& image_stream;
-    ImageResponse image_response;
-
-};
-
-template <class ResT>
-class ExtendedImageStreamRequester : public BaseImageStreamRequester {
-
-public:
-
-    explicit ExtendedImageStreamRequester(ExtendedImageStream<ResT>& im_stream) : image_stream(im_stream) { }
-
-    void start() override {
-
-        thread_ptr = std::unique_ptr<std::thread>(new std::thread(
-                extendedImageRequestThread<ResT>,
-                std::ref(this->image_stream),
-                std::ref(this->image_response),
-                std::ref(this->processing_result),
-                std::ref(this->q_in),
-                std::ref(this->eo_stop)
-        ));
-
-        thread_ptr->detach();
-
-    }
-
     void copyData(ImageResponse& out_im, ResT& out_proc_res) {
 
         out_im = this->image_response;
@@ -139,6 +107,10 @@ public:
     }
 
 private:
+
+    ThreadsafeQueue<AsyncImageRequest> q_in;
+    EventObject eo_stop;
+    std::unique_ptr<std::thread> thread_ptr;
 
     ExtendedImageStream<ResT>& image_stream;
     ImageResponse image_response;
