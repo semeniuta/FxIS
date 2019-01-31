@@ -25,7 +25,7 @@ class Service {
 
 public:
 
-    Service() : ready(false), n_cameras(0) { }
+    Service() : ready_(false), n_cameras_(0) { }
 
     void init(
             unsigned int stream_size,
@@ -43,9 +43,9 @@ public:
             throw std::runtime_error("Failed to start up Vimba system");
         }
 
-        this->n_cameras = cam_parameters.size();
+        n_cameras_ = cam_parameters.size();
 
-        if (task_funcs.size() != n_cameras) {
+        if (task_funcs.size() != n_cameras_) {
             throw std::runtime_error("Size mismatch between number of cameras and number of task functions");
         }
 
@@ -53,7 +53,7 @@ public:
         initImageStreamsAndTasks(stream_size, task_funcs);
         initStreamingObjects(cam_parameters);
 
-        this->ready = true;
+        ready_ = true;
 
     }
 
@@ -61,7 +61,7 @@ public:
 
         // TODO Look here
 
-        for (auto& streaming_obj_ptr : this->streaming_objects) {
+        for (auto& streaming_obj_ptr : streaming_objects_) {
 
             std::thread t(*streaming_obj_ptr);
             t.detach();
@@ -71,16 +71,16 @@ public:
 
     void stop() {
 
-        for (int i = 0; i < this->n_cameras; i++) {
-            this->image_requesters[i]->stop();
+        for (int i = 0; i < n_cameras_; i++) {
+            image_requesters_[i]->stop();
         }
 
-        for (auto& bw : this->blocking_waits) {
+        for (auto& bw : blocking_waits_) {
             bw->notify();
         }
 
         std::stack<std::shared_future<bool>> not_ready_futures;
-        for (std::shared_future<bool> f : this->streaming_finished_futures) {
+        for (std::shared_future<bool> f : streaming_finished_futures_) {
             not_ready_futures.push(f);
         }
 
@@ -101,18 +101,18 @@ public:
 
         std::vector<std::future<bool>> all_futures;
 
-        for (auto& ir : this->image_requesters) {
+        for (auto& ir : image_requesters_) {
             all_futures.push_back(ir->requestImage(t));
         }
 
         ImageResponse im_resp;
         ResT proc_res;
 
-        for (int i = 0; i < this->n_cameras; i++) {
+        for (int i = 0; i < n_cameras_; i++) {
 
             all_futures[i].wait();
 
-            this->image_requesters[i]->copyData(im_resp, proc_res);
+            image_requesters_[i]->copyData(im_resp, proc_res);
 
             out_im.push_back(im_resp);
             out_proc_res.push_back(proc_res);
@@ -124,9 +124,9 @@ protected:
 
     void initBlockingWaits() {
 
-        for (int i = 0; i < this->n_cameras; i++) {
+        for (int i = 0; i < n_cameras_; i++) {
 
-            this->blocking_waits.push_back(
+            blocking_waits_.push_back(
                     std::make_unique<BlockingWait>()
             );
 
@@ -139,22 +139,22 @@ protected:
             const std::vector<ProcessingFunction<ResT>>& task_funcs
     ) {
 
-        for (int i = 0; i < this->n_cameras; i++) {
+        for (int i = 0; i < n_cameras_; i++) {
 
-            this->image_streams.push_back(
+            image_streams_.push_back(
                     std::make_unique<ExtendedImageStream<ResT>>(stream_size)
             );
 
-            this->image_requesters.push_back(
+            image_requesters_.push_back(
                     std::make_unique<ExtendedImageStreamRequester<ResT>>(
-                            *(this->image_streams[i])
+                            *(image_streams_[i])
                     )
             );
-            this->image_requesters[i]->start();
+            image_requesters_[i]->start();
 
-            this->tasks.push_back(
+            tasks_.push_back(
                     std::make_unique<TypedProcessingTask<ResT>>(
-                            *(this->image_streams[i]),
+                            *(image_streams_[i]),
                             task_funcs[i]
                     )
             );
@@ -165,22 +165,22 @@ protected:
 
     void initStreamingObjects(const CamerasParameters& cam_parameters) {
 
-        for (int i = 0; i < this->n_cameras; i++) {
+        for (int i = 0; i < n_cameras_; i++) {
 
-            this->streaming_objects.push_back(
+            streaming_objects_.push_back(
                     std::make_unique<StreamingT>(
-                            *(this->image_streams[i]),
-                            *(this->blocking_waits[i])
+                            *(image_streams_[i]),
+                            *(blocking_waits_[i])
                     )
             );
 
-            this->streaming_objects[i]->init(
+            streaming_objects_[i]->init(
                     cam_parameters[i],
-                    *(this->tasks[i])
+                    *(tasks_[i])
             );
 
-            std::shared_future<bool> future = this->streaming_objects[i]->subscribeToCompletion();
-            this->streaming_finished_futures.push_back(future);
+            std::shared_future<bool> future = streaming_objects_[i]->subscribeToCompletion();
+            streaming_finished_futures_.push_back(future);
 
         }
 
@@ -188,14 +188,14 @@ protected:
 
 private:
 
-    bool ready;
-    unsigned long n_cameras;
-    std::vector<std::unique_ptr<ProcessingTask>> tasks;
-    std::vector<std::unique_ptr<ExtendedImageStream<ResT>>> image_streams;
-    std::vector<std::unique_ptr<ExtendedImageStreamRequester<ResT>>> image_requesters;
-    std::vector<std::unique_ptr<StreamingT>> streaming_objects;
-    std::vector<std::unique_ptr<BlockingWait>> blocking_waits;
-    std::vector<std::shared_future<bool>> streaming_finished_futures;
+    bool ready_;
+    unsigned long n_cameras_;
+    std::vector<std::unique_ptr<ProcessingTask>> tasks_;
+    std::vector<std::unique_ptr<ExtendedImageStream<ResT>>> image_streams_;
+    std::vector<std::unique_ptr<ExtendedImageStreamRequester<ResT>>> image_requesters_;
+    std::vector<std::unique_ptr<StreamingT>> streaming_objects_;
+    std::vector<std::unique_ptr<BlockingWait>> blocking_waits_;
+    std::vector<std::shared_future<bool>> streaming_finished_futures_;
 
 
 };
