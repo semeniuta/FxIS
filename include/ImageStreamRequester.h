@@ -32,14 +32,71 @@ void extendedImageRequestThread(
         ResT& processing_result,
         ThreadsafeQueue<AsyncImageRequest>& q,
         EventObject& stop_event
-);
+) {
 
+    std::cout << "[DEBUG] Starting extendedImageRequestThread\n";
 
-class BaseImageStreamRequester {
+    AsyncImageRequest req;
+
+    while (true) {
+
+        q.pop(req);
+
+        if (stop_event.hasOccured()) {
+            break;
+        }
+
+        im_stream.getImage(
+                req.timestamp,
+                resp,
+                processing_result
+        );
+
+        req.promise_ptr->set_value(true);
+
+    }
+
+    std::cout << "[DEBUG] Stopping extendedImageRequestThread\n";
+
+}
+
+template <class ResT>
+class ExtendedImageStreamRequester {
 
 public:
 
-    virtual void start() = 0;
+    explicit ExtendedImageStreamRequester(ExtendedImageStream<ResT>& im_stream) : image_stream(im_stream) { }
+
+    void start() {
+
+        thread_ptr = std::unique_ptr<std::thread>(new std::thread(
+                extendedImageRequestThread<ResT>,
+                std::ref(this->image_stream),
+                std::ref(this->image_response),
+                std::ref(this->processing_result),
+                std::ref(this->q_in),
+                std::ref(this->eo_stop)
+        ));
+
+        thread_ptr->detach();
+
+    }
+
+    void stop() {
+
+        this->eo_stop.notify();
+
+        // TODO Make the stopping fix more elegant
+
+        std::shared_ptr<std::promise<bool>> promise_ptr(new std::promise<bool>{});
+        AsyncImageRequest req{
+                currentTime(),
+                promise_ptr
+        };
+
+        this->q_in.push(req);
+
+    }
 
     std::future<bool> requestImage(TimePoint t) {
 
@@ -57,43 +114,24 @@ public:
 
     };
 
-protected:
+    void copyData(ImageResponse& out_im, ResT& out_proc_res) {
+
+        out_im = this->image_response;
+        out_proc_res = this->processing_result;
+
+    }
+
+    void copyData(ImageResponse& out_im) {
+
+        out_im = this->image_response;
+
+    }
+
+private:
 
     ThreadsafeQueue<AsyncImageRequest> q_in;
     EventObject eo_stop;
     std::unique_ptr<std::thread> thread_ptr;
-
-};
-
-class ImageStreamRequester : public BaseImageStreamRequester {
-
-public:
-
-    explicit ImageStreamRequester(ImageStream& im_stream);
-
-    void start() override;
-
-    virtual void copyData(ImageResponse& out);
-
-private:
-
-    ImageStream& image_stream;
-    ImageResponse image_response;
-
-};
-
-template <class ResT>
-class ExtendedImageStreamRequester : public BaseImageStreamRequester {
-
-public:
-
-    explicit ExtendedImageStreamRequester(ExtendedImageStream<ResT>& im_stream);
-
-    void start() override;
-
-    void copyData(ImageResponse& out, ResT& processing_result);
-
-private:
 
     ExtendedImageStream<ResT>& image_stream;
     ImageResponse image_response;

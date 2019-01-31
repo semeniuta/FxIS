@@ -10,39 +10,39 @@
  * */
 
 ImageStream::ImageStream(uint size)
-        : stream_size(size), ctv(size, NUM_TIMESTAMPS_IN_IMAGESTREAM), ready(false) { }
+        : stream_size(size), ctv_(size, NUM_TIMESTAMPS_IN_IMAGESTREAM), ready_(false) { }
 
 void ImageStream::init(uint width, uint height, uint numChannels) {
 
-    this->w = width;
-    this->h = height;
-    this->num_channels = numChannels;
+    image_width_ = width;
+    image_height_ = height;
+    num_channels_ = numChannels;
 
-    for (int i = 0; i < this->stream_size; i++) {
+    for (int i = 0; i < stream_size; i++) {
 
-        cv::Mat im(h, w, CV_8UC(this->num_channels));
-        this->images.push_back(im);
+        cv::Mat im(image_height_, image_width_, CV_8UC(num_channels_));
+        images_.push_back(im);
     }
 
-    this->ready = true;
+    ready_ = true;
 
 }
 
 void ImageStream::storeImageData(cv::Mat image, TimePoint t) {
 
-    std::lock_guard<std::mutex> lock(this->mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
-    if (!this->ready) {
+    if (!ready_) {
         throw std::runtime_error("ImageStream is not yet ready");
     }
 
-    this->images[this->ctv.getCurrentIndex()] = image;
+    images_[ctv_.getCurrentIndex()] = image;
 
-    this->ctv.storeTimestamp(t, 0);
-    this->ctv.storeTimestamp(currentTime(), 1);
-    this->ctv.advance();
+    ctv_.storeTimestamp(t, 0);
+    ctv_.storeTimestamp(currentTime(), 1);
+    ctv_.advance();
 
-    this->waiting_for_next_image.notify();
+    waiting_for_next_image_.notify();
 
 }
 
@@ -51,34 +51,34 @@ void ImageStream::getImage(
         ImageResponse& out
 ) {
 
-    std::cout << "[DEBUG] getImage requested. ci=" << this->ctv.getCurrentIndex() << std::endl;
+    std::cout << "[DEBUG] getImage requested. ci=" << ctv_.getCurrentIndex() << std::endl;
 
-    this->waiting_for_next_image.wait();
+    waiting_for_next_image_.wait();
 
     auto t_request_mutex = currentTime();
 
-    std::lock_guard<std::mutex> lock(this->mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     auto t_got_mutex = currentTime();
 
-    if (!this->ready) {
+    if (!ready_) {
         throw std::runtime_error("ImageStream is not yet ready");
     }
 
-    unsigned long index_to_get = this->ctv.searchNearestTime(t, 0);
+    unsigned long index_to_get = ctv_.searchNearestTime(t, 0);
 
-    std::cout << "[DEBUG] target index found (after new frame is acquired). ci=" << this->ctv.getCurrentIndex();
+    std::cout << "[DEBUG] target index found (after new frame is acquired). ci=" << ctv_.getCurrentIndex();
     std::cout << ", target=" << index_to_get << std::endl;
 
     auto t_done_searching = currentTime();
 
-    cv::Mat im = this->images[index_to_get];
+    cv::Mat im = images_[index_to_get];
     im.copyTo(out.image);
 
-    this->ctv.contentSnapshot(out.timestamps_snapshot);
+    ctv_.contentSnapshot(out.timestamps_snapshot);
 
     out.target_index = index_to_get;
-    out.current_index = this->ctv.getCurrentIndex();
+    out.current_index = ctv_.getCurrentIndex();
 
     auto t_done_copying = currentTime();
 
@@ -88,21 +88,21 @@ void ImageStream::getImage(
 
 cv::Size ImageStream::getImageDimension() {
 
-    return cv::Size(this->w, this->h);
+    return cv::Size(image_width_, image_height_);
 
 }
 
 unsigned int ImageStream::getNumberOfChannels() {
 
-    return this->num_channels;
+    return num_channels_;
 
 }
 
 unsigned int ImageStream::getWidth() {
-    return this->w;
+    return image_width_;
 }
 
 unsigned int ImageStream::getHeight() {
-    return this->h;
+    return image_height_;
 }
 

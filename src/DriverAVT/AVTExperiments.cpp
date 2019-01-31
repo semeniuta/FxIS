@@ -27,8 +27,8 @@ int launchImageStreamReadExperiment(
     BlockingWait bw1;
     BlockingWait bw2;
 
-    ImageStream image_stream_1(streamSize);
-    ImageStream image_stream_2(streamSize);
+    ExtendedImageStream<bool> image_stream_1(streamSize);
+    ExtendedImageStream<bool> image_stream_2(streamSize);
 
     JustStoreTask just_save_1(image_stream_1);
     JustStoreTask just_save_2(image_stream_2);

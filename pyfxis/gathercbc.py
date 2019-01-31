@@ -1,5 +1,7 @@
-# Gather good pairs of images with chessboard calibration pattern
-# using FxIS and EPypes
+"""
+Gather good pairs of images with chessboard calibration pattern
+using FxIS and VisionCG/EPypes
+"""
 
 import sys
 import os
@@ -11,12 +13,12 @@ import cv2
 PHD_CODE = os.environ['PHD_CODE']
 sys.path.append(os.getcwd())
 sys.path.append(os.path.join(PHD_CODE, 'EPypes'))
-sys.path.append(os.path.join(PHD_CODE, 'RPALib'))
+sys.path.append(os.path.join(PHD_CODE, 'VisionCG'))
 
 from grabber import AVTGrabber
 from fxisext import get_timestamps_snaphot, get_timepoints
 
-from rpa import cbcalib
+from visioncg import cbcalib
 from epypes import pipeline
 from epypes import compgraph
 from epypes.queue import Queue

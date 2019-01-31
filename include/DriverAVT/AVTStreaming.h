@@ -10,13 +10,12 @@
 #include "ImageStream.h"
 #include "BlockingWait.h"
 #include "ProcessingTask.h"
-#include "Streaming.h"
 #include <future>
 #include <memory>
 
 void initFramePtrVector(FramePtrVector& v, int n_frames);
 
-class AVTStreaming : public Streaming {
+class AVTStreaming {
 
 public:
 
@@ -32,7 +31,7 @@ public:
 
     std::shared_future<bool> subscribeToCompletion();
 
-    void operator()() override;
+    void operator()();
 
 private:
     bool ready;

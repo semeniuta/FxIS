@@ -71,6 +71,8 @@ void AVTStreaming::init(
 
 void AVTStreaming::operator()() {
 
+    std::cout << "[DEBUG] Starting AVTStreaming thread\n";
+
     if (!this->ready) {
         throw std::runtime_error("AVTStreaming object is not initialized");
     }
@@ -102,6 +104,8 @@ void AVTStreaming::operator()() {
     if (this->streaming_finished) { // if subscribeToCompletion was called (std::shared_ptr::operator bool)
         this->streaming_finished->set_value(true);
     }
+
+    std::cout << "[DEBUG] Stopping AVTStreaming thread\n";
 
 }
 
