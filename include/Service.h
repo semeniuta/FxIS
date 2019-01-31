@@ -2,7 +2,6 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include "Streaming.h"
 #include "ImageStream.h"
 #include "ImageStreamRequester.h"
 #include "ProcessingTask.h"
