@@ -34,11 +34,17 @@ void extendedImageRequestThread(
         EventObject& stop_event
 ) {
 
+    std::cout << "[DEBUG] Starting extendedImageRequestThread\n";
+
     AsyncImageRequest req;
 
     while (true) {
 
         q.pop(req);
+
+        if (stop_event.hasOccured()) {
+            break;
+        }
 
         im_stream.getImage(
                 req.timestamp,
@@ -48,10 +54,9 @@ void extendedImageRequestThread(
 
         req.promise_ptr->set_value(true);
 
-        if (stop_event.hasOccured()) {
-            break;
-        }
     }
+
+    std::cout << "[DEBUG] Stopping extendedImageRequestThread\n";
 
 }
 
@@ -80,6 +85,16 @@ public:
     void stop() {
 
         this->eo_stop.notify();
+
+        // TODO Make the stopping fix more elegant
+
+        std::shared_ptr<std::promise<bool>> promise_ptr(new std::promise<bool>{});
+        AsyncImageRequest req{
+                currentTime(),
+                promise_ptr
+        };
+
+        this->q_in.push(req);
 
     }
 
