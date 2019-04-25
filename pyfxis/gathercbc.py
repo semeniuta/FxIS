@@ -111,12 +111,14 @@ def main_loop(runner, sleep_time, save_dir, do_stream=True, do_save=False):
 if __name__ == '__main__':
 
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('--dir')
-    arg_parser.add_argument('--stream', action='store_true')
-    arg_parser.add_argument('--save', action='store_true')
+    arg_parser.add_argument('--dir', help='directory to save images')
+    arg_parser.add_argument('--ph', type=int, help='horizontal pattern size')
+    arg_parser.add_argument('--pv', type=int, help='vertical pattern size')
+    arg_parser.add_argument('--stream', action='store_true', help='launch video streaming')
+    arg_parser.add_argument('--save', action='store_true', help='save images')
     args = arg_parser.parse_args()
 
-    psize = (15, 9)
+    psize = (args.ph, args.pv)
     sleep_time = 1
 
     cg_corners_stereo = compgraph.graph_union_with_suffixing(
