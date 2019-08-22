@@ -13,7 +13,6 @@
 #include <future>
 #include <memory>
 
-void initFramePtrVector(FramePtrVector& v, int n_frames);
 
 class AVTStreaming {
 
@@ -34,12 +33,12 @@ public:
     void operator()();
 
 private:
-    bool ready;
-    ImageStream& image_stream;
-    CameraPtr cam;
-    FramePtrVector frames;
-    BlockingWait& blocking_wait;
-    std::shared_ptr<std::promise<bool>> streaming_finished;
+    bool ready_;
+    ImageStream& image_stream_;
+    CameraPtr cam_;
+    FramePtrVector frames_;
+    BlockingWait& blocking_wait_;
+    std::shared_ptr<std::promise<bool>> streaming_finished_;
 
 };
 

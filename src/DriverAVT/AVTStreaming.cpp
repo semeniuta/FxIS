@@ -3,16 +3,11 @@
 #include "MatMaker.h"
 #include <iostream>
 
-void initFramePtrVector(FramePtrVector& v, unsigned long n_frames) {
-
-    v = FramePtrVector(n_frames);
-
-}
 
 AVTStreaming::AVTStreaming(
         ImageStream& imStream,
         BlockingWait& bw
-) : image_stream(imStream), blocking_wait(bw), ready(false) { }
+) : image_stream_{imStream}, blocking_wait_{bw}, ready_{false} { }
 
 
 void AVTStreaming::init(
@@ -26,7 +21,7 @@ void AVTStreaming::init(
     int camera_index = cam_parameters.at("camera_index");
     unsigned long n_frames = (unsigned long)cam_parameters.at("n_frames");
 
-    initFramePtrVector(this->frames, n_frames);
+    frames_ = FramePtrVector(n_frames);
 
     VimbaSystem& sys = VimbaSystem::GetInstance();
 
@@ -41,11 +36,11 @@ void AVTStreaming::init(
         throw std::runtime_error("Zero cameras available");
     }
 
-    this->cam = cameras[camera_index];
+    cam_ = cameras[camera_index];
 
     std::map<std::string, VmbInt64_t> camera_features;
 
-    err = openCameraWithImageFeatures(this->cam, camera_features);
+    err = openCameraWithImageFeatures(cam_, camera_features);
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when opening a camera and getting image features");
     }
@@ -56,16 +51,16 @@ void AVTStreaming::init(
     w = (unsigned int)camera_features["Width"];
     h = (unsigned int)camera_features["Height"];
 
-    image_stream.init(w, h, mm.getNumberOfChannels());
+    image_stream_.init(w, h, mm.getNumberOfChannels());
 
-    IFrameObserverPtr observer(new AVTFrameObserverImageStream(this->cam, mm, image_stream, task));
+    IFrameObserverPtr observer(new AVTFrameObserverImageStream(cam_, mm, image_stream_, task));
 
-    err = announceFrames(this->cam, frames, observer);
+    err = announceFrames(cam_, frames_, observer);
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when announcing frames");
     }
 
-    this->ready = true;
+    ready_ = true;
 
 }
 
@@ -73,36 +68,36 @@ void AVTStreaming::operator()() {
 
     std::cout << "[DEBUG] Starting AVTStreaming thread\n";
 
-    if (!this->ready) {
+    if (!ready_) {
         throw std::runtime_error("AVTStreaming object is not initialized");
     }
 
     VmbErrorType err;
 
-    err = cam->StartCapture();
+    err = cam_->StartCapture();
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when starting capture");
     }
 
-    err = queueFrames(this->cam, this->frames);
+    err = queueFrames(cam_, frames_);
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when queueing frames");
     }
 
-    err = acquisitionStart(cam);
+    err = acquisitionStart(cam_);
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when starting acquisition");
     }
 
-    this->blocking_wait.wait();
+    blocking_wait_.wait();
 
-    err = acquisitionStop(cam);
+    err = acquisitionStop(cam_);
     if (err != VmbErrorSuccess) {
         throw std::runtime_error("Exception when stopping acquisition");
     }
 
-    if (this->streaming_finished) { // if subscribeToCompletion was called (std::shared_ptr::operator bool)
-        this->streaming_finished->set_value(true);
+    if (streaming_finished_) { // if subscribeToCompletion was called (std::shared_ptr::operator bool)
+        streaming_finished_->set_value(true);
     }
 
     std::cout << "[DEBUG] Stopping AVTStreaming thread\n";
@@ -111,8 +106,8 @@ void AVTStreaming::operator()() {
 
 std::shared_future<bool> AVTStreaming::subscribeToCompletion() {
 
-    std::shared_ptr<std::promise<bool>> promise_ptr(new std::promise<bool>{});
-    this->streaming_finished = promise_ptr;
+    std::shared_ptr<std::promise<bool>> promise_ptr{new std::promise<bool>{}};
+    streaming_finished_ = promise_ptr;
 
     return promise_ptr->get_future();
 
