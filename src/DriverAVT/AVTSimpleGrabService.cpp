@@ -34,13 +34,13 @@ void AVTSimpleGrabService::init(
             cv::resizeWindow(window_name, 640, 480);
         }
 
-        this->funcs.push_back(
+        funcs_.push_back(
                 get_imshow_func(window_name)
         );
 
     }
 
-    this->srv.init(stream_size, cam_parameters, this->funcs);
+    srv_.init(stream_size, cam_parameters, funcs_);
 
 }
 
@@ -49,7 +49,7 @@ std::vector<ImageResponse> AVTSimpleGrabService::grab() {
     std::vector<ImageResponse> res;
     std::vector<int> _;
 
-    this->srv.grab(res, _);
+    srv_.grab(res, _);
 
     return res;
 

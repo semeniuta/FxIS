@@ -18,15 +18,15 @@ public:
             bool show_video
     );
 
-    void start() { srv.start(); };
-    void stop() { srv.stop(); };
+    void start() { srv_.start(); };
+    void stop() { srv_.stop(); };
 
     std::vector<ImageResponse> grab();
 
 private:
 
-    std::vector<ImshowFunc> funcs;
-    Service<AVTStreaming, int> srv;
+    std::vector<ImshowFunc> funcs_;
+    Service<AVTStreaming, int> srv_;
 
 };
 
