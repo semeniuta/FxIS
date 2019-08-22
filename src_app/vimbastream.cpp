@@ -28,8 +28,7 @@ const int N_FRAMES = 4;
 
 using namespace AVT::VmbAPI;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 
     VimbaSystem& sys = VimbaSystem::GetInstance();
 
@@ -58,7 +57,7 @@ int main(int argc, char* argv[])
 
     if (argc == 2) {
 
-        int cam_index = atoi(argv[1]);
+        int cam_index = std::stoi(argv[1]);
 
         if (cam_index < 0 || cam_index >= cameras.size()) {
             std::cout << "None-existent camera index provided(" << cam_index << "). Exiting." << std::endl;
@@ -93,7 +92,7 @@ int main(int argc, char* argv[])
     err = streamingStart(cam, frames, observer);
 
     std::cout<< "Press <enter> to stop streaming...\n" ;
-    getchar();
+    std::cin.get();
 
     err = acquisitionStop(cam);
 
