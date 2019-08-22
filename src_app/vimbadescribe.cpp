@@ -9,8 +9,7 @@
 
 #include "DriverAVT/AVTVimba.h"
 
-int main( int argc, char* argv[] )
-{
+int main( int argc, char* argv[] ) {
 
     if (describeVimbaSetup() != VmbErrorSuccess) {
         std::cout << "Some problem occured" << std::endl;

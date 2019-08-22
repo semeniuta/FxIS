@@ -58,8 +58,8 @@ int main() {
     BlockingWait bw1;
     BlockingWait bw2;
 
-    ExtendedImageStream<CBCResults> image_stream_1(STREAM_SIZE);
-    ExtendedImageStream<CBCResults> image_stream_2(STREAM_SIZE);
+    ExtendedImageStream<CBCResults> image_stream_1{STREAM_SIZE};
+    ExtendedImageStream<CBCResults> image_stream_2{STREAM_SIZE};
 
     CBCFunc f1 = get_cbc_func(9, 7, "Camera 1");
     CBCFunc f2 = get_cbc_func(9, 7, "Camera 2");
@@ -68,22 +68,22 @@ int main() {
     cv::resizeWindow("Camera 1", 640, 480);
     cv::resizeWindow("Camera 2", 640, 480);
 
-    TypedProcessingTask<CBCResults> task_1(image_stream_1, f1);
-    TypedProcessingTask<CBCResults> task_2(image_stream_2, f2);
+    TypedProcessingTask<CBCResults> task_1{image_stream_1, f1};
+    TypedProcessingTask<CBCResults> task_2{image_stream_2, f2};
 
     std::map<std::string, int> params_1 = {{"camera_index", 0}, {"n_frames", N_FRAMES}};
     std::map<std::string, int> params_2 = {{"camera_index", 1}, {"n_frames", N_FRAMES}};
 
-    AVTStreaming cam1_streaming(image_stream_1, bw1);
-    AVTStreaming cam2_streaming(image_stream_2, bw2);
+    AVTStreaming cam1_streaming{image_stream_1, bw1};
+    AVTStreaming cam2_streaming{image_stream_2, bw2};
     cam1_streaming.init(params_1, task_1);
     cam2_streaming.init(params_2, task_2);
 
-    std::thread t1(cam1_streaming);
-    std::thread t2(cam2_streaming);
+    std::thread t1{cam1_streaming};
+    std::thread t2{cam2_streaming};
 
     std::cout<< "Press <enter> to stop all the streaming threads...\n" ;
-    getchar();
+    std::cin.get();
     bw1.notify();
     bw2.notify();
 
