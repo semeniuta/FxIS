@@ -8,6 +8,10 @@
 
 using namespace AVT::VmbAPI;
 
+void startupVimba();
+
+void shutdownVimba();
+
 VmbErrorType startupVimbaSystemAndGetCameras(VimbaSystem& sys, CameraPtrVector& cameras);
 
 VmbErrorType describeVimbaSetup();

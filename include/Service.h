@@ -33,15 +33,7 @@ public:
             std::vector<ProcessingFunction<ResT>> task_funcs = std::vector<ProcessingFunction<ResT>>()
     ) {
 
-        VimbaSystem& sys = VimbaSystem::GetInstance();
-
-        VmbErrorType err;
-
-        err = sys.Startup();
-        if (err != VmbErrorSuccess) {
-            sys.Shutdown();
-            throw std::runtime_error("Failed to start up Vimba system");
-        }
+        // It used to be Vimba statup here
 
         n_cameras_ = cam_parameters.size();
 
@@ -89,9 +81,7 @@ public:
             not_ready_futures.pop();
         }
 
-        VimbaSystem& sys = VimbaSystem::GetInstance();
-        sys.Shutdown();
-        std::cout << "Shutting down normally\n";
+        // It used to be Vimba shut down here
 
     }
 

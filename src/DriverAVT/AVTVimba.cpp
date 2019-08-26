@@ -10,6 +10,35 @@
 
 using namespace AVT::VmbAPI;
 
+void startupVimba() {
+
+    VimbaSystem& sys = VimbaSystem::GetInstance();
+
+    VmbErrorType err;
+
+    err = sys.Startup();
+    if (err != VmbErrorSuccess) {
+        sys.Shutdown();
+        throw std::runtime_error("Failed to start up Vimba API");
+    }
+
+}
+
+void shutdownVimba() {
+
+    VimbaSystem& sys = VimbaSystem::GetInstance();
+
+    VmbErrorType err;
+
+    err = sys.Shutdown();
+    if (err != VmbErrorSuccess) {
+        throw std::runtime_error("Failed to shut down Vimba API");
+    }
+
+    std::cout << "Vimba API is shut down\n";
+
+}
+
 VmbErrorType getFeatureValue(CameraPtr cameraPointer, std::string featureName, VmbInt64_t& result) {
 
     FeaturePtr feature_pointer;

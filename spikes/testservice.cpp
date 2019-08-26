@@ -45,6 +45,8 @@ int main() {
 
     std::vector<CBCFunc> funcs = {get_cbc_func(15, 9, "Camera 1"), get_cbc_func(15, 9, "Camera 2")};
 
+    startupVimba();
+
     Service<AVTStreaming, CBCResults> srv;
     srv.init(
         STREAM_SIZE,
@@ -55,8 +57,10 @@ int main() {
     srv.start();
 
     std::cout<< "Press <enter> to stop all the streaming threads...\n" ;
-    getchar();
+    std::cin.get();
     srv.stop();
+
+    shutdownVimba();
 
     return 0;
 }

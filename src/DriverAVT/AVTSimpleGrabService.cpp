@@ -40,6 +40,7 @@ void AVTSimpleGrabService::init(
 
     }
 
+    startupVimba();
     srv_.init(stream_size, cam_parameters, funcs_);
 
 }

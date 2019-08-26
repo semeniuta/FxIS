@@ -19,7 +19,11 @@ public:
     );
 
     void start() { srv_.start(); };
-    void stop() { srv_.stop(); };
+
+    void stop() {
+        srv_.stop();
+        shutdownVimba();
+    };
 
     std::vector<ImageResponse> grab();
 

@@ -41,13 +41,14 @@ int main() {
 
     std::vector<DummyFunc> funcs = {get_dummy_func("Camera 1"), get_dummy_func("Camera 2")};
 
+    startupVimba();
+
     Service<AVTStreaming, DummyResult> srv;
     srv.init(
             STREAM_SIZE,
             {params_1, params_2},
             funcs
     );
-
 
     srv.start();
 
@@ -82,7 +83,9 @@ int main() {
         }
 
     }
+
     srv.stop();
+    shutdownVimba();
 
     return 0;
 }
