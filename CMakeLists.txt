@@ -106,6 +106,7 @@ pybind11_add_module(fxisext pyfxis/fxisext.cpp)
 target_link_libraries(fxisext PRIVATE FxIS-avt)
 
 configure_file(pyfxis/grabber.py grabber.py COPYONLY)
+configure_file(pyfxis/avtstream.py avtstream.py COPYONLY)
 
 # ======== INSTALLS ======== #
 
