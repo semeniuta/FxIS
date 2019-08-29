@@ -40,7 +40,10 @@ void AVTSimpleGrabService::init(
 
     }
 
-    startupVimba();
+    if (!manual_vimba_control_) {
+        startupVimba();
+    }
+
     srv_.init(stream_size, cam_parameters, funcs_);
 
 }
@@ -48,8 +51,12 @@ void AVTSimpleGrabService::init(
 void AVTSimpleGrabService::start() { srv_.start(); };
 
 void AVTSimpleGrabService::stop() {
+
     srv_.stop();
-    shutdownVimba();
+
+    if (manual_vimba_control_) {
+        shutdownVimba();
+    }
 };
 
 std::vector<ImageResponse> AVTSimpleGrabService::grab() {
@@ -61,4 +68,9 @@ std::vector<ImageResponse> AVTSimpleGrabService::grab() {
 
     return res;
 
+}
+
+void AVTSimpleGrabService::enableManualVimbaControl() {
+
+    manual_vimba_control_ = true;
 }

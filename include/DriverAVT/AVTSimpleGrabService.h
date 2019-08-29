@@ -24,10 +24,13 @@ public:
 
     std::vector<ImageResponse> grab();
 
+    void enableManualVimbaControl();
+
 private:
 
     std::vector<ImshowFunc> funcs_;
     Service<AVTStreaming, int> srv_;
+    bool manual_vimba_control_ = false;
 
 };
 
