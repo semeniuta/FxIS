@@ -72,12 +72,12 @@ public:
         }
 
         std::stack<std::shared_future<bool>> not_ready_futures;
-        for (std::shared_future<bool> f : streaming_finished_futures_) {
+        for (const auto& f : streaming_finished_futures_) {
             not_ready_futures.push(f);
         }
 
         while(!not_ready_futures.empty()) {
-            not_ready_futures.top().wait();;
+            not_ready_futures.top().wait();
             not_ready_futures.pop();
         }
 
