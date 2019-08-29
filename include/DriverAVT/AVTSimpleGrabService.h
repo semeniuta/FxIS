@@ -18,12 +18,9 @@ public:
             bool show_video
     );
 
-    void start() { srv_.start(); };
+    void start();
 
-    void stop() {
-        srv_.stop();
-        shutdownVimba();
-    };
+    void stop();
 
     std::vector<ImageResponse> grab();
 

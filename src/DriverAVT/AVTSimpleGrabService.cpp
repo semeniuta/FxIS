@@ -45,6 +45,13 @@ void AVTSimpleGrabService::init(
 
 }
 
+void AVTSimpleGrabService::start() { srv_.start(); };
+
+void AVTSimpleGrabService::stop() {
+    srv_.stop();
+    shutdownVimba();
+};
+
 std::vector<ImageResponse> AVTSimpleGrabService::grab() {
 
     std::vector<ImageResponse> res;
