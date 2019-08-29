@@ -54,7 +54,7 @@ void AVTSimpleGrabService::stop() {
 
     srv_.stop();
 
-    if (manual_vimba_control_) {
+    if (!manual_vimba_control_) {
         shutdownVimba();
     }
 };
