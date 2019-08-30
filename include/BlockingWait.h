@@ -14,9 +14,9 @@ public:
 
 private:
 
-    bool waiting;
-    std::mutex mx;
-    std::condition_variable cond_var;
+    bool waiting_;
+    std::mutex mx_;
+    std::condition_variable cond_var_;
 };
 
 

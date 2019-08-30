@@ -1,30 +1,30 @@
 #include "BlockingWait.h"
 #include <iostream>
 
-BlockingWait::BlockingWait() : waiting(false) { }
+BlockingWait::BlockingWait() : waiting_(false) { }
 
 void BlockingWait::wait() {
 
-    std::unique_lock<std::mutex> lk(this->mx);
+    std::unique_lock<std::mutex> lk(mx_);
 
-    this->waiting = true;
+    waiting_ = true;
 
-    this->cond_var.wait(lk, [this]{return !this->waiting;});
+    cond_var_.wait(lk, [this]{return !waiting_;});
 
 }
 
 void BlockingWait::notify() {
 
-    if (!this->waiting) {
+    if (!this->waiting_) {
         return;
     }
 
-    std::unique_lock<std::mutex> lk(this->mx);
+    std::unique_lock<std::mutex> lk(mx_);
 
-    this->waiting = false;
+    waiting_ = false;
 
     lk.unlock();
 
-    this->cond_var.notify_one();
+    cond_var_.notify_one();
 
 }
