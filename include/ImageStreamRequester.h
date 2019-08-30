@@ -18,13 +18,6 @@ struct AsyncImageRequest {
     std::shared_ptr<std::promise<bool>> promise_ptr;
 };
 
-void imageRequestThread(
-        ImageStream& im_stream,
-        ImageResponse& resp,
-        ThreadsafeQueue<AsyncImageRequest>& q,
-        EventObject& stop_event
-);
-
 template <class ResT>
 void extendedImageRequestThread(
         ExtendedImageStream<ResT>& im_stream,
@@ -65,26 +58,26 @@ class ExtendedImageStreamRequester {
 
 public:
 
-    explicit ExtendedImageStreamRequester(ExtendedImageStream<ResT>& im_stream) : image_stream(im_stream) { }
+    explicit ExtendedImageStreamRequester(ExtendedImageStream<ResT>& im_stream) : image_stream_(im_stream) { }
 
     void start() {
 
-        thread_ptr = std::unique_ptr<std::thread>(new std::thread(
+        thread_ptr_ = std::make_unique<std::thread>(
                 extendedImageRequestThread<ResT>,
-                std::ref(this->image_stream),
-                std::ref(this->image_response),
-                std::ref(this->processing_result),
-                std::ref(this->q_in),
-                std::ref(this->eo_stop)
-        ));
+                std::ref(image_stream_),
+                std::ref(image_response_),
+                std::ref(processing_result_),
+                std::ref(q_in_),
+                std::ref(eo_stop_)
+        );
 
-        thread_ptr->detach();
+        thread_ptr_->detach();
 
     }
 
     void stop() {
 
-        this->eo_stop.notify();
+        eo_stop_.notify();
 
         // TODO Make the stopping fix more elegant
 
@@ -94,7 +87,7 @@ public:
                 promise_ptr
         };
 
-        this->q_in.push(req);
+        q_in_.push(req);
 
     }
 
@@ -108,7 +101,7 @@ public:
 
         std::future<bool> future = req.promise_ptr->get_future();
 
-        this->q_in.push(req);
+        q_in_.push(req);
 
         return future;
 
@@ -116,26 +109,26 @@ public:
 
     void copyData(ImageResponse& out_im, ResT& out_proc_res) {
 
-        out_im = this->image_response;
-        out_proc_res = this->processing_result;
+        out_im = image_response_;
+        out_proc_res = processing_result_;
 
     }
 
     void copyData(ImageResponse& out_im) {
 
-        out_im = this->image_response;
+        out_im = image_response_;
 
     }
 
 private:
 
-    ThreadsafeQueue<AsyncImageRequest> q_in;
-    EventObject eo_stop;
-    std::unique_ptr<std::thread> thread_ptr;
+    ThreadsafeQueue<AsyncImageRequest> q_in_;
+    EventObject eo_stop_;
+    std::unique_ptr<std::thread> thread_ptr_;
 
-    ExtendedImageStream<ResT>& image_stream;
-    ImageResponse image_response;
-    ResT processing_result;
+    ExtendedImageStream<ResT>& image_stream_;
+    ImageResponse image_response_;
+    ResT processing_result_;
 
 };
 
