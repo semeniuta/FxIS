@@ -110,6 +110,7 @@ target_link_libraries(fxisext PRIVATE FxIS-avt)
 
 configure_file(pyfxis/grabber.py grabber.py COPYONLY)
 configure_file(pyfxis/avtstream.py avtstream.py COPYONLY)
+configure_file(pyfxis/gathercbc.py gathercbc.py COPYONLY)
 
 # ======== INSTALLS ======== #
 

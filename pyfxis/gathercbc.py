@@ -81,11 +81,14 @@ def main_loop(runner, sleep_time, save_dir, do_stream=True, do_save=False):
 
             print_grab_missync(resp_1, resp_2)
 
+            im_1 = np.array(resp_1.image, copy=False)
+            im_2 = np.array(resp_2.image, copy=False)
+
+            im_1 = im_1.reshape(im_1.shape[0], im_1.shape[1])
+            im_2 = im_2.reshape(im_2.shape[0], im_2.shape[1])
+
             t0 = time.time()
-            runner.run(
-                image_1=np.array(resp_1.image, copy=False),
-                image_2=np.array(resp_2.image, copy=False)
-            )
+            runner.run(image_1=im_1, image_2=im_2)
             t1 = time.time()
             t_proc = t1 - t0
 
