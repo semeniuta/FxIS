@@ -47,6 +47,9 @@ target_link_libraries(vimbadescribe FxIS-avt)
 add_executable(vimbastream "src_app/vimbastream.cpp")
 target_link_libraries(vimbastream FxIS-avt)
 
+add_executable(vimbaterm "src_app/vimbaterm.cpp")
+target_link_libraries(vimbaterm FxIS-avt)
+
 add_executable(cbdetect "src_app/cbdetect.cpp")
 target_link_libraries(cbdetect FxIS-avt)
 
