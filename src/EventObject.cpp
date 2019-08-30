@@ -1,34 +1,34 @@
 #include "EventObject.h"
 #include <mutex>
 
-EventObject::EventObject() : occured(false) { }
+EventObject::EventObject() : occured_(false) { }
 
 void EventObject::notify() {
 
     TimePoint t = currentTime();
 
-    std::lock_guard<std::mutex> lk(this->mx);
+    std::lock_guard<std::mutex> lk(mx_);
 
-    if (this->occured) {
+    if (occured_) {
         return;
     }
 
-    this->occured = true;
-    this->timestamp = t;
+    occured_ = true;
+    timestamp_ = t;
 }
 
 bool EventObject::hasOccured() {
-    return this->occured;
+    return occured_;
 }
 
 TimePoint EventObject::getTimestamp() {
 
-    std::lock_guard<std::mutex> lk(this->mx);
+    std::lock_guard<std::mutex> lk(mx_);
 
-    if (!this->occured) {
+    if (!occured_) {
         throw std::logic_error("Timestamp requested before event occured");
     }
 
-    return this->timestamp;
+    return timestamp_;
 
 }

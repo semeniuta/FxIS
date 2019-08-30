@@ -16,9 +16,9 @@ public:
 
 private:
 
-    bool occured;
-    TimePoint timestamp;
-    std::mutex mx;
+    bool occured_;
+    TimePoint timestamp_;
+    std::mutex mx_;
 
 };
 
