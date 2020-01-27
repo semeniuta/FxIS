@@ -10,18 +10,14 @@ import numpy as np
 import argparse
 import cv2
 
-PHD_CODE = os.environ['PHD_CODE']
+CODEROOT = os.environ['CODEROOT']
 sys.path.append(os.getcwd())
-sys.path.append(os.path.join(PHD_CODE, 'EPypes'))
-sys.path.append(os.path.join(PHD_CODE, 'VisionCG'))
+sys.path.append(os.path.join(CODEROOT, 'VisionCG'))
+sys.path.append(os.path.join(CODEROOT, 'EPypes'))
 
 from grabber import AVTGrabber
 from fxisext import get_timestamps_snaphot, get_timepoints
-
 from visioncg import cbcalib
-from epypes import pipeline
-from epypes import compgraph
-from epypes.queue import Queue
 
 def get_timing_measurements(resp):
 
@@ -40,29 +36,41 @@ def print_grab_missync(resp_1, resp_2):
     print('Missync: {:.3f} ms'.format(t_ms))
 
 
-def save_data(index, responses, runner, save_dir):
+def find_corners(im1, im2, pattern_size_wh, flags):
 
-    def save_one(resp, suffix):
+    def fc(im):
+        return cbcalib.find_cbc(im, pattern_size_wh, findcbc_flags=flags)
 
-        im = runner['image_' + suffix]
-        t_snap, t_read = get_timing_measurements(resp)
+    found_1, corners_1 = fc(im1)
+    found_2, corners_2 = fc(im2)
+
+    success = found_1 and found_2
+
+    return success, corners_1, corners_2
+
+
+def save_data(index, im_1, im_2, resp_1, resp_2, save_dir):
+
+    def save_one(im, resp, suffix):
+
+        #t_snap, t_read = get_timing_measurements(resp)
 
         path_im = os.path.join(save_dir, 'img_{}_{}.jpg'.format(suffix, index))
-        path_tsnap = os.path.join(save_dir, 'tsnap_{}_{}.npy'.format(suffix, index))
-        path_tread = os.path.join(save_dir, 'tread_{}_{}.npy'.format(suffix, index))
+        #path_tsnap = os.path.join(save_dir, 'tsnap_{}_{}.npy'.format(suffix, index))
+        #path_tread = os.path.join(save_dir, 'tread_{}_{}.npy'.format(suffix, index))
 
         cv2.imwrite(path_im, im)
-        np.save(path_tsnap, t_snap)
-        np.save(path_tread, t_read)
+        #np.save(path_tsnap, t_snap)
+        #np.save(path_tread, t_read)
 
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
-    save_one(responses[0], '1')
-    save_one(responses[1], '2')
+    save_one(im_1, resp_1, '1')
+    save_one(im_2, resp_2, '2')
 
 
-def main_loop(runner, sleep_time, save_dir, do_stream=True, do_save=False):
+def main_loop(psize, sleep_time, save_dir, do_stream=True, do_save=False):
 
     g = AVTGrabber([0, 1])
     g.start(show_video=do_stream)
@@ -88,15 +96,16 @@ def main_loop(runner, sleep_time, save_dir, do_stream=True, do_save=False):
             im_2 = im_2.reshape(im_2.shape[0], im_2.shape[1])
 
             t0 = time.time()
-            runner.run(image_1=im_1, image_2=im_2)
+
+            flags = cv2.CALIB_CB_FAST_CHECK
+            success, corners_1, corners_2 = find_corners(im_1, im_2, psize, flags)
+
             t1 = time.time()
             t_proc = t1 - t0
 
-            success = runner['success_1'] and runner['success_2']
-
             if success:
                 if do_save:
-                    save_data(attempt, (resp_1, resp_2), runner, save_dir)
+                    save_data(attempt, im_1, im_2, resp_1, resp_2, save_dir)
 
                 print('Success, {:.3f} ms'.format(t_proc * 1e3))
             else:
@@ -124,17 +133,6 @@ if __name__ == '__main__':
     psize = (args.ph, args.pv)
     sleep_time = 1
 
-    cg_corners_stereo = compgraph.graph_union_with_suffixing(
-        cbcalib.CGFindCorners(),
-        cbcalib.CGFindCorners(),
-        exclude=['pattern_size_wh']
-    )
-
-    runner = compgraph.CompGraphRunner(
-        cg_corners_stereo,
-        frozen_tokens={'pattern_size_wh': psize}
-    )
-
     save_dir = 'data' if args.dir is None else args.dir
 
-    main_loop(runner, sleep_time, save_dir, do_stream=args.stream, do_save=args.save)
+    main_loop(psize, sleep_time, save_dir, do_stream=args.stream, do_save=args.save)
