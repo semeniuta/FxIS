@@ -1,6 +1,6 @@
 """
 Gather good pairs of images with chessboard calibration pattern
-using FxIS and VisionCG/EPypes
+using FxIS and visionfuncs/EPypes
 """
 
 import sys
@@ -12,7 +12,7 @@ import cv2
 
 CODEROOT = os.environ['CODEROOT']
 sys.path.append(os.getcwd())
-sys.path.append(os.path.join(CODEROOT, 'VisionCG'))
+sys.path.append(os.path.join(CODEROOT, 'visionfuncs'))
 sys.path.append(os.path.join(CODEROOT, 'EPypes'))
 
 from grabber import AVTGrabber
