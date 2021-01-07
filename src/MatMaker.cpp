@@ -10,7 +10,7 @@ void MatMaker::fillMat(cv::Mat& res, unsigned char* imageBuffer) {
         memcpy(im_bayer.data, imageBuffer, this->height * this->width);
 
         res.create(this->height, this->width, CV_8UC3);
-        cv::cvtColor(im_bayer, res, CV_BayerBG2BGR);
+        cv::cvtColor(im_bayer, res, cv::COLOR_BayerBG2BGR);
 
 
     } else {
