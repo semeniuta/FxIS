@@ -17,7 +17,7 @@ sys.path.append(os.path.join(CODEROOT, 'EPypes'))
 
 from grabber import AVTGrabber
 from fxisext import get_timestamps_snaphot, get_timepoints
-from visioncg import cbcalib
+from visionfuncs import cbcalib
 
 def get_timing_measurements(resp):
 
